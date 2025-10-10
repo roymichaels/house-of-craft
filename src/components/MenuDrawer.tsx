@@ -76,8 +76,8 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
               <GoldenIcon icon={X} size="lg" glow="medium" className="hover:rotate-90 duration-500" />
             </button>
 
-            {/* Menu Items */}
-            <nav className="flex flex-col items-center gap-3">
+            {/* Menu Items - Aligned with homepage spacing */}
+            <nav className="flex flex-col items-center gap-6 md:gap-8 px-8 max-w-4xl mx-auto">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.type === "scroll" ? item.scrollTo : item.name}
@@ -91,17 +91,23 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 >
                   <button
                     onClick={() => handleNavClick(item)}
-                    className="font-romania text-2xl md:text-4xl text-ancient-gold hover:text-ancient-gold/70
-                               transition-colors tracking-wide drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
-                               hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
+                    className="font-ancient text-3xl md:text-5xl text-ancient-gold hover:text-aureate
+                               transition-all duration-500 tracking-[0.15em] 
+                               drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]
+                               hover:drop-shadow-[0_0_50px_rgba(212,175,55,0.6)]
+                               hover:scale-105"
                   >
                     {item.name}
                   </button>
                 </motion.div>
               ))}
 
-              {/* Divider */}
-              <div className="w-24 h-px bg-ancient-gold/20" />
+              {/* Divider - Roman style */}
+              <div className="flex items-center gap-4 my-4">
+                <div className="h-px w-16 bg-gradient-to-r from-transparent via-ancient-gold/40 to-ancient-gold/40" />
+                <div className="w-1.5 h-1.5 rounded-full bg-ancient-gold" />
+                <div className="h-px w-16 bg-gradient-to-l from-transparent via-ancient-gold/40 to-ancient-gold/40" />
+              </div>
 
               {/* Sign In */}
               <motion.div
@@ -116,7 +122,9 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10 font-sans"
+                  className="gap-2 border-ancient-gold/40 text-ancient-gold hover:bg-ancient-gold/10 
+                             font-sans hover:border-ancient-gold transition-all duration-500
+                             hover:shadow-[0_0_30px_hsl(var(--ancient-gold)/0.4)]"
                   onClick={onClose}
                 >
                   <GoldenIcon icon={User} size="md" glow="subtle" />
