@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -26,9 +26,6 @@ export const ProductCard3D = ({
   const cardRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const [animationProgress, setAnimationProgress] = useState(0);
-
-  // Load texture if image provided
-  const texture = image ? useLoader(THREE.TextureLoader, image) : null;
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -95,25 +92,15 @@ export const ProductCard3D = ({
         }}
       >
         <planeGeometry args={[1.2, 1.6]} />
-        {texture ? (
-          <meshStandardMaterial
-            map={texture}
-            transparent
-            opacity={0.95}
-            emissive={color}
-            emissiveIntensity={0.1}
-          />
-        ) : (
-          <meshPhysicalMaterial
-            color="#1a1a1a"
-            transparent
-            opacity={0.8}
-            metalness={0.9}
-            roughness={0.2}
-            emissive={color}
-            emissiveIntensity={0.1}
-          />
-        )}
+        <meshPhysicalMaterial
+          color="#1a1a1a"
+          transparent
+          opacity={0.8}
+          metalness={0.9}
+          roughness={0.2}
+          emissive={color}
+          emissiveIntensity={0.1}
+        />
       </mesh>
 
       {/* Border glow */}
