@@ -1,6 +1,9 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useModalStore } from "@/stores/modalStore";
+import timepieceImage from "@/assets/object-timepiece.jpg";
+import penImage from "@/assets/object-pen.jpg";
+import accessoriesImage from "@/assets/object-accessories.jpg";
 
 const Objects = () => {
   const ref = useRef(null);
@@ -13,21 +16,21 @@ const Objects = () => {
       title: "Instruments of Time",
       description: "Every object here serves one purpose — to sharpen the mind that wields it.",
       story: "Forged for those who master presence. Each chronometer is a meditation on control.",
-      image: "/placeholder.svg",
+      image: timepieceImage,
     },
     {
       category: "Writing Instruments",
       title: "Tools of Thought",
       description: "Every mark is a declaration. Every word, a weapon.",
       story: "Master craftsmen understand: the instrument shapes the idea. These are not pens — they are extensions of will.",
-      image: "/placeholder.svg",
+      image: penImage,
     },
     {
       category: "Accessories",
       title: "Objects of Power",
       description: "What you wear announces what you've conquered.",
       story: "Curated for clarity. Every piece selected for function, refined for presence.",
-      image: "/placeholder.svg",
+      image: accessoriesImage,
     },
   ];
 
