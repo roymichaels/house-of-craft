@@ -121,7 +121,7 @@ const Sun = ({ radius }: SunProps) => {
           color *= brightness;
 
           // Much more controlled brightness
-          color *= 0.8;
+          color *= 0.3;
 
           gl_FragColor = vec4(color, 1.0);
         }
@@ -152,13 +152,13 @@ const Sun = ({ radius }: SunProps) => {
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
-      {/* Reduced sun light to not overpower planets */}
+      {/* Minimal sun light to not overpower planets */}
       <pointLight
         position={[0, 0, 0]}
         color="#ffd966"
-        intensity={8}
-        distance={80}
-        decay={1.5}
+        intensity={2}
+        distance={40}
+        decay={2}
       />
     </group>
   );
