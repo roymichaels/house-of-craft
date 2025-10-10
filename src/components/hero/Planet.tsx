@@ -62,61 +62,59 @@ const Planet = ({
 
   return (
     <group ref={groupRef}>
-      {/* Planet */}
-      <mesh ref={planetRef} castShadow receiveShadow>
+      {/* Planet - using basic material for maximum brightness */}
+      <mesh ref={planetRef}>
         <sphereGeometry args={[radius, 64, 64]} />
-        <meshStandardMaterial
+        <meshBasicMaterial
           color={color}
-          emissive={color}
-          emissiveIntensity={15}
-          roughness={0.1}
-          metalness={0.9}
-          envMapIntensity={10}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Individual planet light source - extremely bright */}
+      {/* Massive planet light sources */}
       <pointLight
         position={[0, 0, 0]}
         color={color}
-        intensity={radius * 50}
-        distance={radius * 30}
-        decay={0.5}
+        intensity={radius * 200}
+        distance={radius * 100}
+        decay={0.1}
       />
 
-      {/* Secondary planet glow */}
       <pointLight
         position={[0, 0, 0]}
         color={color}
-        intensity={radius * 30}
-        distance={radius * 20}
+        intensity={radius * 150}
+        distance={radius * 80}
+        decay={0.2}
+      />
+
+      <pointLight
+        position={[0, 0, 0]}
+        color={color}
+        intensity={radius * 100}
+        distance={radius * 60}
         decay={0.3}
       />
 
       {/* Saturn's rings */}
       {rings && (
         <>
-          <mesh rotation={[Math.PI / 2.5, 0, 0]} castShadow receiveShadow>
+          <mesh rotation={[Math.PI / 2.5, 0, 0]}>
             <ringGeometry args={[radius * 1.5, radius * 2.2, 64]} />
-            <meshStandardMaterial
-              color="#D4B896"
-              emissive="#D4B896"
-              emissiveIntensity={8}
+            <meshBasicMaterial
+              color="#FFE4B5"
               transparent
               opacity={1}
               side={THREE.DoubleSide}
-              roughness={0.2}
-              metalness={0.6}
               toneMapped={false}
             />
           </mesh>
-          {/* Ring glow light */}
           <pointLight
             position={[0, 0, 0]}
-            color="#D4B896"
-            intensity={radius * 25}
-            distance={radius * 15}
+            color="#FFE4B5"
+            intensity={radius * 120}
+            distance={radius * 50}
+            decay={0.2}
           />
         </>
       )}
@@ -128,25 +126,26 @@ const Planet = ({
             ref={(el) => {
               if (el) moonRefs.current[index] = el;
             }}
-            castShadow
-            receiveShadow
           >
             <sphereGeometry args={[moon.radius, 32, 32]} />
-            <meshStandardMaterial
+            <meshBasicMaterial
               color={moon.color}
-              emissive={moon.color}
-              emissiveIntensity={12}
-              roughness={0.2}
-              metalness={0.8}
               toneMapped={false}
             />
           </mesh>
           <pointLight
             position={[0, 0, 0]}
             color={moon.color}
-            intensity={moon.radius * 40}
-            distance={moon.radius * 25}
-            decay={0.4}
+            intensity={moon.radius * 180}
+            distance={moon.radius * 80}
+            decay={0.2}
+          />
+          <pointLight
+            position={[0, 0, 0]}
+            color={moon.color}
+            intensity={moon.radius * 120}
+            distance={moon.radius * 60}
+            decay={0.3}
           />
         </group>
       ))}
