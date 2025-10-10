@@ -50,26 +50,26 @@ const VaultOrderTabs = ({ orders, activeOrder, onSelectOrder }: VaultOrderTabsPr
           </div>
 
           {/* Title */}
-          <h3 className="font-ancient text-xl md:text-2xl text-foreground mb-2 
+          <h3 className="font-ancient-tulip text-xl md:text-2xl text-foreground mb-2 
                          group-hover:text-primary transition-colors">
             {order.title.replace('Order of ', '')}
           </h3>
 
           {/* Microcopy */}
-          <p className="text-xs text-muted-foreground tracking-wider mb-3 opacity-0 
+          <p className="text-xs font-sans text-muted-foreground tracking-wider mb-3 opacity-0 
                         group-hover:opacity-100 transition-opacity duration-500">
             {order.microcopy}
           </p>
 
           {/* Essence */}
-          <p className="text-sm text-muted-foreground/80 italic leading-relaxed">
+          <p className="text-sm font-ancient-tulip text-muted-foreground/80 italic leading-relaxed">
             {order.essence}
           </p>
 
           {/* Latin inscription (appears on hover) */}
           <motion.p
             className="absolute bottom-4 left-0 right-0 text-center text-xs 
-                       text-primary/60 tracking-[0.2em] opacity-0 
+                       font-sans text-primary/60 tracking-[0.2em] opacity-0 
                        group-hover:opacity-100 transition-opacity duration-500"
           >
             {order.latinInscription}

@@ -19,7 +19,7 @@ export const RelicLabel = ({ text, visible }: RelicLabelProps) => {
       }}
     >
       <div className="px-4 py-2 bg-background/95 border border-primary/50 rounded-md backdrop-blur-sm">
-        <p className="font-ancient text-primary text-sm whitespace-nowrap">
+        <p className="font-ancient-tulip text-primary text-sm whitespace-nowrap">
           {text}
         </p>
       </div>

@@ -46,7 +46,7 @@ const Navigation = () => {
               <h2 className="font-ancient text-base sm:text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
                 Apollon
               </h2>
-              <p className="imperial-caps text-[8px] sm:text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
+              <p className="font-sans imperial-caps text-[8px] sm:text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
                 Objects of Mastery
               </p>
             </div>

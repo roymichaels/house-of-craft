@@ -91,7 +91,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 >
                   <button
                     onClick={() => handleNavClick(item)}
-                    className="font-ancient text-3xl md:text-5xl text-ancient-gold hover:text-ancient-gold/70
+                    className="font-ancient-tulip text-3xl md:text-5xl text-ancient-gold hover:text-ancient-gold/70
                                transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
                                hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
                   >

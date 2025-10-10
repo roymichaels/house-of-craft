@@ -49,7 +49,7 @@ const TrustSection = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-ancient-gold/10 border border-ancient-gold/20">
                 <GoldenIcon icon={feature.icon} size="lg" glow="medium" />
               </div>
-              <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
+              <h3 className="text-lg font-sans font-medium mb-2">{feature.title}</h3>
               <p className="text-sm font-ancient-tulip text-muted-foreground text-balance">{feature.description}</p>
             </motion.div>
           ))}

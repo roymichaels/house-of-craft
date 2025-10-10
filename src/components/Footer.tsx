@@ -60,7 +60,7 @@ const Footer = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-base text-muted-foreground max-w-xl mx-auto"
+              className="text-base font-ancient-tulip text-muted-foreground max-w-xl mx-auto"
             >
               The Inner Sanctum awaits those who command themselves.
               Brotherhood, mentorship, and exclusive instruments for men of discipline.
@@ -99,10 +99,10 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <h3 className="text-3xl font-ancient tracking-wider text-ancient-gold mb-2">APOLLON</h3>
-            <p className="text-xs imperial-caps text-ancient-silver/50 mb-4">
+            <p className="text-xs font-sans imperial-caps text-ancient-silver/50 mb-4">
               The Order of Light • Est. MMXXV
             </p>
-            <p className="text-sm text-muted-foreground mb-6 text-balance">
+            <p className="text-sm font-ancient-tulip text-muted-foreground mb-6 text-balance">
               Where Light Becomes Order.
             </p>
             <p className="text-xs font-order text-ancient-gold/60">
@@ -113,7 +113,7 @@ const Footer = () => {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="font-medium mb-4 tracking-wide text-sm">{category}</h4>
+              <h4 className="font-sans font-medium mb-4 tracking-wide text-sm">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link, index) => (
                   <li key={`${category}-${link.name}-${index}`}>

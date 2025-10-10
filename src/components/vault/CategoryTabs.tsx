@@ -82,7 +82,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
               {/* Content */}
               <div className="flex-1 min-w-0">
                 {/* Category Name */}
-                <h3 className="text-xl md:text-2xl font-ancient text-ancient-gold 
+                <h3 className="text-xl md:text-2xl font-ancient-tulip text-ancient-gold 
                                mb-2 tracking-wide
                                group-hover:drop-shadow-[0_0_12px_rgba(196,166,97,0.4)]
                                transition-all duration-300">
@@ -90,13 +90,13 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
                 </h3>
 
                 {/* Tagline */}
-                <p className="text-xs md:text-sm text-foreground/60 leading-relaxed mb-3">
+                <p className="text-xs md:text-sm font-sans text-foreground/60 leading-relaxed mb-3">
                   {category.tagline}
                 </p>
 
                 {/* Product Count Badge */}
                 <div className="inline-flex px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
-                  <span className="text-xs font-medium text-ancient-gold tracking-wider">
+                  <span className="text-xs font-sans font-medium text-ancient-gold tracking-wider">
                     {productCount} {productCount === 1 ? 'ITEM' : 'ITEMS'}
                   </span>
                 </div>
