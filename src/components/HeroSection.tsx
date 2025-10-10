@@ -30,12 +30,12 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grain">
-      {/* Fallback Background Image */}
+      {/* Fallback Background Image - subtle depth layer */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
           alt="Luxury timepiece collection"
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-15 blur-sm"
         />
       </div>
 
