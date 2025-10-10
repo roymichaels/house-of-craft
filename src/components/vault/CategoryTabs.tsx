@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Watch, Crown, Wallet, Shirt, BookOpen, PenTool, Sparkles } from "lucide-react";
 import type { Category } from "@/data/catalog";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
 import { categoryShowcase } from "@/data/categoryShowcase";
-import dynamicIconImports from 'lucide-react/dynamicIconImports';
-import { lazy, Suspense } from 'react';
-import { LucideProps } from 'lucide-react';
+import type { LucideIcon } from "lucide-react";
 
 interface CategoryTabsProps {
   categories: Category[];
@@ -13,17 +11,15 @@ interface CategoryTabsProps {
   onSelectCategory: (categoryId: string) => void;
 }
 
-interface DynamicIconProps extends Omit<LucideProps, 'ref'> {
-  name: keyof typeof dynamicIconImports;
-}
-
-const DynamicIcon = ({ name, ...props }: DynamicIconProps) => {
-  const LucideIcon = lazy(dynamicIconImports[name]);
-  return (
-    <Suspense fallback={<div className="w-7 h-7" />}>
-      <LucideIcon {...props} />
-    </Suspense>
-  );
+// Icon mapping for direct imports
+const iconMap: Record<string, LucideIcon> = {
+  'Watch': Watch,
+  'Crown': Crown,
+  'Wallet': Wallet,
+  'Shirt': Shirt,
+  'BookOpen': BookOpen,
+  'PenTool': PenTool,
+  'Sparkles': Sparkles,
 };
 
 const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: CategoryTabsProps) => {
@@ -50,7 +46,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
 
           // Find matching icon from categoryShowcase
           const showcaseData = categoryShowcase.find(c => c.id === category.id);
-          const iconName = showcaseData?.icon || 'Circle';
+          const IconComponent = showcaseData?.icon ? iconMap[showcaseData.icon] : Watch;
 
           return (
             <motion.button
@@ -75,13 +71,11 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
             >
               {/* Icon */}
               <div className="flex-shrink-0">
-                <DynamicIcon 
-                  name={iconName.toLowerCase() as keyof typeof dynamicIconImports}
-                  className="w-7 h-7 text-ancient-gold 
-                             drop-shadow-[0_0_12px_rgba(196,166,97,0.4)]
-                             group-hover:drop-shadow-[0_0_20px_rgba(196,166,97,0.6)]
-                             transition-all duration-300"
-                  strokeWidth={1.5}
+                <GoldenIcon 
+                  icon={IconComponent}
+                  size="lg"
+                  glow="medium"
+                  className="transition-all duration-300"
                 />
               </div>
 
