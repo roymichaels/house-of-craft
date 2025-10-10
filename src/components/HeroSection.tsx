@@ -5,7 +5,6 @@ import * as THREE from "three";
 import HeroOverlay from "./hero/HeroOverlay";
 import OrbModel from "./hero/OrbModel";
 import GoldenParticles from "./hero/GoldenParticles";
-import ApollonText3D from "./hero/ApollonText3D";
 import FloatingGeometry from "./hero/FloatingGeometry";
 import LightRays from "./hero/LightRays";
 import ConstellationField from "./hero/ConstellationField";
@@ -78,9 +77,6 @@ const HeroSection = () => {
               rotationSpeed={config.rotation_speed}
               lightColor={config.light_color}
             />
-            
-            {/* APOLLON 3D Text */}
-            <ApollonText3D />
             
             {/* Golden Particles */}
             <GoldenParticles count={isMobile ? 150 : 300} />

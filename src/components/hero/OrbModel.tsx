@@ -24,20 +24,6 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       groupRef.current.scale.setScalar(1 + breathe);
     }
 
-    // Individual ring rotations - creating dynamic movement
-    if (ring1Ref.current) {
-      ring1Ref.current.rotation.x += 0.003;
-      ring1Ref.current.rotation.y += 0.002;
-    }
-    if (ring2Ref.current) {
-      ring2Ref.current.rotation.x -= 0.004;
-      ring2Ref.current.rotation.z += 0.003;
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.y += 0.005;
-      ring3Ref.current.rotation.z -= 0.002;
-    }
-
     // Pulsing glow on orb
     if (orbRef.current) {
       const pulse = Math.sin(state.clock.elapsedTime * 2) * 0.02 + 0.05;
@@ -74,8 +60,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 1 - Outer bronze astrolabe band */}
-      <mesh ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
+      {/* Ring 1 - Outer bronze astrolabe band - removed individual ref */}
+      <mesh rotation={[Math.PI / 4, 0, 0]}>
         <torusGeometry args={[1.5, 0.04, 16, 100]} />
         <meshPhysicalMaterial
           color="#5A5040"
@@ -87,8 +73,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 2 - Middle brass band */}
-      <mesh ref={ring2Ref} rotation={[0, Math.PI / 3, Math.PI / 4]}>
+      {/* Ring 2 - Middle brass band - removed individual ref */}
+      <mesh rotation={[0, Math.PI / 3, Math.PI / 4]}>
         <torusGeometry args={[1.3, 0.03, 16, 100]} />
         <meshPhysicalMaterial
           color="#B8860B"
@@ -100,8 +86,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 3 - Inner oxidized copper */}
-      <mesh ref={ring3Ref} rotation={[Math.PI / 6, Math.PI / 2, 0]}>
+      {/* Ring 3 - Inner oxidized copper - removed individual ref */}
+      <mesh rotation={[Math.PI / 6, Math.PI / 2, 0]}>
         <torusGeometry args={[1.1, 0.025, 16, 100]} />
         <meshPhysicalMaterial
           color="#7A6A4F"

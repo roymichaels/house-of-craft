@@ -12,8 +12,16 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
 
   return (
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-8 h-full pointer-events-none">
-      <div className="flex flex-col items-center justify-center h-full space-y-6 md:space-y-8 mt-24">
-        {/* Title - Now in 3D above orb */}
+      <div className="flex flex-col items-center justify-center h-full space-y-6 md:space-y-8">
+        {/* APOLLON Title */}
+        <motion.h1
+          className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)]"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          APOLLON
+        </motion.h1>
 
         {/* Subtitle with decorative divider - positioned below 3D APOLLON text */}
         <motion.div
