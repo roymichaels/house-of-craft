@@ -30,11 +30,21 @@ const CollectionsModal = () => {
     }
   }, [isOpen, selectedCategory]);
 
-  // Keyboard navigation
+  // Keyboard navigation and body scroll lock
   useEffect(() => {
+    if (!isOpen) return;
+
+    // Lock body scroll when modal is open
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    
+    // Get scrollbar width to prevent layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      
       if (e.key === 'Escape') {
         if (viewState === 'category-detail') {
           setViewState('categories');
@@ -44,8 +54,15 @@ const CollectionsModal = () => {
         }
       }
     };
+    
     window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+      // Restore body scroll
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
   }, [isOpen, viewState, closeModal]);
 
   // Navigation handlers
@@ -74,6 +91,8 @@ const CollectionsModal = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-md z-50"
             onClick={closeModal}
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           />
 
           {/* Modal Content */}

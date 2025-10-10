@@ -115,8 +115,8 @@ const Footer = () => {
             <div key={category}>
               <h4 className="font-medium mb-4 tracking-wide text-sm">{category}</h4>
               <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link.path}>
+                {links.map((link, index) => (
+                  <li key={`${category}-${link.name}-${index}`}>
                     <a
                       href={link.path}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
