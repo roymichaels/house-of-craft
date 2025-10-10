@@ -81,8 +81,8 @@ const CollectionsModal = () => {
             className="fixed inset-0 z-50 overflow-y-auto"
             onClick={(e) => e.target === e.currentTarget && closeModal()}
           >
-            <div className="min-h-screen px-6 py-24">
-              <div className="relative bg-background/95 backdrop-blur-sm rounded-lg max-w-7xl mx-auto border border-primary/20">
+            <div className="min-h-screen">
+              <div className="relative bg-background/95 backdrop-blur-sm h-screen overflow-y-auto border-y border-primary/20">
                 {/* Close Button */}
                 <button
                   onClick={closeModal}

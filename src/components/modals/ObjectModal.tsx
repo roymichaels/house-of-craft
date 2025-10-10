@@ -48,7 +48,7 @@ const ObjectModal = () => {
 
           {/* Modal Content */}
           <motion.div
-            className="relative z-10 w-full max-w-7xl mx-4 md:mx-8 grid md:grid-cols-2 gap-8 p-8 md:p-12 bg-card/50 border border-border/50 rounded-lg"
+            className="relative z-10 w-full h-screen grid md:grid-cols-2 gap-8 p-8 md:p-12 bg-card/50 border-y border-border/50"
             initial={{ scale: 0.9, y: 50 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 50 }}
