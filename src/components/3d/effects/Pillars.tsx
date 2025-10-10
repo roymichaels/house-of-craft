@@ -22,7 +22,7 @@ export const Pillars = ({
     if (groupRef.current) {
       const time = state.clock.getElapsedTime();
       groupRef.current.children.forEach((pillar, i) => {
-        pillar.position.y = Math.sin(time * 0.3 + i) * 0.1 - 3;
+        pillar.position.y = Math.sin(time * 0.3 + i) * 0.15;
       });
     }
   });
@@ -32,7 +32,7 @@ export const Pillars = ({
     return {
       position: [
         Math.cos(angle) * radius,
-        -3,
+        0,
         Math.sin(angle) * radius
       ] as [number, number, number],
       key: i
@@ -49,7 +49,7 @@ export const Pillars = ({
             roughness={0.8}
             metalness={0.1}
             emissive={lightColor}
-            emissiveIntensity={0.05}
+            emissiveIntensity={0.2}
           />
         </mesh>
       ))}

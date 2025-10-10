@@ -44,7 +44,7 @@ const ChamberVault = ({ lightColor }: ChamberVaultProps) => {
   return (
     <group>
       {/* Pillars */}
-      <Pillars count={6} radius={14} height={10} lightColor={lightColor} />
+      <Pillars count={6} radius={11} height={10} lightColor={lightColor} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="objects" position={[0, 3.5, -6]} />

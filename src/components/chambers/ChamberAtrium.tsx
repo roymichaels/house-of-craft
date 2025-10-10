@@ -42,7 +42,7 @@ const ChamberAtrium = ({ lightColor }: ChamberAtriumProps) => {
       <OrbModel rotationSpeed={0.3} lightColor={lightColor} />
       
       {/* Roman Pillars */}
-      <Pillars count={8} radius={18} height={8} lightColor={lightColor} />
+      <Pillars count={8} radius={12} height={10} lightColor={lightColor} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="hero" position={[0, 3, -8]} />
