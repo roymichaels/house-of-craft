@@ -330,4 +330,285 @@ a, button {
     rgba(0, 0, 0, 0.4) 100%
   );
 }
+
+/* Realistic Lava Background System */
+.lava-base {
+  background: linear-gradient(135deg,
+    #1a0a05 0%,
+    #2d1308 15%,
+    #4a1c0f 30%,
+    #6b2510 45%,
+    #8b2e14 60%,
+    #a63a18 75%,
+    #c1441c 90%,
+    #d84e20 100%
+  );
+  animation: lavaBaseFlow 25s ease-in-out infinite;
+}
+
+@keyframes lavaBaseFlow {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(1deg);
+  }
+  50% {
+    transform: scale(1.02) rotate(-0.5deg);
+  }
+  75% {
+    transform: scale(1.08) rotate(0.8deg);
+  }
+}
+
+.lava-layer-1 {
+  background: radial-gradient(ellipse at 20% 30%,
+    rgba(255, 120, 50, 0.6) 0%,
+    rgba(235, 90, 40, 0.4) 20%,
+    rgba(200, 60, 30, 0.2) 40%,
+    transparent 60%
+  ),
+  radial-gradient(ellipse at 80% 70%,
+    rgba(255, 100, 40, 0.5) 0%,
+    rgba(220, 70, 35, 0.3) 25%,
+    transparent 50%
+  );
+  mix-blend-mode: screen;
+  animation: lavaFlow1 20s ease-in-out infinite;
+}
+
+@keyframes lavaFlow1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  33% {
+    transform: translate(-5%, 3%) scale(1.1);
+    opacity: 0.8;
+  }
+  66% {
+    transform: translate(3%, -2%) scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+.lava-layer-2 {
+  background: radial-gradient(ellipse at 60% 40%,
+    rgba(255, 140, 60, 0.7) 0%,
+    rgba(240, 100, 45, 0.5) 15%,
+    rgba(200, 70, 35, 0.3) 35%,
+    transparent 55%
+  ),
+  radial-gradient(ellipse at 30% 80%,
+    rgba(255, 110, 50, 0.6) 0%,
+    rgba(220, 80, 40, 0.4) 20%,
+    transparent 45%
+  );
+  mix-blend-mode: overlay;
+  animation: lavaFlow2 30s ease-in-out infinite reverse;
+}
+
+@keyframes lavaFlow2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(4%, -3%) scale(1.05);
+  }
+  50% {
+    transform: translate(-3%, 4%) scale(0.98);
+  }
+  75% {
+    transform: translate(2%, 2%) scale(1.03);
+  }
+}
+
+.lava-layer-3 {
+  background: radial-gradient(circle at 50% 50%,
+    rgba(255, 160, 80, 0.4) 0%,
+    rgba(240, 120, 60, 0.3) 20%,
+    rgba(200, 80, 40, 0.15) 40%,
+    transparent 60%
+  );
+  mix-blend-mode: color-dodge;
+  animation: lavaFlow3 18s ease-in-out infinite;
+}
+
+@keyframes lavaFlow3 {
+  0%, 100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.15) translate(2%, -2%);
+    opacity: 0.8;
+  }
+}
+
+.lava-hotspots {
+  pointer-events: none;
+}
+
+.hotspot {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: hotspotPulse 4s ease-in-out infinite;
+}
+
+.hotspot-1 {
+  width: 400px;
+  height: 400px;
+  top: 15%;
+  left: 25%;
+  background: radial-gradient(circle,
+    rgba(255, 230, 150, 0.8) 0%,
+    rgba(255, 180, 80, 0.6) 20%,
+    rgba(255, 120, 50, 0.3) 40%,
+    transparent 70%
+  );
+  animation-delay: 0s;
+  animation-duration: 5s;
+}
+
+.hotspot-2 {
+  width: 350px;
+  height: 350px;
+  top: 55%;
+  right: 20%;
+  background: radial-gradient(circle,
+    rgba(255, 220, 140, 0.7) 0%,
+    rgba(255, 160, 70, 0.5) 25%,
+    rgba(240, 100, 50, 0.25) 50%,
+    transparent 75%
+  );
+  animation-delay: 1.5s;
+  animation-duration: 6s;
+}
+
+.hotspot-3 {
+  width: 300px;
+  height: 300px;
+  bottom: 20%;
+  left: 15%;
+  background: radial-gradient(circle,
+    rgba(255, 200, 120, 0.6) 0%,
+    rgba(250, 140, 70, 0.4) 30%,
+    transparent 65%
+  );
+  animation-delay: 3s;
+  animation-duration: 7s;
+}
+
+.hotspot-4 {
+  width: 450px;
+  height: 450px;
+  top: 40%;
+  left: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 240, 160, 0.5) 0%,
+    rgba(255, 170, 80, 0.35) 25%,
+    rgba(230, 110, 60, 0.2) 50%,
+    transparent 75%
+  );
+  animation-delay: 2s;
+  animation-duration: 8s;
+}
+
+.hotspot-5 {
+  width: 320px;
+  height: 320px;
+  top: 70%;
+  right: 35%;
+  background: radial-gradient(circle,
+    rgba(255, 210, 130, 0.65) 0%,
+    rgba(245, 150, 75, 0.45) 20%,
+    rgba(220, 100, 55, 0.25) 45%,
+    transparent 70%
+  );
+  animation-delay: 4s;
+  animation-duration: 5.5s;
+}
+
+@keyframes hotspotPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.9;
+  }
+}
+
+.lava-texture {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
+  background-size: 20px 20px, 20px 20px;
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  animation: textureShift 40s linear infinite;
+}
+
+@keyframes textureShift {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 20px 20px, -20px -20px;
+  }
+}
+
+.lava-cracks {
+  background-image:
+    linear-gradient(90deg, transparent 48%, rgba(60, 20, 10, 0.4) 49%, rgba(60, 20, 10, 0.4) 51%, transparent 52%),
+    linear-gradient(0deg, transparent 48%, rgba(60, 20, 10, 0.35) 49%, rgba(60, 20, 10, 0.35) 51%, transparent 52%),
+    linear-gradient(45deg, transparent 48%, rgba(50, 15, 8, 0.3) 49%, rgba(50, 15, 8, 0.3) 51%, transparent 52%);
+  background-size: 150px 150px, 180px 180px, 200px 200px;
+  background-position: 0 0, 30px 30px, 60px 60px;
+  opacity: 0.3;
+  mix-blend-mode: darken;
+}
+
+.lava-vignette {
+  background: radial-gradient(ellipse at center,
+    transparent 0%,
+    transparent 30%,
+    rgba(40, 15, 8, 0.3) 60%,
+    rgba(30, 10, 5, 0.6) 85%,
+    rgba(20, 5, 3, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+.lava-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lava-base,
+  .lava-layer-1,
+  .lava-layer-2,
+  .lava-layer-3,
+  .hotspot,
+  .lava-texture {
+    animation: none !important;
+  }
+}
 }
