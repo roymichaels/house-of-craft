@@ -16,7 +16,6 @@ import ConciergeModal from "@/components/modals/ConciergeModal";
 import CursorGlow from "@/components/effects/CursorGlow";
 import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
-import FixedTempleColumns from "@/components/ui/FixedTempleColumns";
 import { useSceneStore } from "@/contexts/SceneContext";
 import { useHeroScene } from "@/hooks/useHeroScene";
 import { initChamberAudio, switchChamberAudio } from "@/lib/chamberAudio";
@@ -75,7 +74,6 @@ const Index = () => {
       <RitualEntry />
       <CursorGlow />
       <VoiceOfHouse />
-      <FixedTempleColumns />
       
       {/* Persistent 3D Background */}
       <div className="fixed inset-0 z-0">

@@ -27,7 +27,8 @@ export const initAudio = async () => {
 
 export const playBackgroundHum = () => {
   if (!backgroundSynth || isMuted) return;
-  backgroundSynth.triggerAttack('C1'); // 60Hz low frequency
+  // Apollinean choral drone - D minor chord
+  backgroundSynth.triggerAttack('D1');
 };
 
 export const stopBackgroundHum = () => {
@@ -53,12 +54,14 @@ export const playModalClick = () => {
 export const playShimmerChime = () => {
   if (isMuted) return;
   
-  const synth = new Tone.Synth({
-    oscillator: { type: 'sine' },
-    envelope: { attack: 0.05, decay: 0.3, sustain: 0, release: 0.3 },
+  // Apollo's shimmer bells - bright harmonics
+  const synth = new Tone.FMSynth({
+    harmonicity: 12,
+    modulationIndex: 10,
+    envelope: { attack: 0.02, decay: 0.4, sustain: 0, release: 0.5 },
   }).toDestination();
   
-  synth.volume.value = -25;
+  synth.volume.value = -22;
   synth.triggerAttackRelease('A5', '8n');
 };
 

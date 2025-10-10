@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { LightColumns } from "../3d/effects/LightColumns";
 import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberDoctrineProps {
@@ -33,6 +34,9 @@ const ChamberDoctrine = ({ lightColor }: ChamberDoctrineProps) => {
 
   return (
     <group>
+      {/* Minimal Light Columns - Focus on tablets */}
+      <LightColumns lightColor={lightColor} intensity={0.4} />
+      
       {/* Latin Inscription */}
       <LatinInscription mode="doctrine" position={[0, 4, -3]} />
       

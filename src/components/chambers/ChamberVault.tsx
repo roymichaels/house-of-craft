@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
 import { relics } from "@/data/relics";
-import { TempleColumns } from "../3d/effects/TempleColumns";
+import { LightColumns } from "../3d/effects/LightColumns";
 import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberVaultProps {
@@ -43,8 +43,8 @@ const ChamberVault = ({ lightColor }: ChamberVaultProps) => {
 
   return (
     <group>
-      {/* Roman Temple Columns - Entrance gateway */}
-      <TempleColumns layout="entrance" height={12} lightColor={lightColor} />
+      {/* Entrance Light Columns - Gateway to vault */}
+      <LightColumns lightColor={lightColor} intensity={0.8} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="objects" position={[0, 3.5, -6]} />

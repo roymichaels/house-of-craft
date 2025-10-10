@@ -41,6 +41,9 @@ const HeroScene = ({
         className="w-full h-full"
       >
         <Suspense fallback={null}>
+          {/* Apollinean atmosphere - fog for depth */}
+          <fog attach="fog" args={['#000000', 5, 25]} />
+          
           <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
           
@@ -53,13 +56,13 @@ const HeroScene = ({
           
           <Environment preset="city" />
           
-          {/* Environmental particles - subtle gold sparkle */}
+          {/* Environmental particles - subtle golden tint for Apollinean atmosphere */}
           <Stars 
             radius={50} 
             depth={50} 
-            count={300} 
+            count={500} 
             factor={2} 
-            saturation={0} 
+            saturation={0.1} 
             fade 
             speed={0.3}
           />

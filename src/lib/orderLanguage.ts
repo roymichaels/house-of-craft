@@ -25,11 +25,11 @@ export const OrderLanguage = {
   },
   
   latin: {
-    hero: "Tempus Dominum", // Time belongs to the master
-    mindcraft: "Virtus in Opere", // Virtue in craft
-    objects: "Praesentia Vera", // True presence
-    doctrine: "Sapientia Aeterna", // Eternal wisdom
-    circle: "Fraternitas Interna" // Inner brotherhood
+    hero: "Lux Est Disciplina", // Light is discipline
+    mindcraft: "Claritas Ante Actum", // Clarity before action
+    objects: "Forma Sequitur Rationem", // Form follows reason
+    doctrine: "Ordo Ab Lux", // Order from light
+    circle: "Tempus Domini Solis" // Time belongs to the sun
   },
   
   phrases: {

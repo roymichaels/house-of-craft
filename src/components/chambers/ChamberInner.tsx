@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { LightColumns } from "../3d/effects/LightColumns";
+import { SolarHalo } from "../3d/effects/SolarHalo";
 
 interface ChamberInnerProps {
   lightColor: string;
@@ -25,8 +27,14 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
 
   return (
     <group>
+      {/* Brightest Light Columns - Inner sanctum */}
+      <LightColumns lightColor={lightColor} intensity={1.5} />
+      
+      {/* Pulsing Solar Halo */}
+      <SolarHalo radius={4.0} lightColor={lightColor} intensity={1.2} />
+      
       {/* Floor sigil */}
-      <mesh 
+      <mesh
         ref={sigilRef}
         rotation={[Math.PI / 2, 0, 0]}
         position={[0, -3, -5]}

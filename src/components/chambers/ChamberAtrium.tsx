@@ -1,5 +1,6 @@
 import OrbModel from "../hero/OrbModel";
-import { TempleColumns } from "../3d/effects/TempleColumns";
+import { LightColumns } from "../3d/effects/LightColumns";
+import { SolarHalo } from "../3d/effects/SolarHalo";
 import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberAtriumProps {
@@ -9,11 +10,14 @@ interface ChamberAtriumProps {
 const ChamberAtrium = ({ lightColor }: ChamberAtriumProps) => {
   return (
     <group>
-      {/* Central Orb */}
+      {/* Central Orb - Eye of Apollo */}
       <OrbModel rotationSpeed={0.3} lightColor={lightColor} />
       
-      {/* Roman Temple Columns - Framing layout */}
-      <TempleColumns layout="temple-framing" height={12} lightColor={lightColor} />
+      {/* Apollo's Halo - Solar Ring */}
+      <SolarHalo radius={3.5} lightColor={lightColor} intensity={1.0} />
+      
+      {/* Volumetric Light Columns */}
+      <LightColumns lightColor={lightColor} intensity={1.0} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="hero" position={[0, 3, -8]} />

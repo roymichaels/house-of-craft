@@ -31,10 +31,8 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
   const sweepLightRef = useRef<SpotLight>(null);
   const jewelLightRef = useRef<PointLight>(null);
   const burgundyRimRef = useRef<PointLight>(null);
-  const leftColumnLightRef = useRef<SpotLight>(null);
-  const rightColumnLightRef = useRef<SpotLight>(null);
-  const leftRimLightRef = useRef<PointLight>(null);
-  const rightRimLightRef = useRef<PointLight>(null);
+  const apolloKeyRef = useRef<SpotLight>(null);
+  const apolloRimRef = useRef<PointLight>(null);
 
   useEffect(() => {
     // Smoothly transition lighting based on scene mode
@@ -102,8 +100,8 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         penumbra={0.8}
       />
       
-      {/* Fill light - soft ambient (increased for fog compensation) */}
-      <ambientLight intensity={0.35} />
+      {/* Fill light - soft ambient (increased for Apollinean fog) */}
+      <ambientLight intensity={0.5} />
       
       {/* Rim light - accent separation */}
       <directionalLight
@@ -145,43 +143,24 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         distance={20}
       />
 
-      {/* Temple Column Lighting - Left Side */}
+      {/* Apollo's Key Light - Golden sunlight from above */}
       <spotLight
-        ref={leftColumnLightRef}
-        position={[-12, 6, 4]}
-        color="#D4AF37"
-        intensity={1.2}
-        angle={0.5}
-        penumbra={0.6}
-        target-position={[-10, 0, 0]}
+        ref={apolloKeyRef}
+        position={[0, 5, 5]}
+        color="#ffd966"
+        intensity={1.5}
+        angle={0.8}
+        penumbra={0.4}
+        castShadow
       />
 
-      {/* Temple Column Lighting - Right Side */}
-      <spotLight
-        ref={rightColumnLightRef}
-        position={[12, 6, 4]}
-        color="#D4AF37"
-        intensity={1.2}
-        angle={0.5}
-        penumbra={0.6}
-        target-position={[10, 0, 0]}
-      />
-
-      {/* Column Rim Lights - Bronze undertone */}
+      {/* Apollo's Rim Light - Bronze edge definition */}
       <pointLight
-        ref={leftRimLightRef}
-        position={[-11, 3, -1]}
+        ref={apolloRimRef}
+        position={[0, 0, -10]}
         color="#8B7355"
         intensity={0.8}
-        distance={8}
-      />
-
-      <pointLight
-        ref={rightRimLightRef}
-        position={[11, 3, -1]}
-        color="#8B7355"
-        intensity={0.8}
-        distance={8}
+        distance={15}
       />
 
       {/* Native Three.js fog for atmospheric depth */}

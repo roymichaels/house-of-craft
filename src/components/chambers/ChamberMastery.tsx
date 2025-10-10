@@ -3,7 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
 import { relics } from "@/data/relics";
-import { TempleColumns } from "../3d/effects/TempleColumns";
+import { LightColumns } from "../3d/effects/LightColumns";
+import { SolarHalo } from "../3d/effects/SolarHalo";
 import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberMasteryProps {
@@ -31,8 +32,11 @@ const ChamberMastery = ({ lightColor, accentColor }: ChamberMasteryProps) => {
 
   return (
     <group ref={groupRef}>
-      {/* Roman Temple Columns - Circular layout for orbital relics */}
-      <TempleColumns layout="circular" count={6} radius={10} height={11} lightColor={lightColor} />
+      {/* Volumetric Light Columns - Subtle presence */}
+      <LightColumns lightColor={lightColor} intensity={0.6} />
+      
+      {/* Solar Halo - Larger radius to not interfere with relics */}
+      <SolarHalo radius={4.5} lightColor={lightColor} intensity={0.8} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="mindcraft" position={[0, 3.5, -4]} />
