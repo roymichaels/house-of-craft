@@ -22,14 +22,16 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-background">
+    <div className="relative h-screen w-full overflow-hidden">
       <Navigation />
       
-      {/* Vanilla Three.js container */}
-      <div ref={containerRef} className="fixed inset-0 z-0" />
+      {/* Vanilla Three.js container - behind everything */}
+      <div ref={containerRef} className="absolute inset-0" />
 
-      <div className="scene-vignette" />
+      {/* Vignette effect */}
+      <div className="scene-vignette pointer-events-none" />
       
+      {/* Overlay content - on top with transparent background */}
       <HeroOverlay 
         title={data?.title || "APOLLO"}
         subtitle={data?.subtitle || "Reliquary of Distinction"}
