@@ -75,51 +75,63 @@ const HeroOverlay = ({
         </p>
       </motion.div>
 
-      {/* The Summoning CTA - appears at 7-9s */}
+      {/* The Summoning CTA - Ceremonial Button - appears at 7-9s */}
       <motion.div
-        className="absolute bottom-[15vh] md:bottom-[20vh] left-0 right-0 z-30 flex flex-col items-center gap-6 px-6"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 7, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute bottom-[15vh] md:bottom-[20vh] left-0 right-0 z-30 flex flex-col items-center gap-4 px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 7, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
-        {/* Sacred Sigil Button */}
-        <button
-          onClick={() => openModal('collections')}
-          className="group relative w-24 h-24 rounded-full 
-                     border-2 border-primary/40 backdrop-blur-sm
-                     hover:border-primary/80 transition-all duration-700
-                     hover:shadow-[0_0_40px_rgba(196,166,97,0.4)]
-                     focus:outline-none focus:ring-2 focus:ring-primary/50"
-        >
-          {/* Rotating outer ring */}
-          <span className="absolute inset-0 rounded-full border border-primary/20 
-                           animate-[spin_20s_linear_infinite]" />
-          
-          {/* Inner sigil */}
-          <span className="absolute inset-0 flex items-center justify-center">
-            <span className="font-ancient text-primary text-2xl">☉</span>
-          </span>
-          
-          {/* Hover glow */}
-          <span className="absolute inset-0 rounded-full bg-primary/5 
-                           opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        </button>
+        {/* Golden Ceremonial Entry Button */}
+        <div className="relative group">
+          {/* Initial pulse ring (appears once at 8s) */}
+          <motion.div
+            className="absolute inset-0 rounded-md border-2 border-primary/60 pointer-events-none"
+            initial={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ delay: 8, duration: 1.5, ease: "easeOut" }}
+          />
+
+          <motion.button
+            onClick={() => openModal('collections')}
+            className="
+              relative px-10 py-4 rounded-md
+              bg-gradient-to-r from-[#D4AF37] to-[#F9E79F] text-black
+              font-ancient text-sm md:text-base tracking-[0.15em] font-semibold
+              shadow-[0_0_20px_rgba(212,175,55,0.3)]
+              hover:bg-black hover:text-[#D4AF37]
+              hover:shadow-[0_0_40px_rgba(212,175,55,0.6)]
+              transition-all duration-500 ease-out
+              focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2
+              focus:ring-offset-background
+              
+              before:absolute before:inset-0 before:rounded-md 
+              before:border-2 before:border-primary/20
+              before:scale-100 before:opacity-0
+              hover:before:scale-125 hover:before:opacity-100
+              before:transition-all before:duration-700
+              before:pointer-events-none
+            "
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 7.5, duration: 0.6, ease: "easeOut" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            ENTER THE ORDER
+          </motion.button>
+        </div>
         
-        {/* CTA Text */}
-        <motion.div 
-          className="text-center"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+        {/* Subtitle */}
+        <motion.p 
+          className="text-xs md:text-sm text-muted-foreground/60 tracking-wider italic"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 8, duration: 1 }}
         >
-          <p className="font-ancient text-primary text-base tracking-[0.2em] mb-1">
-            ENTER THE ORDER
-          </p>
-          <p className="text-xs text-muted-foreground/60 tracking-wider">
-            The Vault of Instruments Awaits
-          </p>
-        </motion.div>
+          The Vault of Instruments Awaits
+        </motion.p>
       </motion.div>
 
       {/* Main Title - Scroll-triggered reveal (only after 60% scroll) */}
