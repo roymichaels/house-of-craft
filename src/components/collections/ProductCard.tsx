@@ -12,6 +12,8 @@ interface Product {
   description: string;
   price: string | number;
   image: string;
+  images?: string[];
+  videos?: string[];
 }
 
 interface ProductCardProps {
@@ -28,11 +30,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : product.price;
 
   const handleCardClick = () => {
+    // Build media array from images and videos
+    const mediaItems = [
+      ...(product.images?.map(img => ({ type: 'image' as const, url: img })) || 
+         [{ type: 'image' as const, url: product.image }]),
+      ...(product.videos?.map(vid => ({ type: 'video' as const, url: vid })) || [])
+    ];
+
     openModal('object', {
       title: product.name,
       category: product.category,
       description: product.description,
       image: product.image,
+      media: mediaItems,
       story: `${product.name} - ${product.description}`,
       price: displayPrice
     });

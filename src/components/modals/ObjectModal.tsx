@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, ArrowLeft } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useEffect } from "react";
 import { OrderLanguage } from "@/lib/orderLanguage";
 import { latin } from "@/lib/brandLanguage";
+import { ProductMediaGallery } from "./ProductMediaGallery";
 
 const ObjectModal = () => {
   const { activeModal, objectData, closeModal, openModal } = useModalStore();
@@ -27,6 +28,9 @@ const ObjectModal = () => {
   }, [isOpen, closeModal]);
 
   if (!objectData) return null;
+
+  // Support both old (image) and new (media) format
+  const mediaItems = objectData.media || (objectData.image ? [{ type: 'image' as const, url: objectData.image }] : []);
 
   return (
     <AnimatePresence>
@@ -101,6 +105,20 @@ const ObjectModal = () => {
               ease: [0.25, 0.1, 0.25, 1] 
             }}
           >
+            {/* Go Back Button */}
+            <motion.button
+              onClick={closeModal}
+              className="absolute top-6 left-6 z-20 p-2 rounded-full
+                         bg-black/40 backdrop-blur-sm border border-ancient-gold/20
+                         text-ancient-gold/60 hover:text-ancient-gold hover:bg-ancient-gold/10
+                         transition-all duration-300 group"
+              whileHover={{ scale: 1.05, x: -2 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </motion.button>
+
             {/* Close Button */}
             <motion.button
               onClick={closeModal}
@@ -115,31 +133,9 @@ const ObjectModal = () => {
               <X className="h-5 w-5" />
             </motion.button>
 
-            {/* Left Panel - Image Viewer */}
-            <div className="relative h-[50vh] md:h-full flex items-center justify-center rounded-lg overflow-hidden 
-                            bg-gradient-to-br from-black/80 to-obsidian-core/90 
-                            border border-ancient-gold/20 group">
-              
-              {/* Cinematic lighting overlay */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-ancient-gold/5 to-transparent 
-                              pointer-events-none z-10" />
-              
-              <TransformWrapper
-                initialScale={1}
-                minScale={1}
-                maxScale={3}
-                centerOnInit
-              >
-                <TransformComponent>
-                  <motion.img
-                    src={objectData.image}
-                    alt={objectData.title}
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 4, ease: "easeOut" }}
-                  />
-                </TransformComponent>
-              </TransformWrapper>
+            {/* Left Panel - Media Gallery */}
+            <div className="relative h-[50vh] md:h-full">
+              <ProductMediaGallery media={mediaItems} title={objectData.title} />
             </div>
 
             {/* Right Panel - Story & Details */}

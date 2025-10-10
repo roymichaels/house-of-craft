@@ -2,11 +2,18 @@ import { create } from 'zustand';
 
 export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge' | 'email-capture' | 'cart';
 
+export interface MediaItem {
+  type: 'image' | 'video';
+  url: string;
+  thumbnail?: string;
+}
+
 interface ObjectData {
   title: string;
   category: string;
   description: string;
-  image: string;
+  image?: string; // Kept for backward compatibility
+  media?: MediaItem[];
   story?: string;
   price?: string;
 }
