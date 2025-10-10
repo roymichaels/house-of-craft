@@ -47,7 +47,7 @@ const VoiceOfHouse = () => {
           <motion.div
             key={currentWordIndex}
             initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 0.5, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 3 }}
             className="font-ancient text-6xl md:text-8xl text-ancient-gold tracking-wider"
