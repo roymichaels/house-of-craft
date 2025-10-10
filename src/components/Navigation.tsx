@@ -36,11 +36,11 @@ const Navigation = () => {
             </Link>
 
             {/* Brand Title - Right next to logo */}
-            <div className="hidden sm:flex flex-col gap-0.5">
-              <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
+            <div className="flex flex-col gap-0.5">
+              <h2 className="font-ancient text-base sm:text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
                 Apollon
               </h2>
-              <p className="imperial-caps text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
+              <p className="imperial-caps text-[8px] sm:text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
                 The Order of Light
               </p>
             </div>
@@ -48,8 +48,8 @@ const Navigation = () => {
 
           {/* Menu Button */}
           <motion.button
-            onClick={() => setIsDrawerOpen(true)}
-            className="w-9 h-9 md:w-10 md:h-10 rounded-full 
+            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+            className="w-9 h-9 md:w-10 md:h-10 rounded-full
                        border border-ancient-gold/25 bg-transparent
                        flex flex-col items-center justify-center gap-[3px]
                        hover:shadow-[0_0_8px_rgba(212,175,55,0.4)]
