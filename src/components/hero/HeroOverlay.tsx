@@ -49,7 +49,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
 
           {/* Three Actions - Enhanced with icons and glow */}
           <motion.div
-          className="flex flex-col md:flex-row items-center gap-4 md:gap-6 pointer-events-auto"
+          className="flex flex-col md:flex-row items-center gap-2 md:gap-6 pointer-events-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
