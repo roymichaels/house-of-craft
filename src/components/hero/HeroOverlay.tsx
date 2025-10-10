@@ -11,8 +11,8 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
   const { openModal } = useModalStore();
 
   return (
-    <div className="absolute inset-0 z-20 flex flex-col text-center px-8 h-full pointer-events-none">
-      <div className="flex flex-col h-full justify-between pt-8 pb-0">
+    <div className="absolute inset-0 z-20 flex flex-col text-center px-8 h-full pointer-events-none bg-transparent">
+      <div className="flex flex-col h-full justify-between pt-8 pb-0 bg-transparent">
         {/* APOLLO Title - Top */}
         <motion.h1
           className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)] pt-12"
