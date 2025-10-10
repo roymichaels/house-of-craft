@@ -64,7 +64,7 @@ const HeroOverlay = ({
 
       {/* Tagline - appears at 5-7s in lower third */}
       <motion.div
-        className="absolute bottom-32 left-0 right-0 z-10 text-center px-6"
+        className="absolute bottom-[25vh] md:bottom-[30vh] left-0 right-0 z-20 text-center px-6"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 0.6, y: 0 }}
         transition={{ delay: 5, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
@@ -109,7 +109,7 @@ const HeroOverlay = ({
 
       {/* CTA - appears later */}
       <motion.div
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10"
+        className="absolute bottom-[16vh] md:bottom-[18vh] left-1/2 -translate-x-1/2 z-20"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 7, duration: 1.2, ease: "easeOut" }}
