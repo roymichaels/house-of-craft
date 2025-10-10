@@ -1,14 +1,15 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
-// ============================================================================
-// EXACT RECREATION OF ORIGINAL MAIN.JS SOLAR SYSTEM
-// ============================================================================
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
 let controls: OrbitControls;
+let composer: EffectComposer;
 let animationId: number;
 let isInitialized = false;
 
@@ -67,12 +68,13 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000814);
+  scene.fog = new THREE.Fog(0x000814, 180, 250);
   
   // ============================================================================
   // CAMERA
   // ============================================================================
   camera = new THREE.PerspectiveCamera(
-    45,
+    75,
     container.clientWidth / container.clientHeight,
     0.1,
     1000
@@ -89,26 +91,57 @@ export function initSolarSystem(container: HTMLElement) {
   });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
+  
+  // ============================================================================
+  // POST-PROCESSING
+  // ============================================================================
+  composer = new EffectComposer(renderer);
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+  
+  const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(container.clientWidth, container.clientHeight),
+    1.5,  // strength
+    0.4,  // radius
+    0.85  // threshold
+  );
+  composer.addPass(bloomPass);
+  
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
   
   // ============================================================================
   // ORBIT CONTROLS
   // ============================================================================
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.05;
+  controls.dampingFactor = 0.08;
+  controls.rotateSpeed = 0.3;
+  controls.zoomSpeed = 0.8;
+  controls.panSpeed = 0.5;
   controls.minDistance = 15;
   controls.maxDistance = 200;
   
   // ============================================================================
   // LIGHTING
   // ============================================================================
-  const ambientLight = new THREE.AmbientLight(0x333333, 1.0);
+  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
   scene.add(ambientLight);
   
-  const sunLight = new THREE.PointLight(0xFFE4B5, 8.0, 800);
+  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 1.0, 1.0), 10.0, 1000, 0.5);
   sunLight.position.set(0, 0, 0);
+  sunLight.castShadow = false;
   scene.add(sunLight);
+  
+  const fillLight = new THREE.PointLight(new THREE.Color(0.2, 0.4, 1.0), 2.0, 100, 1);
+  fillLight.position.set(50, 50, -100);
+  scene.add(fillLight);
   
   // ============================================================================
   // STARFIELD
@@ -116,47 +149,15 @@ export function initSolarSystem(container: HTMLElement) {
   createStarfield();
   
   // ============================================================================
-  // SUN - Enhanced with multi-layer glow
+  // SUN
   // ============================================================================
-  const sunGeometry = new THREE.SphereGeometry(10, 64, 64);
-  const sunMaterial = new THREE.MeshStandardMaterial({
-    color: 0xFDB813,
-    emissive: 0xFFA500,
-    emissiveIntensity: 2.0,
+  const sunGeometry = new THREE.SphereGeometry(5, 64, 64);
+  const sunMaterial = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(1.5, 1.2, 0.8),
     toneMapped: false
   });
   const sun = new THREE.Mesh(sunGeometry, sunMaterial);
   scene.add(sun);
-  
-  // Multi-layer sun glow effect
-  const glowLayers = [
-    { radius: 12, opacity: 0.4, color: 0xFFA500 },
-    { radius: 15, opacity: 0.25, color: 0xFFB520 },
-    { radius: 20, opacity: 0.15, color: 0xFFC649 }
-  ];
-  
-  glowLayers.forEach(layer => {
-    const glowGeometry = new THREE.SphereGeometry(layer.radius, 32, 32);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-      color: layer.color,
-      transparent: true,
-      opacity: layer.opacity,
-      side: THREE.BackSide
-    });
-    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-    scene.add(glow);
-  });
-  
-  // Nebula atmospheric effect around sun
-  const nebulaGeometry = new THREE.SphereGeometry(35, 32, 32);
-  const nebulaMaterial = new THREE.MeshBasicMaterial({
-    color: 0xFF8C00,
-    transparent: true,
-    opacity: 0.08,
-    side: THREE.BackSide
-  });
-  const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
-  scene.add(nebula);
   
   // ============================================================================
   // PLANETS
@@ -258,7 +259,7 @@ export function initSolarSystem(container: HTMLElement) {
     });
     
     controls.update();
-    renderer.render(scene, camera);
+    composer.render();
   }
   
   animate();
@@ -270,6 +271,7 @@ export function initSolarSystem(container: HTMLElement) {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
+    composer.setSize(container.clientWidth, container.clientHeight);
   };
   
   window.addEventListener('resize', handleResize);
@@ -387,6 +389,10 @@ export function cleanupSolarSystem() {
   
   while(scene.children.length > 0) {
     scene.remove(scene.children[0]);
+  }
+  
+  if (composer) {
+    composer.dispose();
   }
   
   if (renderer) {
