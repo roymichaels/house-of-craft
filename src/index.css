@@ -6,6 +6,16 @@
 All colors MUST be HSL.
 */
 
+/* Ancient Font - Brand Wordmark */
+@font-face {
+  font-family: 'Ancient';
+  src: url('/fonts/ancient.woff2') format('woff2'),
+       url('/fonts/ancient.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 27 10% 5%;
@@ -17,7 +27,7 @@ All colors MUST be HSL.
     --popover: 27 8% 7%;
     --popover-foreground: 40 15% 93%;
 
-    --primary: 40 40% 60%;
+    --primary: 43 74% 66%;
     --primary-foreground: 27 10% 5%;
 
     --secondary: 40 20% 35%;
@@ -26,7 +36,7 @@ All colors MUST be HSL.
     --muted: 27 8% 15%;
     --muted-foreground: 40 10% 55%;
 
-    --accent: 40 40% 60%;
+    --accent: 43 74% 66%;
     --accent-foreground: 27 10% 5%;
 
     --destructive: 0 70% 60%;
@@ -38,8 +48,11 @@ All colors MUST be HSL.
 
     --radius: 0.375rem;
     
-    /* Luxury maison tokens */
-    --gold: 40 40% 60%;
+    /* Modern Relic brand tokens */
+    --ancient-gold: 43 74% 66%;
+    --ancient-silver: 0 0% 75%;
+    --ancient-patina: 40 25% 45%;
+    --gold: 43 74% 66%;
     --gold-dark: 40 20% 35%;
     --brass: 40 25% 45%;
     
@@ -100,9 +113,14 @@ All colors MUST be HSL.
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Libre Caslon Text', 'Georgia', serif;
+    font-family: 'Playfair Display', 'Georgia', serif;
     font-weight: 400;
     letter-spacing: -0.02em;
+  }
+  
+  .font-ancient {
+    font-family: 'Ancient', serif;
+    letter-spacing: 0.05em;
   }
 }
 

@@ -26,9 +26,9 @@ const Navigation = () => {
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="text-xl font-serif tracking-tight transition-opacity hover:opacity-70">
-            THE HOUSE
+          {/* Logo - Ancient monogram */}
+          <Link to="/" className="text-2xl font-ancient tracking-wider text-ancient-gold transition-opacity hover:opacity-70">
+            TH
           </Link>
 
           {/* Desktop Navigation */}

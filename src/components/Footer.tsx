@@ -30,7 +30,10 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-serif mb-4">THE HOUSE</h3>
+            <h3 className="text-3xl font-ancient tracking-wider text-ancient-gold mb-2">THE HOUSE</h3>
+            <p className="text-xs font-sans tracking-widest text-ancient-silver/50 uppercase mb-4">
+              by Roy Michaels
+            </p>
             <p className="text-sm text-muted-foreground mb-6 text-balance">
               A luxury maison for discerning collectors of timepieces, tailoring, and timeless objects.
             </p>

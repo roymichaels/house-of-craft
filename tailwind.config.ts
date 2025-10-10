@@ -57,6 +57,9 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "ancient-gold": "hsl(var(--ancient-gold))",
+        "ancient-silver": "hsl(var(--ancient-silver))",
+        "ancient-patina": "hsl(var(--ancient-patina))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -64,7 +67,8 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        serif: ['Libre Caslon Text', 'Georgia', 'serif'],
+        ancient: ['Ancient', 'serif'],
+        serif: ['Playfair Display', 'Georgia', 'serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['IBM Plex Mono', 'Menlo', 'monospace'],
       },
