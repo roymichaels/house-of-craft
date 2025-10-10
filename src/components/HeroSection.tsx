@@ -22,7 +22,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-[#000814]">
+    <div className="relative h-screen w-full overflow-hidden bg-[#0A0404]">
       {/* Navigation - Top layer */}
       <div className="relative z-30">
         <Navigation />

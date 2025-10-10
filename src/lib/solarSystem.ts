@@ -75,8 +75,8 @@ export function initSolarSystem(container: HTMLElement) {
   // SCENE
   // ============================================================================
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000814);
-  scene.fog = new THREE.Fog(0x000814, 180, 250);
+  scene.background = new THREE.Color(0x0A0404);
+  scene.fog = new THREE.Fog(0x1A0A06, 180, 250);
   
   // ============================================================================
   // CAMERA
@@ -115,9 +115,9 @@ export function initSolarSystem(container: HTMLElement) {
   
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.2,  // strength - increased for more dramatic glow
-    0.8,  // radius - increased for wider bloom
-    0.1   // threshold - slightly higher to bloom only bright areas
+    2.0,  // strength - dramatically increased for intense glow
+    1.2,  // radius - much wider bloom for fiery effect
+    0.05  // threshold - lower to bloom more areas
   );
   composer.addPass(bloomPass);
   
@@ -142,12 +142,12 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
   scene.add(ambientLight);
   
-  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 1.0, 1.0), 10.0, 1000, 0.5);
+  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 0.4, 0.15), 15.0, 1000, 0.4);
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = false;
   scene.add(sunLight);
   
-  const fillLight = new THREE.PointLight(new THREE.Color(0.2, 0.4, 1.0), 2.0, 100, 1);
+  const fillLight = new THREE.PointLight(new THREE.Color(0.8, 0.2, 0.1), 3.0, 100, 1);
   fillLight.position.set(50, 50, -100);
   scene.add(fillLight);
   
@@ -166,10 +166,10 @@ export function initSolarSystem(container: HTMLElement) {
     uniforms: {
       time: { value: 0 },
       colorWhiteHot: { value: new THREE.Color(0xFFFFFF) },
-      colorHot: { value: new THREE.Color(0xFFAA55) },
-      colorMid: { value: new THREE.Color(0xFF5522) },
-      colorCool: { value: new THREE.Color(0xCC2200) },
-      colorDark: { value: new THREE.Color(0x330000) }
+      colorHot: { value: new THREE.Color(0xFFAA33) },
+      colorMid: { value: new THREE.Color(0xFF4400) },
+      colorCool: { value: new THREE.Color(0xBB1100) },
+      colorDark: { value: new THREE.Color(0x220000) }
     },
     vertexShader: `
       uniform float time;
@@ -199,12 +199,13 @@ export function initSolarSystem(container: HTMLElement) {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
 
-        // Enhanced displacement for MORE dramatic lava turbulence
+        // EXTREME displacement for violent apocalyptic turbulence
         vec3 pos = position;
-        float disp1 = fbm(position * 2.5 + time * 0.15);
-        float disp2 = fbm(position * 4.0 - time * 0.2);
-        float disp3 = fbm(position * 1.2 + time * 0.08);
-        float displacement = (disp1 * 0.4 + disp2 * 0.25 + disp3 * 0.2) * 1.2;
+        float disp1 = fbm(position * 3.0 + time * 0.25);
+        float disp2 = fbm(position * 5.0 - time * 0.35);
+        float disp3 = fbm(position * 1.8 + time * 0.15);
+        float disp4 = fbm(position * 7.0 + time * 0.4);
+        float displacement = (disp1 * 0.35 + disp2 * 0.3 + disp3 * 0.2 + disp4 * 0.15) * 1.8;
         pos += normal * displacement;
 
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -225,11 +226,11 @@ export function initSolarSystem(container: HTMLElement) {
         return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
       }
 
-      // Fractal Brownian Motion for complex patterns
+      // Fractal Brownian Motion for complex patterns - MORE OCTAVES
       float fbm(vec3 p) {
         float value = 0.0;
         float amplitude = 0.5;
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 6; i++) {
           value += amplitude * noise(p);
           p *= 2.3;
           amplitude *= 0.5;
@@ -238,73 +239,76 @@ export function initSolarSystem(container: HTMLElement) {
       }
 
       void main() {
-        // Stronger fresnel effect for dramatic edge glow
+        // INTENSE fresnel effect for apocalyptic edge glow
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.5);
+        float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.0);
 
-        // Create flowing lava patterns with MORE frequencies for detail
-        vec3 flowDir1 = vPosition + vec3(time * 0.12, time * 0.08, 0.0);
-        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.15, time * 0.1);
-        vec3 flowDir3 = vPosition + vec3(time * 0.05, -time * 0.06, time * 0.07);
+        // CHAOTIC flowing lava patterns with EXTREME frequencies
+        vec3 flowDir1 = vPosition + vec3(time * 0.18, time * 0.12, 0.0);
+        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.22, time * 0.15);
+        vec3 flowDir3 = vPosition + vec3(time * 0.08, -time * 0.09, time * 0.11);
+        vec3 flowDir4 = vPosition + vec3(time * 0.25, time * 0.05, -time * 0.08);
 
-        float lava1 = fbm(flowDir1 * 2.2);
-        float lava2 = fbm(flowDir2 * 3.5);
-        float lava3 = fbm(flowDir3 * 1.5);
-        float lava4 = noise(vPosition * 8.0 + time * 0.4);
+        float lava1 = fbm(flowDir1 * 2.8);
+        float lava2 = fbm(flowDir2 * 4.2);
+        float lava3 = fbm(flowDir3 * 2.0);
+        float lava4 = noise(vPosition * 10.0 + time * 0.6);
+        float lava5 = fbm(flowDir4 * 3.5);
 
-        // Combine patterns for MORE turbulent lava effect
-        float noiseValue = lava1 * 0.4 + lava2 * 0.3 + lava3 * 0.2 + lava4 * 0.1;
+        // Combine patterns for EXTREME turbulent apocalyptic effect
+        float noiseValue = lava1 * 0.35 + lava2 * 0.25 + lava3 * 0.2 + lava4 * 0.12 + lava5 * 0.08;
 
-        // Add MORE dramatic swirling veins
-        float veins = abs(sin(lava1 * 15.0 + time * 0.7));
-        float veins2 = abs(cos(lava2 * 12.0 - time * 0.5));
-        noiseValue = mix(noiseValue, (veins + veins2) * 0.5, 0.3);
+        // Add EXTREME dramatic swirling veins and flame streaks
+        float veins = abs(sin(lava1 * 18.0 + time * 1.0));
+        float veins2 = abs(cos(lava2 * 15.0 - time * 0.8));
+        float veins3 = abs(sin(lava3 * 20.0 + time * 0.6));
+        noiseValue = mix(noiseValue, (veins + veins2 + veins3) * 0.4, 0.4);
 
-        // Enhance contrast for MUCH more dramatic effect
-        noiseValue = pow(noiseValue, 0.6);
-        noiseValue = smoothstep(0.05, 0.95, noiseValue);
+        // MAXIMUM contrast for apocalyptic effect
+        noiseValue = pow(noiseValue, 0.5);
+        noiseValue = smoothstep(0.02, 0.98, noiseValue);
 
-        // Create more dramatic dark spots (cooler lava crust)
-        float spots = fbm(vPosition * 4.0 + time * 0.03);
-        float darkSpots = smoothstep(0.65, 0.75, spots);
-        noiseValue = mix(noiseValue * 0.2, noiseValue, darkSpots);
+        // Create DEEP dramatic dark spots (cooler lava crust)
+        float spots = fbm(vPosition * 5.0 + time * 0.04);
+        float darkSpots = smoothstep(0.7, 0.8, spots);
+        noiseValue = mix(noiseValue * 0.15, noiseValue, darkSpots);
 
-        // Color mapping with MORE variation and white-hot peaks
+        // APOCALYPTIC color mapping with EXTREME heat variation
         vec3 color;
-        if (noiseValue < 0.15) {
+        if (noiseValue < 0.12) {
           color = colorDark;
-        } else if (noiseValue < 0.3) {
-          color = mix(colorDark, colorCool, (noiseValue - 0.15) / 0.15);
-        } else if (noiseValue < 0.5) {
-          color = mix(colorCool, colorMid, (noiseValue - 0.3) / 0.2);
-        } else if (noiseValue < 0.7) {
-          color = mix(colorMid, colorHot, (noiseValue - 0.5) / 0.2);
-        } else if (noiseValue < 0.85) {
-          color = mix(colorHot, colorWhiteHot, (noiseValue - 0.7) / 0.15);
+        } else if (noiseValue < 0.25) {
+          color = mix(colorDark, colorCool, (noiseValue - 0.12) / 0.13);
+        } else if (noiseValue < 0.45) {
+          color = mix(colorCool, colorMid, (noiseValue - 0.25) / 0.2);
+        } else if (noiseValue < 0.65) {
+          color = mix(colorMid, colorHot, (noiseValue - 0.45) / 0.2);
+        } else if (noiseValue < 0.82) {
+          color = mix(colorHot, colorWhiteHot, (noiseValue - 0.65) / 0.17);
         } else {
-          color = colorWhiteHot;
+          color = colorWhiteHot * 1.2;
         }
 
-        // Add BRIGHTER veins of flowing lava
-        float brightVeins = smoothstep(0.8, 0.95, noiseValue);
-        color = mix(color, colorWhiteHot * 1.5, brightVeins);
+        // Add BLAZING white-hot veins of flowing lava
+        float brightVeins = smoothstep(0.75, 0.92, noiseValue);
+        color = mix(color, colorWhiteHot * 2.0, brightVeins * 0.8);
 
-        // More dramatic fresnel glow
-        color = mix(color, colorHot * 1.2, fresnel * 0.6);
+        // EXTREME dramatic fresnel glow for fiery atmosphere
+        color = mix(color, colorHot * 1.5, fresnel * 0.75);
 
-        // Add surface texture detail
-        float detail = noise(vPosition * 20.0 + time * 0.1) * 0.1;
-        color += detail;
+        // Add intense surface texture detail
+        float detail = noise(vPosition * 25.0 + time * 0.15) * 0.12;
+        color += detail * vec3(1.2, 0.8, 0.6);
 
         gl_FragColor = vec4(color, 1.0);
       }
     `
   };
   
-  // Core - BRIGHTER center
+  // Core - BLAZING WHITE-HOT center
   const coreGeometry = new THREE.SphereGeometry(2.5, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(3.0, 2.2, 1.8),
+    color: new THREE.Color(5.0, 3.5, 2.5),
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
@@ -320,36 +324,36 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Inner Corona - bright orange glow
+  // Inner Corona - INTENSE red-orange flame glow
   const innerCoronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
   const innerCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(2.0, 0.8, 0.3),
+    color: new THREE.Color(3.0, 1.2, 0.3),
     transparent: true,
-    opacity: 0.4,
+    opacity: 0.55,
     side: THREE.BackSide,
     toneMapped: false
   });
   const innerCorona = new THREE.Mesh(innerCoronaGeometry, innerCoronaMaterial);
   sunGroup.add(innerCorona);
 
-  // Outer Corona - larger atmospheric glow
+  // Outer Corona - DRAMATIC fiery atmospheric glow
   const outerCoronaGeometry = new THREE.SphereGeometry(8.5, 64, 64);
   const outerCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.5, 0.5, 0.2),
+    color: new THREE.Color(2.5, 0.8, 0.2),
     transparent: true,
-    opacity: 0.25,
+    opacity: 0.38,
     side: THREE.BackSide,
     toneMapped: false
   });
   const outerCorona = new THREE.Mesh(outerCoronaGeometry, outerCoronaMaterial);
   sunGroup.add(outerCorona);
 
-  // Far Corona - subtle halo
+  // Far Corona - DEEP crimson apocalyptic halo
   const farCoronaGeometry = new THREE.SphereGeometry(11.0, 64, 64);
   const farCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.0, 0.3, 0.15),
+    color: new THREE.Color(1.8, 0.4, 0.15),
     transparent: true,
-    opacity: 0.15,
+    opacity: 0.25,
     side: THREE.BackSide,
     toneMapped: false
   });
@@ -451,39 +455,39 @@ export function initSolarSystem(container: HTMLElement) {
     
     const time = performance.now() * 0.001; // Time in seconds
     
-    // Animate sun - pulsating lava effect with dramatic coronas
+    // Animate sun - APOCALYPTIC pulsating lava effect with EXTREME coronas
     if (sunLayers) {
       // Update shader time uniform
       sunLayers.material.uniforms.time.value = time;
 
-      // More dramatic pulsating scale - breathing effect
-      const pulseScale = 1.0 + Math.sin(time * 0.5) * 0.03 + Math.sin(time * 1.2) * 0.015;
-      sunLayers.core.scale.setScalar(pulseScale * 1.02);
+      // VIOLENT pulsating scale - threatening breathing effect
+      const pulseScale = 1.0 + Math.sin(time * 0.7) * 0.05 + Math.sin(time * 1.5) * 0.025 + Math.sin(time * 2.3) * 0.015;
+      sunLayers.core.scale.setScalar(pulseScale * 1.03);
       sunLayers.surface.scale.setScalar(pulseScale);
 
-      // Animate coronas with different pulse rates for dynamic effect
-      const coronaPulse1 = 1.0 + Math.sin(time * 0.6) * 0.08;
-      const coronaPulse2 = 1.0 + Math.sin(time * 0.4 + 1.0) * 0.1;
-      const coronaPulse3 = 1.0 + Math.sin(time * 0.3 + 2.0) * 0.12;
+      // Animate coronas with INTENSE pulse rates for chaotic effect
+      const coronaPulse1 = 1.0 + Math.sin(time * 0.8) * 0.12 + Math.sin(time * 1.6) * 0.05;
+      const coronaPulse2 = 1.0 + Math.sin(time * 0.6 + 1.0) * 0.15 + Math.sin(time * 1.3) * 0.06;
+      const coronaPulse3 = 1.0 + Math.sin(time * 0.4 + 2.0) * 0.18 + Math.sin(time * 1.0) * 0.07;
 
       sunLayers.innerCorona.scale.setScalar(coronaPulse1);
       sunLayers.outerCorona.scale.setScalar(coronaPulse2);
       sunLayers.farCorona.scale.setScalar(coronaPulse3);
 
-      // Vary corona opacity for flickering effect
+      // Vary corona opacity for INTENSE flickering effect
       if (sunLayers.innerCorona.material) {
-        sunLayers.innerCorona.material.opacity = 0.4 + Math.sin(time * 0.8) * 0.15;
+        sunLayers.innerCorona.material.opacity = 0.55 + Math.sin(time * 1.2) * 0.2 + Math.sin(time * 2.5) * 0.08;
       }
       if (sunLayers.outerCorona.material) {
-        sunLayers.outerCorona.material.opacity = 0.25 + Math.sin(time * 0.6 + 1.5) * 0.1;
+        sunLayers.outerCorona.material.opacity = 0.38 + Math.sin(time * 0.9 + 1.5) * 0.15 + Math.sin(time * 2.0) * 0.06;
       }
       if (sunLayers.farCorona.material) {
-        sunLayers.farCorona.material.opacity = 0.15 + Math.sin(time * 0.5 + 3.0) * 0.08;
+        sunLayers.farCorona.material.opacity = 0.25 + Math.sin(time * 0.7 + 3.0) * 0.12 + Math.sin(time * 1.8) * 0.05;
       }
 
-      // Faster rotation for more active lava flow
-      sunLayers.surface.rotation.y += 0.0012;
-      sunLayers.surface.rotation.x += 0.0003;
+      // MUCH faster rotation for violent lava flow
+      sunLayers.surface.rotation.y += 0.002;
+      sunLayers.surface.rotation.x += 0.0005;
     }
     
     // Update planets

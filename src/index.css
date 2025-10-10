@@ -147,7 +147,7 @@ All colors MUST be HSL.
 
   body {
     @apply text-foreground;
-    background: #000814;
+    background: #0A0404;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -316,7 +316,7 @@ a, button {
   cursor: pointer;
 }
 
-/* Depth-based vignette for 3D scene framing */
+/* Depth-based vignette for 3D scene framing - Apocalyptic atmosphere */
 .scene-vignette {
   position: fixed;
   inset: 0;
@@ -325,9 +325,9 @@ a, button {
   background: radial-gradient(
     ellipse 80% 80% at 50% 50%,
     transparent 0%,
-    transparent 60%,
-    rgba(0, 0, 0, 0.2) 90%,
-    rgba(0, 0, 0, 0.4) 100%
+    transparent 55%,
+    rgba(20, 5, 2, 0.25) 85%,
+    rgba(10, 4, 4, 0.5) 100%
   );
 }
 }
