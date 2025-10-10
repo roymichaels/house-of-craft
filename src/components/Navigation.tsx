@@ -38,12 +38,12 @@ const Navigation = () => {
             {/* Gradient Divider */}
             <div className="hidden sm:block w-12 md:w-14 h-6 rounded-sm bg-gradient-to-r from-ancient-gold/50 to-transparent shrink-0" />
 
-            {/* Brand Title */}
-            <div className="hidden sm:flex flex-col gap-0">
-              <h1 className="font-sub-header text-base md:text-lg text-ancient-gold tracking-wider leading-none m-0">
+            {/* Brand Title - Using exact HeroLogo styling */}
+            <div className="hidden sm:flex flex-col gap-0.5">
+              <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
                 APOLLON
-              </h1>
-              <p className="font-serif text-[0.65rem] text-ancient-gold/70 tracking-[0.15em] uppercase leading-tight m-0 mt-0.5">
+              </h2>
+              <p className="imperial-caps text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
                 The Order of Light
               </p>
             </div>

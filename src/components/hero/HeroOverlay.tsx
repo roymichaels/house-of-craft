@@ -59,8 +59,6 @@ const HeroOverlay = ({
 
   return (
     <>
-      {/* Hero Logo */}
-      <HeroLogo logoText={logoText} show={showLogo} />
 
       {/* Tagline - appears at 5-7s in lower third */}
       <motion.div
