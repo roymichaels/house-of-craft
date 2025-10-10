@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Mesh, Group, Vector2 } from "three";
 
@@ -23,17 +23,19 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
   const handlePointerDown = (e: any) => {
     e.stopPropagation();
     setIsDragging(true);
-    setPreviousMouse(new Vector2(e.clientX || e.touches?.[0]?.clientX, e.clientY || e.touches?.[0]?.clientY));
+    const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+    const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
+    setPreviousMouse(new Vector2(clientX, clientY));
   };
 
-  const handlePointerMove = (e: any) => {
+  const handlePointerMove = (e: PointerEvent | TouchEvent) => {
     if (!isDragging || !groupRef.current) return;
     
-    const currentX = e.clientX || e.touches?.[0]?.clientX;
-    const currentY = e.clientY || e.touches?.[0]?.clientY;
+    const clientX = (e as PointerEvent).clientX ?? (e as TouchEvent).touches?.[0]?.clientX ?? 0;
+    const clientY = (e as PointerEvent).clientY ?? (e as TouchEvent).touches?.[0]?.clientY ?? 0;
     
-    const deltaX = currentX - previousMouse.x;
-    const deltaY = currentY - previousMouse.y;
+    const deltaX = clientX - previousMouse.x;
+    const deltaY = clientY - previousMouse.y;
 
     // Update rotation velocity
     setRotationVelocity({
@@ -41,12 +43,29 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       y: deltaX * 0.01
     });
 
-    setPreviousMouse(new Vector2(currentX, currentY));
+    setPreviousMouse(new Vector2(clientX, clientY));
   };
 
   const handlePointerUp = () => {
     setIsDragging(false);
   };
+
+  // Global event listeners for drag to work on all devices
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('pointermove', handlePointerMove);
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('touchmove', handlePointerMove);
+      window.addEventListener('touchend', handlePointerUp);
+    }
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('touchmove', handlePointerMove);
+      window.removeEventListener('touchend', handlePointerUp);
+    };
+  }, [isDragging]);
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -96,9 +115,6 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
     <group 
       ref={groupRef}
       onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
     >
       {/* Central Astrolabe Core - Dark Bronze */}
       <mesh ref={orbRef} position={[0, 0, 0]} castShadow receiveShadow>
