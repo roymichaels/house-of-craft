@@ -39,7 +39,7 @@ const FeaturedCollections = () => {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <h2 className="text-4xl md:text-5xl font-serif mb-4">Our Collections</h2>
-        <p className="text-lg font-ancient-tulip text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-lg font-romania text-muted-foreground max-w-2xl mx-auto">
           Each piece tells a story of precision, artistry, and timeless design
         </p>
       </motion.div>
@@ -75,7 +75,7 @@ const FeaturedCollections = () => {
               <h3 className="text-2xl md:text-3xl font-serif mb-2 transition-all">
                 {collection.title}
               </h3>
-              <p className="font-ancient-tulip text-muted-foreground text-balance">{collection.description}</p>
+              <p className="font-romania text-muted-foreground text-balance">{collection.description}</p>
             </div>
 
             {/* Hover Border Effect */}

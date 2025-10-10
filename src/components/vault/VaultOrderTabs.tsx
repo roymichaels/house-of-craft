@@ -50,7 +50,7 @@ const VaultOrderTabs = ({ orders, activeOrder, onSelectOrder }: VaultOrderTabsPr
           </div>
 
           {/* Title */}
-          <h3 className="font-ancient-tulip text-xl md:text-2xl text-foreground mb-2 
+          <h3 className="font-romania text-xl md:text-2xl text-foreground mb-2 
                          group-hover:text-primary transition-colors">
             {order.title.replace('Order of ', '')}
           </h3>
@@ -62,7 +62,7 @@ const VaultOrderTabs = ({ orders, activeOrder, onSelectOrder }: VaultOrderTabsPr
           </p>
 
           {/* Essence */}
-          <p className="text-sm font-ancient-tulip text-muted-foreground/80 italic leading-relaxed">
+          <p className="text-sm font-romania text-muted-foreground/80 italic leading-relaxed">
             {order.essence}
           </p>
 

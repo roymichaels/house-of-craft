@@ -109,7 +109,7 @@ const Objects = () => {
                          drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]">
             INSTRUMENTS OF MASTERY
           </h2>
-          <p className="text-base md:text-lg text-foreground/60 max-w-2xl mx-auto font-ancient-tulip italic">
+          <p className="text-base md:text-lg text-foreground/60 max-w-2xl mx-auto font-romania italic">
             Objects forged for men who command themselves
           </p>
         </motion.div>

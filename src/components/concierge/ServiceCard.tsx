@@ -31,8 +31,8 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
           <service.icon className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h3 className="text-xl font-ancient-tulip mb-3">{service.title}</h3>
-          <p className="font-ancient-tulip text-muted-foreground text-balance leading-relaxed">
+          <h3 className="text-xl font-romania mb-3">{service.title}</h3>
+          <p className="font-romania text-muted-foreground text-balance leading-relaxed">
             {service.description}
           </p>
         </div>

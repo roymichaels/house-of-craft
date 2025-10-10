@@ -91,7 +91,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Product Details */}
       <div className="space-y-1">
         {/* Title */}
-        <h3 className="text-sm font-ancient-tulip text-foreground line-clamp-1 tracking-wide">
+        <h3 className="text-sm font-romania text-foreground line-clamp-1 tracking-wide">
           {product.name}
         </h3>
         

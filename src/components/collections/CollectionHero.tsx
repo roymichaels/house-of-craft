@@ -12,7 +12,7 @@ const CollectionHero = () => {
           <h1 className="text-5xl md:text-7xl font-serif mb-6">
             Curated Collections
           </h1>
-          <p className="text-lg md:text-xl font-ancient-tulip text-muted-foreground max-w-3xl mx-auto text-balance">
+          <p className="text-lg md:text-xl font-romania text-muted-foreground max-w-3xl mx-auto text-balance">
             Each timepiece is carefully selected for its heritage, craftsmanship, and story.
             Discover pieces that transcend time.
           </p>

@@ -30,7 +30,7 @@ const Doctrine = () => {
             Philosophy & Mission
           </h2>
           <p className="text-foreground/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed 
-                        font-ancient-tulip italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)] mb-12">
+                        font-romania italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)] mb-12">
             The principles that guide creation, command, and conduct
           </p>
 

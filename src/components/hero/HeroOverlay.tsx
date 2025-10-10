@@ -67,7 +67,7 @@ const HeroOverlay = ({
         transition={{ delay: 4, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
-        <p className="text-sm md:text-base font-ancient-tulip tracking-wider max-w-lg md:max-w-3xl mx-auto text-balance">
+        <p className="text-sm md:text-base font-romania tracking-wider max-w-lg md:max-w-3xl mx-auto text-balance">
           {subtitle}
         </p>
       </motion.div>
@@ -143,7 +143,7 @@ const HeroOverlay = ({
         {/* Secondary CTA - Explore the Philosophy */}
         <motion.a
           href="#doctrine"
-          className="text-xs font-ancient-tulip text-muted-foreground/50 tracking-wider
+          className="text-xs font-romania text-muted-foreground/50 tracking-wider
                      hover:text-primary transition-colors duration-300 underline decoration-dotted"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

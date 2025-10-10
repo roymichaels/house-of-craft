@@ -80,7 +80,7 @@ const SanctumModal = () => {
                   <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4 tracking-wider drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
                     The Chamber
                   </h2>
-                  <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-ancient-tulip italic leading-relaxed">
+                  <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-romania italic leading-relaxed">
                     Private access for those who lead, create, and command through light
                   </p>
                 </motion.div>

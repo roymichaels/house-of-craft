@@ -82,7 +82,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
               {/* Content */}
               <div className="flex-1 min-w-0">
                 {/* Category Name */}
-                <h3 className="text-xl md:text-2xl font-ancient-tulip text-ancient-gold 
+                <h3 className="text-xl md:text-2xl font-romania text-ancient-gold 
                                mb-2 tracking-wide
                                group-hover:drop-shadow-[0_0_12px_rgba(196,166,97,0.4)]
                                transition-all duration-300">

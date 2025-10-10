@@ -136,12 +136,12 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-3xl font-ancient-tulip text-ancient-gold tracking-wide">
+                  <h2 className="text-3xl font-romania text-ancient-gold tracking-wide">
                     {product.name}
                   </h2>
 
                   {/* Description */}
-                  <p className="text-foreground/80 leading-relaxed font-ancient-tulip">
+                  <p className="text-foreground/80 leading-relaxed font-romania">
                     {product.description}
                   </p>
 
