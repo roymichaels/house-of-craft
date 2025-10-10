@@ -102,7 +102,7 @@ const Doctrine = () => {
             onClick={() => openModal('stories')}
             className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300"
           >
-            EXPLORE THE DOCTRINE
+            Explore the Doctrine
             <ArrowRight className="w-5 h-5" />
           </button>
         </motion.div>

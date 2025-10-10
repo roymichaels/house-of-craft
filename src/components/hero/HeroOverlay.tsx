@@ -123,7 +123,7 @@ const HeroOverlay = ({
             className="text-sm tracking-widest opacity-70 hover:opacity-100 
                        transition-opacity duration-300 font-sans pointer-events-auto"
           >
-            ENTER
+            Enter
           </a>
         )}
       </motion.div>

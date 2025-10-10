@@ -106,7 +106,7 @@ const Circle = () => {
             onClick={() => openModal('concierge')}
             className="inline-flex items-center gap-3 px-12 py-5 bg-ancient-gold text-background font-ancient text-lg tracking-widest hover:bg-ancient-gold/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-ancient-gold/20"
           >
-            REQUEST ENTRY
+            Request Entry
           </button>
         </motion.div>
 
