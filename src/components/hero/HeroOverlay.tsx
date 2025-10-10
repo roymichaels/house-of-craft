@@ -13,18 +13,6 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
   return (
     <div className="absolute inset-0 z-20 flex flex-col text-center h-full pointer-events-none bg-transparent">
       <div className="flex flex-col h-full bg-transparent">
-        {/* APOLLO Title - Top Center */}
-        <div className="flex-1 flex items-center justify-center">
-          <motion.h1
-            className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)]"
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            APOLLO
-          </motion.h1>
-        </div>
-
         {/* Bottom Docked Container - Fixed to Bottom */}
         <div className="fixed bottom-0 left-0 right-0 w-full pointer-events-auto z-30">
           <motion.div

@@ -43,17 +43,34 @@ const Navigation = () => {
           
           {/* Brand Section */}
           <div className="flex items-center gap-3 relative z-[5]">
-            
+
             {/* ΛΠ Symbol */}
-            <Link 
+            <Link
               to="/"
-              className="font-ancient text-lg md:text-xl text-ancient-gold 
+              className="font-ancient text-lg md:text-xl text-ancient-gold
                          border border-ancient-gold/30 rounded-md px-2.5 py-1.5
                          bg-ancient-gold/5 hover:bg-ancient-gold/10
                          transition-all duration-300 no-underline"
             >
               ΛΠ
             </Link>
+
+            {/* APOLLO Title */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Link
+                to="/"
+                className="font-ancient text-lg md:text-xl text-ancient-gold
+                           tracking-[0.15em] drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]
+                           hover:drop-shadow-[0_0_30px_rgba(212,175,55,0.6)]
+                           transition-all duration-300 no-underline"
+              >
+                APOLLO
+              </Link>
+            </motion.div>
           </div>
 
           {/* Actions */}
