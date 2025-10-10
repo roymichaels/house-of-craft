@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment } from "@react-three/drei";
+import { EffectComposer, DepthOfField } from "@react-three/postprocessing";
 import WatchModel from "./WatchModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
@@ -51,6 +52,14 @@ const HeroScene = ({
             handStyle={handStyle}
           />
           <Environment preset="city" />
+          <EffectComposer>
+            <DepthOfField
+              focusDistance={0}
+              focalLength={0.02}
+              bokehScale={2}
+              height={480}
+            />
+          </EffectComposer>
         </Suspense>
       </Canvas>
     </div>

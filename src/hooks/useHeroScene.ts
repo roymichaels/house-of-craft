@@ -20,6 +20,10 @@ interface HeroScene {
   show_balance_wheel: boolean;
   show_gears: boolean;
   hand_style: string;
+  text_delay_ms: number;
+  show_logo: boolean;
+  logo_text: string;
+  cta_style: string;
 }
 
 export const useHeroScene = () => {

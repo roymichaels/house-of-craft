@@ -21,19 +21,23 @@ export type Database = {
           camera_position: Json | null
           created_at: string | null
           cta_link: string | null
+          cta_style: string | null
           cta_text: string | null
           hand_style: string | null
           hdri_url: string | null
           id: string
           is_active: boolean | null
           light_color: string | null
+          logo_text: string | null
           model_url: string | null
           movement_style: string | null
           rotation_speed: number | null
           show_balance_wheel: boolean | null
           show_gears: boolean | null
+          show_logo: boolean | null
           show_real_time: boolean | null
           subtitle: string | null
+          text_delay_ms: number | null
           title: string
         }
         Insert: {
@@ -42,19 +46,23 @@ export type Database = {
           camera_position?: Json | null
           created_at?: string | null
           cta_link?: string | null
+          cta_style?: string | null
           cta_text?: string | null
           hand_style?: string | null
           hdri_url?: string | null
           id?: string
           is_active?: boolean | null
           light_color?: string | null
+          logo_text?: string | null
           model_url?: string | null
           movement_style?: string | null
           rotation_speed?: number | null
           show_balance_wheel?: boolean | null
           show_gears?: boolean | null
+          show_logo?: boolean | null
           show_real_time?: boolean | null
           subtitle?: string | null
+          text_delay_ms?: number | null
           title?: string
         }
         Update: {
@@ -63,19 +71,23 @@ export type Database = {
           camera_position?: Json | null
           created_at?: string | null
           cta_link?: string | null
+          cta_style?: string | null
           cta_text?: string | null
           hand_style?: string | null
           hdri_url?: string | null
           id?: string
           is_active?: boolean | null
           light_color?: string | null
+          logo_text?: string | null
           model_url?: string | null
           movement_style?: string | null
           rotation_speed?: number | null
           show_balance_wheel?: boolean | null
           show_gears?: boolean | null
+          show_logo?: boolean | null
           show_real_time?: boolean | null
           subtitle?: string | null
+          text_delay_ms?: number | null
           title?: string
         }
         Relationships: []

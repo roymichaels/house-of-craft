@@ -2,9 +2,15 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
 import { useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  
+  // Navigation appears after scrolling past 30% of viewport
+  const navOpacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
+  const navY = useTransform(scrollYProgress, [0, 0.3], [-20, 0]);
 
   const navItems = [
     { name: "Collections", path: "/collections" },
@@ -14,7 +20,10 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 cinematic-blur border-b border-border/50">
+    <motion.nav 
+      className="fixed top-0 left-0 right-0 z-50 cinematic-blur border-b border-border/50"
+      style={{ opacity: navOpacity, y: navY }}
+    >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -73,7 +82,7 @@ const Navigation = () => {
           </div>
         )}
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 

@@ -22,6 +22,10 @@ const HeroSection = () => {
     show_balance_wheel: true,
     show_gears: true,
     hand_style: "classic",
+    text_delay_ms: 3000,
+    show_logo: true,
+    logo_text: "THE HOUSE",
+    cta_style: "seal",
   };
 
   return (
@@ -31,9 +35,8 @@ const HeroSection = () => {
         <img
           src={heroImage}
           alt="Luxury timepiece collection"
-          className="w-full h-full object-cover opacity-30"
+          className="w-full h-full object-cover opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background" />
       </div>
 
       {/* 3D Scene Layer */}
@@ -57,8 +60,11 @@ const HeroSection = () => {
       <HeroOverlay
         title={config.title}
         subtitle={config.subtitle || ""}
-        ctaText={config.cta_text}
         ctaLink={config.cta_link}
+        ctaStyle={config.cta_style}
+        showLogo={config.show_logo}
+        logoText={config.logo_text}
+        textDelayMs={config.text_delay_ms}
       />
     </section>
   );
