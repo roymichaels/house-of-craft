@@ -165,10 +165,10 @@ export function initSolarSystem(container: HTMLElement) {
   const lavaShader = {
     uniforms: {
       time: { value: 0 },
-      colorHot: { value: new THREE.Color(0xFFFFFF) },
-      colorMid: { value: new THREE.Color(0xFFD700) },
-      colorCool: { value: new THREE.Color(0xFF4500) },
-      colorDark: { value: new THREE.Color(0x8B0000) }
+      colorHot: { value: new THREE.Color(0xFF6B4A) },
+      colorMid: { value: new THREE.Color(0xFF4520) },
+      colorCool: { value: new THREE.Color(0xCC2200) },
+      colorDark: { value: new THREE.Color(0x660000) }
     },
     vertexShader: `
       uniform float time;
@@ -259,18 +259,6 @@ export function initSolarSystem(container: HTMLElement) {
   });
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
-  
-  // Chromosphere - red transparent layer
-  const chromoGeometry = new THREE.SphereGeometry(5.5, 48, 48);
-  const chromoMaterial = new THREE.MeshBasicMaterial({
-    color: 0xFF3300,
-    transparent: true,
-    opacity: 0.4,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const chromosphere = new THREE.Mesh(chromoGeometry, chromoMaterial);
-  sunGroup.add(chromosphere);
 
   scene.add(sunGroup);
 
@@ -278,7 +266,6 @@ export function initSolarSystem(container: HTMLElement) {
   sunLayers = {
     core: sunCore,
     surface: sunSurface,
-    chromosphere,
     material: surfaceMaterial
   };
   
@@ -378,7 +365,6 @@ export function initSolarSystem(container: HTMLElement) {
       // Multi-speed rotation for lava flow effect
       sunLayers.surface.rotation.y += 0.0008;
       sunLayers.surface.rotation.x += 0.0002;
-      sunLayers.chromosphere.rotation.y -= 0.0006;
     }
     
     // Update planets
