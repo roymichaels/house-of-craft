@@ -30,9 +30,23 @@ const VaultOrderTabs = ({ orders, activeOrder, onSelectOrder }: VaultOrderTabsPr
               : undefined,
           }}
         >
-          {/* Icon */}
-          <div className="text-5xl mb-4 opacity-80 group-hover:opacity-100 transition-opacity">
-            {order.icon}
+          {/* Icon - Renaissance AI-generated image */}
+          <div className="relative w-24 h-24 mb-4 mx-auto">
+            <img 
+              src={order.iconImage} 
+              alt={`${order.title} icon`}
+              className="w-full h-full object-cover rounded-lg opacity-80 
+                         group-hover:opacity-100 group-hover:scale-110
+                         transition-all duration-700 
+                         shadow-[0_0_20px_rgba(0,0,0,0.5)]
+                         group-hover:shadow-[0_0_30px_rgba(196,166,97,0.4)]"
+            />
+            {/* Golden overlay on hover */}
+            <div 
+              className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-20 
+                         transition-opacity duration-500 pointer-events-none"
+              style={{ backgroundColor: order.colorTheme.primary }}
+            />
           </div>
 
           {/* Title */}

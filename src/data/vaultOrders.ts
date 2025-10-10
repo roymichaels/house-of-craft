@@ -22,7 +22,7 @@ export interface VaultOrder {
   emotionalTrigger: string;
   latinInscription: string;
   microcopy: string;
-  icon: string;
+  iconImage: string;
   colorTheme: {
     primary: string;
     glow: string;
@@ -38,7 +38,7 @@ export const vaultOrders: VaultOrder[] = [
     emotionalTrigger: 'Control',
     latinInscription: 'TEMPUS DOMINI SOLIS',
     microcopy: 'Instruments of Command',
-    icon: '⌚',
+    iconImage: '/src/assets/vault-icons/order-time.png',
     colorTheme: {
       primary: 'rgb(196, 166, 97)',
       glow: 'rgba(196, 166, 97, 0.3)',
@@ -128,7 +128,7 @@ export const vaultOrders: VaultOrder[] = [
     emotionalTrigger: 'Influence',
     latinInscription: 'VERBA VINCUNT MUNDUM',
     microcopy: 'Implements of Influence',
-    icon: '✒️',
+    iconImage: '/src/assets/vault-icons/order-thought.png',
     colorTheme: {
       primary: 'rgb(186, 154, 91)',
       glow: 'rgba(186, 154, 91, 0.3)',
@@ -161,7 +161,7 @@ export const vaultOrders: VaultOrder[] = [
     emotionalTrigger: 'Authority',
     latinInscription: 'FORMA EST IMPERIUM',
     microcopy: 'Objects of Command',
-    icon: '💍',
+    iconImage: '/src/assets/vault-icons/order-presence.png',
     colorTheme: {
       primary: 'rgb(176, 144, 81)',
       glow: 'rgba(176, 144, 81, 0.3)',
@@ -194,7 +194,7 @@ export const vaultOrders: VaultOrder[] = [
     emotionalTrigger: 'Discipline',
     latinInscription: 'ORDO AB DISCIPLINA',
     microcopy: 'Implements of Discipline',
-    icon: '🔥',
+    iconImage: '/src/assets/vault-icons/order-ritual.png',
     colorTheme: {
       primary: 'rgb(166, 134, 71)',
       glow: 'rgba(166, 134, 71, 0.3)',
@@ -227,7 +227,7 @@ export const vaultOrders: VaultOrder[] = [
     emotionalTrigger: 'Honor',
     latinInscription: 'AETERNUM PERMANET',
     microcopy: 'Artifacts of Permanence',
-    icon: '🦅',
+    iconImage: '/src/assets/vault-icons/order-legacy.png',
     colorTheme: {
       primary: 'rgb(156, 124, 61)',
       glow: 'rgba(156, 124, 61, 0.3)',
