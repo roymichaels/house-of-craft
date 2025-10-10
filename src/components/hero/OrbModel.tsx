@@ -149,9 +149,9 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       <mesh ref={sunRef}>
         <sphereGeometry args={[1, 64, 64]} />
         <meshPhysicalMaterial
-          color="#FFEB3B"
-          emissive="#FDB813"
-          emissiveIntensity={6}
+          color="#FFFFFF"
+          emissive="#FF8C00"
+          emissiveIntensity={4}
           metalness={0}
           roughness={0.9}
           toneMapped={false}
