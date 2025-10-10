@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import HeroSeal from "./hero/HeroSeal";
 import { OrderLanguage } from "@/lib/orderLanguage";
 import { playModalClick } from "@/lib/audio";
+import { useModalStore } from "@/stores/modalStore";
 
 const RitualEntry = () => {
   const [showEntry, setShowEntry] = useState(false);
   const [hasEntered, setHasEntered] = useState(false);
+  const { openModal } = useModalStore();
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("apollon-visited");
@@ -22,7 +24,15 @@ const RitualEntry = () => {
     playModalClick();
     localStorage.setItem("apollon-visited", "true");
     setShowEntry(false);
-    setTimeout(() => setHasEntered(true), 1000);
+    setTimeout(() => {
+      setHasEntered(true);
+      
+      // Show email capture modal after entry if user hasn't signed up yet
+      const hasSignedUp = localStorage.getItem("apollon_email_signup");
+      if (!hasSignedUp) {
+        setTimeout(() => openModal('email-capture'), 2000);
+      }
+    }, 1000);
   };
 
   if (hasEntered) return null;

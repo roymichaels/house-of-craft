@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import ServiceCard from "@/components/concierge/ServiceCard";
 import ContactForm from "@/components/concierge/ContactForm";
 import OathRitual from "@/components/concierge/OathRitual";
+import EmailCaptureForm from "@/components/concierge/EmailCaptureForm";
 
 const services = [
   {
@@ -37,8 +38,9 @@ const services = [
 const ConciergeModal = () => {
   const { activeModal, closeModal } = useModalStore();
   const { mode } = useSceneStore();
-  const isOpen = activeModal === 'concierge';
+  const isOpen = activeModal === 'concierge' || activeModal === 'email-capture';
   const isInnerChamber = mode === 'circle';
+  const isEmailCapture = activeModal === 'email-capture';
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -82,8 +84,12 @@ const ConciergeModal = () => {
                   <X className="h-5 w-5" />
                 </button>
 
-                {/* Conditional Content: Oath Ritual or Standard Concierge */}
-                {isInnerChamber ? (
+                {/* Conditional Content: Email Capture, Oath Ritual, or Standard Concierge */}
+                {isEmailCapture ? (
+                  <div className="px-6 py-16">
+                    <EmailCaptureForm />
+                  </div>
+                ) : isInnerChamber ? (
                   <div className="px-6 py-16">
                     <OathRitual />
                   </div>

@@ -8,7 +8,6 @@ import Objects from "@/components/sections/Objects";
 import Doctrine from "@/components/sections/Doctrine";
 import Circle from "@/components/sections/Circle";
 import Footer from "@/components/Footer";
-import EmailCaptureModal from "@/components/EmailCaptureModal";
 import ObjectModal from "@/components/modals/ObjectModal";
 import CollectionsModal from "@/components/modals/CollectionsModal";
 import StoriesModal from "@/components/modals/StoriesModal";
@@ -103,7 +102,6 @@ const Index = () => {
         </section>
       </div>
       
-      <EmailCaptureModal />
       <ObjectModal />
       <CollectionsModal />
       <StoriesModal />
