@@ -30,25 +30,25 @@ interface Moon {
 
 const celestialBodies: CelestialBody[] = [];
 
-// Planet data matching original main.js exactly
+// Planet data - sizes increased 1.5x for visibility
 const PLANETS_DATA = [
-  { name: "Mercury", radius: 0.8, distance: 12, speed: 4.15, rotation: 0.02, color: 0x8C7853, angle: 0 },
-  { name: "Venus", radius: 1.5, distance: 18, speed: 1.62, rotation: 0.004, color: 0xFFC649, angle: 0.3 },
+  { name: "Mercury", radius: 1.2, distance: 12, speed: 4.15, rotation: 0.02, color: 0x8C7853, angle: 0 },
+  { name: "Venus", radius: 2.25, distance: 18, speed: 1.62, rotation: 0.004, color: 0xFFC649, angle: 0.3 },
   { 
     name: "Earth", 
-    radius: 1.6, 
+    radius: 2.4, 
     distance: 25, 
     speed: 1.0, 
     rotation: 0.01, 
     color: 0x4169E1, 
     angle: 0.6,
-    moon: { radius: 0.4, distance: 3, speed: 0.5, color: 0xAAAAAA }
+    moon: { radius: 0.6, distance: 3, speed: 0.5, color: 0xAAAAAA }
   },
-  { name: "Mars", radius: 1.2, distance: 32, speed: 0.53, rotation: 0.01, color: 0xCD5C5C, angle: 0.9 },
-  { name: "Jupiter", radius: 4.0, distance: 52, speed: 0.084, rotation: 0.04, color: 0xDAA520, angle: 1.2 },
-  { name: "Saturn", radius: 3.5, distance: 70, speed: 0.034, rotation: 0.038, color: 0xF4A460, angle: 1.5, hasRings: true },
-  { name: "Uranus", radius: 2.5, distance: 85, speed: 0.012, rotation: 0.03, color: 0x4FD0E0, angle: 1.8 },
-  { name: "Neptune", radius: 2.4, distance: 100, speed: 0.006, rotation: 0.032, color: 0x4169E1, angle: 2.1 },
+  { name: "Mars", radius: 1.8, distance: 32, speed: 0.53, rotation: 0.01, color: 0xCD5C5C, angle: 0.9 },
+  { name: "Jupiter", radius: 6.0, distance: 52, speed: 0.084, rotation: 0.04, color: 0xDAA520, angle: 1.2 },
+  { name: "Saturn", radius: 5.25, distance: 70, speed: 0.034, rotation: 0.038, color: 0xF4A460, angle: 1.5, hasRings: true },
+  { name: "Uranus", radius: 3.75, distance: 85, speed: 0.012, rotation: 0.03, color: 0x4FD0E0, angle: 1.8 },
+  { name: "Neptune", radius: 3.6, distance: 100, speed: 0.006, rotation: 0.032, color: 0x4169E1, angle: 2.1 },
 ];
 
 export function initSolarSystem(container: HTMLElement) {
@@ -77,7 +77,7 @@ export function initSolarSystem(container: HTMLElement) {
     0.1,
     1000
   );
-  camera.position.set(0, 50, 120);
+  camera.position.set(0, 40, 80);
   camera.lookAt(0, 0, 0);
   
   // ============================================================================
@@ -106,7 +106,7 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(0x333333, 1.0);
   scene.add(ambientLight);
   
-  const sunLight = new THREE.PointLight(0xFFFFFF, 3.0, 500);
+  const sunLight = new THREE.PointLight(0xFFE4B5, 8.0, 800);
   sunLight.position.set(0, 0, 0);
   scene.add(sunLight);
   
@@ -116,28 +116,47 @@ export function initSolarSystem(container: HTMLElement) {
   createStarfield();
   
   // ============================================================================
-  // SUN
+  // SUN - Enhanced with multi-layer glow
   // ============================================================================
-  const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
+  const sunGeometry = new THREE.SphereGeometry(10, 64, 64);
   const sunMaterial = new THREE.MeshStandardMaterial({
     color: 0xFDB813,
-    emissive: 0xFDB813,
-    emissiveIntensity: 1.5,
+    emissive: 0xFFA500,
+    emissiveIntensity: 2.0,
     toneMapped: false
   });
   const sun = new THREE.Mesh(sunGeometry, sunMaterial);
   scene.add(sun);
   
-  // Sun glow
-  const glowGeometry = new THREE.SphereGeometry(6, 32, 32);
-  const glowMaterial = new THREE.MeshBasicMaterial({
-    color: 0xFDB813,
+  // Multi-layer sun glow effect
+  const glowLayers = [
+    { radius: 12, opacity: 0.4, color: 0xFFA500 },
+    { radius: 15, opacity: 0.25, color: 0xFFB520 },
+    { radius: 20, opacity: 0.15, color: 0xFFC649 }
+  ];
+  
+  glowLayers.forEach(layer => {
+    const glowGeometry = new THREE.SphereGeometry(layer.radius, 32, 32);
+    const glowMaterial = new THREE.MeshBasicMaterial({
+      color: layer.color,
+      transparent: true,
+      opacity: layer.opacity,
+      side: THREE.BackSide
+    });
+    const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+    scene.add(glow);
+  });
+  
+  // Nebula atmospheric effect around sun
+  const nebulaGeometry = new THREE.SphereGeometry(35, 32, 32);
+  const nebulaMaterial = new THREE.MeshBasicMaterial({
+    color: 0xFF8C00,
     transparent: true,
-    opacity: 0.3,
+    opacity: 0.08,
     side: THREE.BackSide
   });
-  const sunGlow = new THREE.Mesh(glowGeometry, glowMaterial);
-  scene.add(sunGlow);
+  const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
+  scene.add(nebula);
   
   // ============================================================================
   // PLANETS
@@ -217,7 +236,6 @@ export function initSolarSystem(container: HTMLElement) {
     
     // Rotate sun
     sun.rotation.y += 0.001;
-    sunGlow.rotation.y -= 0.0005;
     
     // Update planets
     celestialBodies.forEach(body => {
@@ -269,28 +287,56 @@ export function initSolarSystem(container: HTMLElement) {
 // ============================================================================
 
 function createStarfield() {
-  const starCount = 3000;
+  const starCount = 5000;
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(starCount * 3);
+  const colors = new Float32Array(starCount * 3);
+  const sizes = new Float32Array(starCount);
   
-  for (let i = 0; i < starCount * 3; i += 3) {
+  for (let i = 0; i < starCount; i++) {
+    const i3 = i * 3;
     const radius = 200 + Math.random() * 200;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     
-    positions[i] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[i + 2] = radius * Math.cos(phi);
+    positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+    positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+    positions[i3 + 2] = radius * Math.cos(phi);
+    
+    // Variable star sizes for depth
+    sizes[i] = Math.random() * 2.5 + 0.5;
+    
+    // Color variation - mostly white, some blue/orange tints
+    const colorChoice = Math.random();
+    if (colorChoice < 0.7) {
+      // White stars with brightness variation
+      const brightness = 0.7 + Math.random() * 0.3;
+      colors[i3] = brightness;
+      colors[i3 + 1] = brightness;
+      colors[i3 + 2] = brightness;
+    } else if (colorChoice < 0.85) {
+      // Blue tint stars
+      colors[i3] = 0.6 + Math.random() * 0.2;
+      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
+      colors[i3 + 2] = 0.9 + Math.random() * 0.1;
+    } else {
+      // Orange tint stars
+      colors[i3] = 0.9 + Math.random() * 0.1;
+      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
+      colors[i3 + 2] = 0.5 + Math.random() * 0.2;
+    }
   }
   
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
   
   const material = new THREE.PointsMaterial({
-    color: 0xFFFFFF,
-    size: 0.7,
+    size: 1.5,
+    sizeAttenuation: true,
+    vertexColors: true,
     transparent: true,
-    opacity: 0.8,
-    sizeAttenuation: true
+    opacity: 0.9
   });
   
   const stars = new THREE.Points(geometry, material);
@@ -309,9 +355,9 @@ function createOrbitPath(radius: number) {
   const points = curve.getPoints(128);
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   const material = new THREE.LineBasicMaterial({
-    color: 0x444444,
+    color: 0x666666,
     transparent: true,
-    opacity: 0.3
+    opacity: 0.15
   });
   
   const orbit = new THREE.Line(geometry, material);
