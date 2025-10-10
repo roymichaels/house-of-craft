@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import { OrderLanguage } from "@/lib/orderLanguage";
 
 const EmailCaptureModal = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,25 +57,43 @@ const EmailCaptureModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-md grain">
+      <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-md border-ancient-gold/20 grain animate-scale-in">
+        {/* Golden orb accent */}
+        <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-gradient-radial from-ancient-gold/40 via-ancient-gold/10 to-transparent blur-2xl pointer-events-none" />
+        
         <button
           onClick={handleDismiss}
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="absolute right-4 top-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ancient-gold/50 focus:ring-offset-2"
         >
-          <X className="h-4 w-4" />
+          <X className="h-4 w-4 text-ancient-gold" />
           <span className="sr-only">Close</span>
         </button>
 
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-ancient text-ancient-gold">Join The Order</DialogTitle>
-          <DialogDescription className="text-base pt-2">
-            Receive early access to APOLLON's curated instruments and sacred teachings. <span className="text-primary font-medium">10% initiation discount</span> granted.
+        <DialogHeader className="space-y-3 pt-2">
+          {/* Latin inscription */}
+          <p className="text-xs tracking-[0.3em] text-ancient-gold/60 uppercase text-center font-order">
+            {OrderLanguage.latin.circle}
+          </p>
+          
+          {/* Main title */}
+          <DialogTitle className="text-3xl font-apollon text-ancient-gold text-center tracking-wide">
+            Join The Order
+          </DialogTitle>
+          
+          {/* Description */}
+          <DialogDescription className="text-center text-base leading-relaxed pt-1">
+            Receive early access to APOLLON's curated instruments and sacred teachings.
+            <span className="block mt-2 text-ancient-gold font-medium">
+              10% initiation gift granted.
+            </span>
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+        <form onSubmit={handleSubmit} className="space-y-5 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm">Email</Label>
+            <Label htmlFor="email" className="text-sm font-order tracking-wider text-muted-foreground">
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
@@ -82,19 +101,19 @@ const EmailCaptureModal = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="h-11"
+              className="h-12 border-ancient-gold/20 focus:border-ancient-gold transition-colors bg-background/50"
             />
           </div>
 
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-11 text-base beam-ripple"
+            className="w-full h-12 text-base bg-ancient-gold/10 border border-ancient-gold/50 hover:bg-ancient-gold/20 hover:border-ancient-gold text-ancient-gold font-order tracking-wider beam-ripple transition-all duration-300"
           >
             {isSubmitting ? "Processing..." : "Take the Oath"}
           </Button>
 
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-xs text-muted-foreground/70 text-center leading-relaxed">
             By subscribing, you agree to receive marketing communications. Unsubscribe anytime.
           </p>
         </form>
