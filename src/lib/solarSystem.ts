@@ -10,6 +10,7 @@ let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
 let controls: OrbitControls;
 let composer: EffectComposer;
+let bloomPass: UnrealBloomPass;
 let animationId: number;
 let isInitialized = false;
 let sunLayers: any = null;
@@ -112,15 +113,15 @@ export function initSolarSystem(container: HTMLElement) {
   composer = new EffectComposer(renderer);
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
-  
-  const bloomPass = new UnrealBloomPass(
+
+  bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.5,  // strength
-    0.6,  // radius
-    0.05  // threshold
+    1.5,  // strength - increased for more dramatic glow
+    0.8,  // radius - wider bloom
+    0.1   // threshold - lower to capture more lights
   );
   composer.addPass(bloomPass);
-  
+
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
   
@@ -152,9 +153,9 @@ export function initSolarSystem(container: HTMLElement) {
   scene.add(fillLight);
   
   // ============================================================================
-  // STARFIELD
+  // STARFIELD - Enhanced with nebula background
   // ============================================================================
-  createStarfield();
+  createEnhancedStarfield();
   
   // ============================================================================
   // SUN - Realistic Pulsating Lava
@@ -307,6 +308,18 @@ export function initSolarSystem(container: HTMLElement) {
   });
   const corona3 = new THREE.Mesh(corona3Geometry, corona3Material);
   sunGroup.add(corona3);
+
+  // Lens flare effect - largest outer glow
+  const flareGeo = new THREE.SphereGeometry(12, 32, 32);
+  const flareMat = new THREE.MeshBasicMaterial({
+    color: 0xFFFFAA,
+    transparent: true,
+    opacity: 0.08,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const lensFlare = new THREE.Mesh(flareGeo, flareMat);
+  sunGroup.add(lensFlare);
   
   scene.add(sunGroup);
   
@@ -318,6 +331,7 @@ export function initSolarSystem(container: HTMLElement) {
     corona1,
     corona2,
     corona3,
+    lensFlare,
     material: surfaceMaterial
   };
   
@@ -330,14 +344,18 @@ export function initSolarSystem(container: HTMLElement) {
   // PLANETS
   // ============================================================================
   PLANETS_DATA.forEach(planetData => {
-    // Create planet
-    const geometry = new THREE.SphereGeometry(planetData.radius, 32, 32);
+    // Create planet with better materials
+    const geometry = new THREE.SphereGeometry(planetData.radius, 64, 64);
     const material = new THREE.MeshStandardMaterial({
       color: planetData.color,
-      roughness: 0.7,
-      metalness: 0.3
+      roughness: 0.85,
+      metalness: 0.15,
+      emissive: new THREE.Color(planetData.color).multiplyScalar(0.05),
+      emissiveIntensity: 0.1
     });
     const planet = new THREE.Mesh(geometry, material);
+    planet.castShadow = true;
+    planet.receiveShadow = true;
     
     // Set initial position
     planet.position.x = Math.cos(planetData.angle) * planetData.distance;
@@ -432,7 +450,22 @@ export function initSolarSystem(container: HTMLElement) {
       sunLayers.corona1.rotation.y += 0.0003;
       sunLayers.corona2.rotation.y -= 0.0002;
       sunLayers.corona3.rotation.y += 0.0001;
+
+      // Lens flare subtle pulsing
+      const flarePulse = 0.08 + Math.sin(time * 0.3) * 0.03;
+      sunLayers.lensFlare.material.opacity = flarePulse;
+      sunLayers.lensFlare.rotation.y += 0.00015;
     }
+
+    // Dynamic bloom based on camera distance from sun
+    const distanceToSun = camera.position.length();
+    const maxDistance = 100;
+    const minDistance = 10;
+    const normalizedDistance = Math.max(0, Math.min(1, (distanceToSun - minDistance) / (maxDistance - minDistance)));
+
+    // Closer to sun = stronger bloom
+    bloomPass.strength = 1.5 + (1 - normalizedDistance) * 1.0;
+    bloomPass.radius = 0.8 + (1 - normalizedDistance) * 0.3;
     
     // Update planets
     celestialBodies.forEach(body => {
@@ -484,116 +517,171 @@ export function initSolarSystem(container: HTMLElement) {
 // HELPER FUNCTIONS
 // ============================================================================
 
-function createStarfield() {
-  const starCount = 5000;
+function createEnhancedStarfield() {
+  // Outer starfield sphere with texture-like appearance
+  const starGeo = new THREE.SphereGeometry(200, 64, 64);
+  const starMat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(1.2, 1.2, 1.2),
+    side: THREE.BackSide,
+    toneMapped: false
+  });
+  const outerStars = new THREE.Mesh(starGeo, starMat);
+  scene.add(outerStars);
+
+  // Nebula layer
+  const nebulaGeo = new THREE.SphereGeometry(190, 64, 64);
+  const nebulaMat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(0.8, 0.9, 1.0),
+    side: THREE.BackSide,
+    transparent: true,
+    opacity: 0.15,
+    toneMapped: false
+  });
+  const nebula = new THREE.Mesh(nebulaGeo, nebulaMat);
+  scene.add(nebula);
+
+  // Point stars for twinkling effect
+  const starCount = 8000;
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(starCount * 3);
   const colors = new Float32Array(starCount * 3);
   const sizes = new Float32Array(starCount);
-  
+
   for (let i = 0; i < starCount; i++) {
     const i3 = i * 3;
-    const radius = 200 + Math.random() * 200;
+    const radius = 150 + Math.random() * 100;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
-    
+
     positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
     positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
     positions[i3 + 2] = radius * Math.cos(phi);
-    
+
     // Variable star sizes for depth
-    sizes[i] = Math.random() * 2.5 + 0.5;
-    
-    // Color variation - mostly white, some blue/orange tints
+    sizes[i] = Math.random() * 3.5 + 0.8;
+
+    // Color variation
     const colorChoice = Math.random();
-    if (colorChoice < 0.7) {
-      // White stars with brightness variation
-      const brightness = 0.7 + Math.random() * 0.3;
+    if (colorChoice < 0.6) {
+      // Bright white stars
+      const brightness = 0.9 + Math.random() * 0.1;
       colors[i3] = brightness;
       colors[i3 + 1] = brightness;
       colors[i3 + 2] = brightness;
-    } else if (colorChoice < 0.85) {
+    } else if (colorChoice < 0.8) {
       // Blue tint stars
-      colors[i3] = 0.6 + Math.random() * 0.2;
-      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
-      colors[i3 + 2] = 0.9 + Math.random() * 0.1;
+      colors[i3] = 0.7 + Math.random() * 0.2;
+      colors[i3 + 1] = 0.8 + Math.random() * 0.2;
+      colors[i3 + 2] = 1.0;
     } else {
-      // Orange tint stars
-      colors[i3] = 0.9 + Math.random() * 0.1;
-      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
-      colors[i3 + 2] = 0.5 + Math.random() * 0.2;
+      // Orange/yellow tint stars
+      colors[i3] = 1.0;
+      colors[i3 + 1] = 0.8 + Math.random() * 0.2;
+      colors[i3 + 2] = 0.6 + Math.random() * 0.2;
     }
   }
-  
+
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-  
+
   const material = new THREE.PointsMaterial({
-    size: 1.5,
+    size: 2.0,
     sizeAttenuation: true,
     vertexColors: true,
     transparent: true,
-    opacity: 0.9
+    opacity: 0.95,
+    blending: THREE.AdditiveBlending
   });
-  
-  const stars = new THREE.Points(geometry, material);
-  scene.add(stars);
+
+  const pointStars = new THREE.Points(geometry, material);
+  scene.add(pointStars);
 }
 
 function createAsteroidBelt() {
-  for (let i = 0; i < 150; i++) {
-    const size = 0.02 + Math.random() * 0.06;
-    const distance = 20 + Math.random() * 4; // Between 20-24
+  // Main asteroid belt with varied types
+  for (let i = 0; i < 300; i++) {
+    const size = 0.015 + Math.random() * 0.08;
+    const distance = 19.5 + Math.random() * 6; // Between Mars and Jupiter
     const angle = Math.random() * Math.PI * 2;
-    
+
+    // Different asteroid types
+    const asteroidType = Math.random();
+    let color: THREE.Color;
+    if (asteroidType < 0.5) {
+      color = new THREE.Color(0.4, 0.26, 0.13); // C-type (carbonaceous)
+    } else if (asteroidType < 0.8) {
+      color = new THREE.Color(0.6, 0.6, 0.6); // S-type (silicate)
+    } else {
+      color = new THREE.Color(0.5, 0.4, 0.3); // M-type (metallic)
+    }
+
     const geometry = new THREE.SphereGeometry(size, 6, 6);
     const material = new THREE.MeshStandardMaterial({
-      color: 0x666666,
+      color: color,
+      emissive: color.clone().multiplyScalar(0.08),
+      emissiveIntensity: 0.12,
       roughness: 1.0,
-      metalness: 0.1
+      metalness: asteroidType > 0.8 ? 0.3 : 0.1
     });
     const asteroid = new THREE.Mesh(geometry, material);
-    
+
     asteroid.position.x = Math.cos(angle) * distance;
     asteroid.position.z = Math.sin(angle) * distance;
-    asteroid.position.y = (Math.random() - 0.5) * 0.5;
-    
+    asteroid.position.y = (Math.random() - 0.5) * 1.0;
+
+    asteroid.rotation.x = Math.random() * Math.PI;
+    asteroid.rotation.y = Math.random() * Math.PI;
+    asteroid.rotation.z = Math.random() * Math.PI;
+
     scene.add(asteroid);
   }
 }
 
 function createOrbitPath(radius: number) {
-  // Color-coded orbit rings based on distance
-  let orbitColor: number;
+  // Color-coded orbit rings based on distance with glow
+  let orbitColor: THREE.Color;
+  let glowIntensity: number;
+  let baseOpacity: number;
+
   if (radius < 20) {
-    orbitColor = 0x4A90E2; // Inner planets - Blue
+    orbitColor = new THREE.Color(0.3, 0.5, 0.7); // Inner planets - Blue
+    glowIntensity = 0.03;
+    baseOpacity = 0.15;
   } else if (radius >= 20 && radius < 24) {
-    orbitColor = 0x996633; // Asteroid region - Brown
+    orbitColor = new THREE.Color(0.6, 0.3, 0.15); // Asteroid region - Brown
+    glowIntensity = 0.06;
+    baseOpacity = 0.12;
   } else if (radius >= 24 && radius < 45) {
-    orbitColor = 0x8B7EBF; // Outer planets - Purple
+    orbitColor = new THREE.Color(0.5, 0.4, 0.7); // Outer planets - Purple
+    glowIntensity = 0.05;
+    baseOpacity = 0.18;
   } else {
-    orbitColor = 0xCCA000; // Dwarf planets - Gold
+    orbitColor = new THREE.Color(0.8, 0.6, 0.0); // Dwarf planets - Gold
+    glowIntensity = 0.08;
+    baseOpacity = 0.22;
   }
-  
-  const curve = new THREE.EllipseCurve(
-    0, 0,           // center x, y
-    radius, radius, // xRadius, yRadius
-    0, 2 * Math.PI, // start angle, end angle
-    false,          // clockwise
-    0               // rotation
+
+  // Use ring geometry for better visibility
+  const ringGeo = new THREE.RingGeometry(
+    radius - 0.08,
+    radius + 0.08,
+    256
   );
-  
-  const points = curve.getPoints(128);
-  const geometry = new THREE.BufferGeometry().setFromPoints(points);
-  const material = new THREE.LineBasicMaterial({
+
+  const ringMat = new THREE.MeshBasicMaterial({
     color: orbitColor,
+    emissive: orbitColor,
+    emissiveIntensity: glowIntensity,
+    side: THREE.DoubleSide,
     transparent: true,
-    opacity: 0.2
+    opacity: baseOpacity,
+    toneMapped: false
   });
-  
-  const orbit = new THREE.Line(geometry, material);
+
+  const orbit = new THREE.Mesh(ringGeo, ringMat);
   orbit.rotation.x = Math.PI / 2;
+  orbit.position.y = -0.01;
   scene.add(orbit);
 }
 
