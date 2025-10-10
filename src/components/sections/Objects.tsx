@@ -63,7 +63,7 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col h-full justify-between">
+      <div className="relative z-10 flex flex-col h-full justify-center items-center text-center">
         <div className="space-y-3 md:space-y-4">
           {/* Name */}
           <h3 className="font-ancient text-ancient-gold text-2xl md:text-3xl
@@ -78,17 +78,6 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
           <p className="text-sm md:text-base text-foreground/60 italic leading-snug">
             {category.tagline}
           </p>
-        </div>
-
-        {/* Item Count Badge */}
-        <div className="mt-4 self-start">
-          <div className="px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full
-                          backdrop-blur-sm group-hover:bg-primary/15 group-hover:border-primary/30
-                          transition-all duration-300">
-            <span className="text-xs font-medium text-ancient-gold tracking-wider">
-              {productCount} ITEMS
-            </span>
-          </div>
         </div>
       </div>
 
