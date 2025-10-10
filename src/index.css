@@ -19,6 +19,8 @@ All colors MUST be HSL.
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  /* Fallback to ensure text always displays */
+  unicode-range: U+0000-FFFF;
 }
 
 /* Romania Font - Product Text */
@@ -30,6 +32,8 @@ All colors MUST be HSL.
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  /* Fallback to ensure text always displays */
+  unicode-range: U+0000-FFFF;
 }
 
 @layer base {
@@ -160,7 +164,7 @@ All colors MUST be HSL.
   }
   
   .font-ancient {
-    font-family: 'Ancient', serif;
+    font-family: 'Ancient', 'Playfair Display', 'Cinzel', Georgia, serif;
     letter-spacing: 0.05em;
   }
 }
@@ -273,13 +277,17 @@ body p {
 
 /* Apollinean utilities */
 .font-apollo {
-  font-family: 'Ancient', serif;
+  font-family: 'Ancient', 'Playfair Display', 'Cinzel', Georgia, serif;
   text-shadow: 0 0 30px hsla(var(--ancient-gold) / 0.4);
 }
 
 .font-order {
-  font-family: 'Cinzel', serif;
+  font-family: 'Cinzel', Georgia, serif;
   letter-spacing: 0.1em;
+}
+
+.font-romania {
+  font-family: 'Romania', 'Playfair Display', Georgia, serif;
 }
 
 /* Beam ripple effect - Apollinean interaction */
