@@ -1,14 +1,18 @@
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import { X, Heart, Share2 } from "lucide-react";
+import { X, Heart, Share2, ShoppingBag, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
+import { useModalStore } from "@/stores/modalStore";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
+  subcategory?: string;
   description: string;
-  price: string;
+  price: string | number;
   image: string;
 }
 
@@ -19,6 +23,10 @@ interface ProductBottomSheetProps {
 
 const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
   const [dragOffset, setDragOffset] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const { addItem, getItemQuantity } = useCartStore();
+  const { openModal } = useModalStore();
+  const inCartQuantity = product ? getItemQuantity(product.id) : 0;
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     if (info.offset.y > 150 || info.velocity.y > 300) {
@@ -26,6 +34,29 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
     }
     setDragOffset(0);
   };
+
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    const price = typeof product.price === 'string' 
+      ? parseFloat(product.price.replace(/[^0-9.]/g, '')) || 0
+      : product.price;
+
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: price,
+      image: product.image,
+      category: product.category,
+      subcategory: product.subcategory || 'general'
+    }, quantity);
+
+    toast.success(`${product.name} added to cart`);
+    setQuantity(1);
+  };
+
+  const incrementQuantity = () => setQuantity(q => q + 1);
+  const decrementQuantity = () => setQuantity(q => Math.max(1, q - 1));
 
   return (
     <AnimatePresence>
@@ -121,13 +152,78 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                     </p>
                   </div>
 
-                  {/* CTA Button */}
+                  {/* In Cart Indicator */}
+                  {inCartQuantity > 0 && (
+                    <motion.div
+                      className="px-4 py-2 bg-primary/10 border border-primary/30 rounded-full
+                                 text-ancient-gold text-sm font-medium text-center"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      {inCartQuantity} in cart
+                    </motion.div>
+                  )}
+
+                  {/* Quantity Selector */}
+                  <div className="flex items-center justify-between p-4 bg-card/40 backdrop-blur-sm
+                                 border border-border/30 rounded-2xl">
+                    <span className="text-sm font-medium text-foreground">Quantity</span>
+                    <div className="flex items-center gap-3">
+                      <motion.button
+                        onClick={decrementQuantity}
+                        className="w-9 h-9 rounded-full border border-border/30
+                                   flex items-center justify-center
+                                   hover:border-primary/40 hover:bg-primary/5
+                                   transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Minus size={16} className="text-muted-foreground" />
+                      </motion.button>
+
+                      <span className="w-12 text-center font-bold text-lg text-foreground">
+                        {quantity}
+                      </span>
+
+                      <motion.button
+                        onClick={incrementQuantity}
+                        className="w-9 h-9 rounded-full border border-border/30
+                                   flex items-center justify-center
+                                   hover:border-primary/40 hover:bg-primary/5
+                                   transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Plus size={16} className="text-muted-foreground" />
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Add to Cart Button */}
                   <motion.button
-                    whileTap={{ scale: 0.97 }}
-                    className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-medium text-lg
-                               hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
+                    onClick={handleAddToCart}
+                    className="w-full py-4 bg-gradient-to-r from-primary via-primary to-primary/80
+                               text-background font-bold text-sm tracking-widest rounded-full
+                               hover:shadow-lg hover:shadow-primary/25 transition-all
+                               flex items-center justify-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    Contact Concierge
+                    <ShoppingBag size={18} />
+                    ADD TO CART
+                  </motion.button>
+
+                  {/* View Cart Link */}
+                  <motion.button
+                    onClick={() => {
+                      onClose();
+                      setTimeout(() => openModal('cart'), 300);
+                    }}
+                    className="text-sm text-muted-foreground hover:text-ancient-gold transition-colors
+                               text-center underline underline-offset-2"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    View Cart
                   </motion.button>
                 </div>
               </div>

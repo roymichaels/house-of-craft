@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
+import { ShoppingBag, Check } from "lucide-react";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
+  subcategory?: string;
   description: string;
-  price: string;
+  price: string | number;
   image: string;
 }
 
@@ -14,6 +18,32 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const { addItem, getItemQuantity } = useCartStore();
+  const inCart = getItemQuantity(product.id) > 0;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const price = typeof product.price === 'string' 
+      ? parseFloat(product.price.replace(/[^0-9.]/g, '')) || 0
+      : product.price;
+
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: price,
+      image: product.image,
+      category: product.category,
+      subcategory: product.subcategory || 'general'
+    }, 1);
+
+    toast.success(`${product.name} added to cart`);
+  };
+
+  const displayPrice = typeof product.price === 'number' 
+    ? `$${product.price.toLocaleString()}` 
+    : product.price;
+
   return (
     <motion.div
       className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
@@ -82,17 +112,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
             transition={{ delay: 0.1 }}
           >
             <span className="text-sm font-semibold text-foreground">
-              {product.price}
+              {displayPrice}
             </span>
           </motion.div>
           
-          {/* CTA Button */}
+          {/* Add to Cart Button */}
           <motion.button
-            className="px-4 py-2 text-xs font-medium tracking-wider rounded-full
-                       bg-primary/10 border border-primary/30 text-ancient-gold
-                       hover:bg-primary/20 hover:border-primary/50
-                       transition-all duration-200
-                       opacity-0 group-hover:opacity-100"
+            onClick={handleAddToCart}
+            className={`px-4 py-2 text-xs font-medium tracking-wider rounded-full
+                       transition-all duration-200 flex items-center gap-1.5
+                       opacity-0 group-hover:opacity-100
+                       ${inCart 
+                         ? 'bg-primary/20 border border-primary/50 text-ancient-gold' 
+                         : 'bg-primary/10 border border-primary/30 text-ancient-gold hover:bg-primary/20 hover:border-primary/50'
+                       }`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{
@@ -101,7 +134,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
               damping: 25,
             }}
           >
-            VIEW
+            {inCart ? (
+              <>
+                <Check size={14} />
+                IN CART
+              </>
+            ) : (
+              <>
+                <ShoppingBag size={14} />
+                ADD
+              </>
+            )}
           </motion.button>
         </div>
       </div>

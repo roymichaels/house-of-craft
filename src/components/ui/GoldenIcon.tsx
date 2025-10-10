@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface GoldenIconProps {
   icon: LucideIcon;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | number;
   glow?: "none" | "subtle" | "medium" | "strong" | "pulse";
   className?: string;
   animate?: boolean;
@@ -32,11 +32,14 @@ export const GoldenIcon = ({
   className,
   animate = true,
 }: GoldenIconProps) => {
+  const sizeStyle = typeof size === 'number' ? { width: size, height: size } : undefined;
+  
   return (
     <Icon
+      style={sizeStyle}
       className={cn(
         "text-ancient-gold",
-        sizeMap[size],
+        typeof size === 'string' && sizeMap[size],
         glowMap[glow],
         animate && "transition-all duration-300 hover:scale-110",
         className

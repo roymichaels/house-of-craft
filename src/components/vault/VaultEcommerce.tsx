@@ -160,11 +160,12 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
                   >
                     <ProductCard
                       product={{
-                        id: index,
+                        id: product.id,
                         name: product.name,
                         category: product.subcategoryName,
+                        subcategory: product.subcategory,
                         description: product.description,
-                        price: product.price.toString(),
+                        price: product.price,
                         image: product.images[0],
                       }}
                     />

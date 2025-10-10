@@ -52,7 +52,7 @@ const VaultRelicGrid = ({ relics, instrumentName, orderTitle, onBack }: VaultRel
             >
               <ProductCard
                 product={{
-                  id: index,
+                  id: relic.id,
                   name: relic.name,
                   category: '',
                   description: relic.philosophicalEssence || relic.description,

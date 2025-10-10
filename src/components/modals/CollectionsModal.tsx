@@ -89,26 +89,27 @@ const CollectionsModal = () => {
                             rounded-3xl border border-primary/20 shadow-2xl overflow-hidden">
               {/* Top Navigation Bar */}
               <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 md:p-6">
-                {/* Decorative Icon (Left) */}
-                <motion.div
-                  initial={{ opacity: 0, rotate: -90 }}
-                  animate={{ opacity: 1, rotate: 0 }}
-                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                >
-                  <GoldenIcon icon={Circle} size="lg" glow="strong" className="opacity-60" />
-                </motion.div>
-
-                {/* Back Button (contextual) */}
-                {viewState === 'category-detail' && (
+                {/* Decorative Icon / Back Button */}
+                {viewState === 'categories' ? (
+                  <motion.div
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  >
+                    <GoldenIcon icon={Circle} size="lg" glow="strong" className="opacity-60" />
+                  </motion.div>
+                ) : (
                   <motion.button
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     onClick={handleBackToCategories}
-                    className="absolute left-16 md:left-20 px-3 py-2 rounded-full
+                    className="px-3 py-2 rounded-full
                                bg-background/60 hover:bg-primary/10 backdrop-blur-sm
                                border border-primary/20 hover:border-primary/40
                                transition-all group flex items-center gap-2"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     aria-label="Go back"
                   >
                     <GoldenIcon icon={ChevronLeft} size="sm" glow="subtle" 
@@ -125,6 +126,8 @@ const CollectionsModal = () => {
                   onClick={closeModal}
                   className="p-2 rounded-full bg-background/60 hover:bg-primary/10 backdrop-blur-sm
                              border border-primary/20 hover:border-primary/40 transition-all group"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   aria-label="Close modal"
                 >
                   <GoldenIcon icon={X} size="md" glow="medium" 

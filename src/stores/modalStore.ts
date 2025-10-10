@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge' | 'email-capture';
+export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge' | 'email-capture' | 'cart';
 
 interface ObjectData {
   title: string;
