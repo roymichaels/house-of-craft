@@ -59,13 +59,13 @@ const StoriesModal = () => {
                     transition={{ delay: 0.2 }}
                   >
                     <p className="font-ancient text-primary text-sm tracking-wider mb-4">
-                      The House of Time
+                      The Doctrine of
                     </p>
-                    <h2 className="text-4xl md:text-6xl font-serif mb-4">
-                      Our Story
+                    <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4">
+                      APOLLON
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                      Where heritage meets innovation, and every timepiece carries the weight of history forward into tomorrow
+                      Where clarity becomes command
                     </p>
                   </motion.div>
                 </div>
@@ -84,11 +84,10 @@ const StoriesModal = () => {
                     transition={{ duration: 0.8 }}
                   >
                     <blockquote className="text-2xl md:text-3xl font-serif italic text-balance mb-8">
-                      "We don't just sell timepieces. We preserve legacies, honor craftsmanship,
-                      and connect collectors with pieces that will define their own stories."
+                      "We forge instruments of presence for those who refuse mediocrity. Light is discipline. Order is beauty. Command through clarity."
                     </blockquote>
                     <p className="text-primary font-ancient tracking-wider">
-                      — The Founders
+                      — The Lightbearers
                     </p>
                   </motion.div>
                 </div>

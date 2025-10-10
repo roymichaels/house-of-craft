@@ -6,14 +6,14 @@ const HeroSection = () => {
 
   // Default values while loading or if query fails
   const config = heroScene || {
-    title: "THE HOUSE",
-    subtitle: "A sanctuary for those who master time, mind, and matter. Objects of power. Instruments of presence. Stories that shape destiny.",
+    title: "APOLLON",
+    subtitle: "Where Light Becomes Order. A sanctuary for those who master time, mind, and presence.",
     rotation_speed: 0.3,
     light_color: "#C4A661",
     accent_color: "#7A6A4F",
     camera_fov: 45,
     camera_position: { x: 0, y: 0, z: 5 },
-    cta_text: "Enter The House",
+    cta_text: "Enter The Order",
     cta_link: "#mindcraft",
     show_real_time: false,
     show_balance_wheel: true,
@@ -21,7 +21,7 @@ const HeroSection = () => {
     hand_style: "classic",
     text_delay_ms: 3000,
     show_logo: true,
-    logo_text: "THE HOUSE",
+    logo_text: "APOLLON",
     cta_style: "seal",
   };
 

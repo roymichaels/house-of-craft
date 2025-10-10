@@ -27,7 +27,7 @@ const Circle = () => {
     {
       icon: Crown,
       title: "Legacy Projects",
-      description: "Partnerships that shape the future canon of the House.",
+      description: "Partnerships that shape the future canon of APOLLON.",
     },
   ];
 
@@ -51,10 +51,10 @@ const Circle = () => {
           </div>
           
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            The Inner Chamber
+            The Inner Sanctum
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
-            Private access to The House — for those who lead, create, and command.
+            Private access to APOLLON — for those who lead, create, and command through light.
           </p>
         </motion.div>
 

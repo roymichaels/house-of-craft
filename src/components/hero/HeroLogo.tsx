@@ -51,8 +51,8 @@ const HeroLogo = ({ logoText, show }: HeroLogoProps) => {
       <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.7)] transition-all duration-300">
         {logoText}
       </h2>
-      <p className="font-sans text-[9px] tracking-widest text-ancient-silver/60 uppercase">
-        Est. MMXXV
+      <p className="imperial-caps text-[9px] tracking-widest text-ancient-silver/60">
+        The Order of Light
       </p>
     </motion.div>
   );

@@ -44,10 +44,10 @@ export const relics: Record<string, RelicData> = {
   seal: {
     id: 'seal',
     name: 'seal',
-    title: 'Mark of The House',
+    title: 'Mark of APOLLON',
     category: 'Wax Seal',
-    description: 'Your signature in wax and gold. A mark that cannot be forged.',
-    story: 'When you seal a letter with this, the recipient knows: this comes from power. Not influence. Not status. Power. The kind that built empires.',
+    description: 'Your sigil in wax and gold. The seal of the lightbearers.',
+    story: 'This piece confirms dominion. When you seal with this mark, the recipient knows: this comes from the Order. Acquisition requires consultation with APOLLON.',
     image: '/placeholder.svg',
     chamber: 'mastery'
   },
@@ -90,7 +90,7 @@ export const relics: Record<string, RelicData> = {
     title: 'The Chronicle',
     category: 'Master Collection',
     description: 'The pinnacle. Reserved for those who have proven themselves worthy.',
-    story: 'This piece does not announce arrival. It confirms dominion. Acquisition requires consultation with The House. Not everyone is ready.',
+    story: 'This piece does not announce arrival. It confirms dominion. Acquisition requires consultation with APOLLON. Not everyone is ready.',
     image: '/assets/collection-watches.jpg',
     price: 'By Consultation Only',
     chamber: 'vault'

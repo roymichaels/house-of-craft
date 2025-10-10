@@ -54,7 +54,7 @@ All colors MUST be HSL.
 
     --radius: 0.375rem;
     
-    /* Modern Relic brand tokens */
+    /* APOLLON brand tokens */
     --ancient-gold: 43 74% 66%;
     --ancient-silver: 0 0% 75%;
     --ancient-patina: 40 25% 45%;
@@ -62,7 +62,12 @@ All colors MUST be HSL.
     --gold-dark: 40 20% 35%;
     --brass: 40 25% 45%;
     
-    /* Roman Imperial Palette */
+    /* Apollinean Solar Palette */
+    --solar-copper: 28 62% 49%;
+    --aureate: 43 74% 66%;
+    --obsidian: 0 0% 4%;
+    --marble-ivory: 40 15% 93%;
+    --blood-red: 0 48% 48%;
     --imperial-bronze: 28 38% 35%;
     --temple-marble: 0 0% 95%;
     --obsidian-core: 0 0% 8%;
@@ -197,6 +202,42 @@ body p {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 600;
+}
+
+/* Apollinean utilities */
+.font-apollon {
+  font-family: 'Ancient', serif;
+  text-shadow: 0 0 30px hsla(var(--ancient-gold) / 0.4);
+}
+
+.font-order {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.1em;
+}
+
+/* Beam ripple effect - Apollinean interaction */
+.beam-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.beam-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, hsla(var(--aureate) / 0.4) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  pointer-events: none;
+}
+
+.beam-ripple:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 /* Custom cursor */

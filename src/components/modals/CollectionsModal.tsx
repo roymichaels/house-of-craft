@@ -66,13 +66,13 @@ const CollectionsModal = () => {
                     transition={{ delay: 0.2 }}
                   >
                     <p className="font-ancient text-primary text-sm tracking-wider mb-4">
-                      Curated Collections
+                      The Instruments of
                     </p>
-                    <h2 className="text-4xl md:text-6xl font-serif mb-4">
-                      The House Collections
+                    <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4">
+                      APOLLON
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                      Timepieces of exceptional provenance and character
+                      Objects forged by light and discipline
                     </p>
                   </motion.div>
                 </div>

@@ -13,8 +13,8 @@ const EmailCaptureModal = () => {
 
   useEffect(() => {
     // Check if user has already signed up or dismissed
-    const hasSignedUp = localStorage.getItem("house_email_signup");
-    const hasDismissed = sessionStorage.getItem("house_email_dismissed");
+    const hasSignedUp = localStorage.getItem("apollon_email_signup");
+    const hasDismissed = sessionStorage.getItem("apollon_email_dismissed");
 
     if (!hasSignedUp && !hasDismissed) {
       // Show modal after 3 seconds
@@ -37,12 +37,12 @@ const EmailCaptureModal = () => {
 
     // TODO: Connect to Lovable Cloud to store email and generate discount code
     // For now, store in localStorage
-    localStorage.setItem("house_email_signup", email);
-    localStorage.setItem("house_discount_code", "HOUSE10");
+    localStorage.setItem("apollon_email_signup", email);
+    localStorage.setItem("apollon_initiation_code", "APOLLON10");
 
-    toast.success("Welcome to The House! Your 10% discount code: HOUSE10", {
+    toast.success("Welcome to APOLLON! Your initiation code: APOLLON10", {
       duration: 8000,
-      description: "Check your email for exclusive access and curated selections.",
+      description: "You have been granted early access to sacred instruments and teachings.",
     });
 
     setIsOpen(false);
@@ -50,7 +50,7 @@ const EmailCaptureModal = () => {
   };
 
   const handleDismiss = () => {
-    sessionStorage.setItem("house_email_dismissed", "true");
+    sessionStorage.setItem("apollon_email_dismissed", "true");
     setIsOpen(false);
   };
 
@@ -66,9 +66,9 @@ const EmailCaptureModal = () => {
         </button>
 
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif">Join The House</DialogTitle>
+          <DialogTitle className="text-2xl font-ancient text-ancient-gold">Join The Order</DialogTitle>
           <DialogDescription className="text-base pt-2">
-            Receive <span className="text-primary font-medium">10% off your first purchase</span> and early access to our curated collections.
+            Receive early access to APOLLON's curated instruments and sacred teachings. <span className="text-primary font-medium">10% initiation discount</span> granted.
           </DialogDescription>
         </DialogHeader>
 
@@ -89,9 +89,9 @@ const EmailCaptureModal = () => {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full h-11 text-base"
+            className="w-full h-11 text-base beam-ripple"
           >
-            {isSubmitting ? "Processing..." : "Claim Your Welcome Offer"}
+            {isSubmitting ? "Processing..." : "Take the Oath"}
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">

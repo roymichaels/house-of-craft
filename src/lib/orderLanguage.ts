@@ -1,27 +1,27 @@
 export const OrderLanguage = {
   chambers: {
-    hero: "Atrium of Command",
-    mindcraft: "Hall of Mastery", 
-    objects: "Vault of Presence",
-    doctrine: "Library of Doctrine",
-    circle: "Inner Chamber"
+    hero: "The Solar Atrium",
+    mindcraft: "Hall of Discipline", 
+    objects: "Vault of Sacred Instruments",
+    doctrine: "Library of Light",
+    circle: "The Inner Sanctum"
   },
   
   actions: {
     enter: "Enter The Order",
-    examine: "Examine the Relic",
+    examine: "Study the Instrument",
     study: "Study the Doctrine",
-    acquire: "Acquire the Relic",
-    swear: "Swear the Oath",
-    access: "Inner Chamber Access"
+    acquire: "Claim Your Relic",
+    swear: "Take the Oath",
+    access: "Inner Sanctum Access"
   },
   
   virtues: {
-    hero: "Authority & Self-Control",
-    mindcraft: "Discipline & Craft",
-    objects: "Embodied Stillness",
-    doctrine: "Wisdom & Restraint",
-    circle: "Brotherhood & Legacy"
+    hero: "Command Through Clarity",
+    mindcraft: "Light as Discipline",
+    objects: "Form Follows Reason",
+    doctrine: "Order From Light",
+    circle: "Time Belongs to the Sun"
   },
   
   latin: {
@@ -35,5 +35,11 @@ export const OrderLanguage = {
   phrases: {
     hero: "Time belongs to the man who commands himself",
     sanctuary: "A Sanctuary of Mastery"
+  },
+  
+  taglines: {
+    primary: "Where Light Becomes Order",
+    secondary: "Forged by the Sun",
+    tertiary: "Command Through Clarity"
   }
 };

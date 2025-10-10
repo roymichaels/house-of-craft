@@ -35,7 +35,7 @@ const Navigation = () => {
           className="text-xl font-ancient tracking-wider text-ancient-gold 
                      opacity-60 hover:opacity-100 transition-opacity"
         >
-          TH
+          ΛΠ
         </Link>
       </motion.div>
     </>
