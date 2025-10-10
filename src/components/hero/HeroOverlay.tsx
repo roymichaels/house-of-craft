@@ -27,20 +27,20 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
         <div className="flex flex-col items-center gap-3 pb-0">
           {/* Subtitle with decorative divider */}
           <motion.div
-          className="max-w-2xl mx-auto mb-4"
+          className="max-w-2xl mx-auto mb-2 md:mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
         >
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-ancient-gold/40 to-ancient-gold/40" />
             <div className="w-1.5 h-1.5 rounded-full bg-ancient-gold animate-pulse" />
             <div className="h-px flex-1 bg-gradient-to-l from-transparent via-ancient-gold/40 to-ancient-gold/40" />
           </div>
-          <p className="text-lg md:text-xl text-ancient-silver/80 font-light tracking-wide text-center">
+          <p className="text-base md:text-xl text-ancient-silver/80 font-light tracking-wide text-center px-4">
             {subtitle}
           </p>
-          <div className="flex items-center gap-4 mt-4">
+          <div className="flex items-center gap-3 md:gap-4 mt-2 md:mt-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-ancient-gold/40 to-ancient-gold/40" />
             <div className="imperial-caps text-xs text-ancient-gold/60 tracking-widest">EST. MMXXIV</div>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent via-ancient-gold/40 to-ancient-gold/40" />
