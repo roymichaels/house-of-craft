@@ -15,7 +15,7 @@ const Navigation = () => {
       {/* Floating Menu Button */}
       <motion.button
         onClick={() => setIsDrawerOpen(true)}
-        className="fixed top-8 right-8 md:right-12 z-50 w-12 h-12 rounded-full 
+        className="fixed top-6 right-6 md:top-8 md:right-12 z-[60] w-12 h-12 rounded-full 
                    border border-ancient-gold/30 backdrop-blur-sm
                    flex items-center justify-center
                    opacity-60 hover:opacity-100 hover:border-ancient-gold/60
@@ -29,7 +29,14 @@ const Navigation = () => {
       </motion.button>
 
       {/* Logo */}
-      <motion.div className="fixed top-8 left-12 md:left-16 z-40">
+      <motion.div 
+        className="fixed top-6 left-6 md:top-8 md:left-12 z-[60] 
+                   backdrop-blur-sm border border-ancient-gold/20 
+                   p-2 rounded-lg"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
         <Link 
           to="/" 
           className="text-xl font-ancient tracking-wider text-ancient-gold 
