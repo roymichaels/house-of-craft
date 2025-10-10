@@ -6,6 +6,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import TrustBadges from "@/components/trust/TrustBadges";
 
 const CartModal = () => {
   const { activeModal, closeModal, openModal } = useModalStore();
@@ -397,6 +398,11 @@ const CartModal = () => {
                       >
                         {isCheckingOut ? 'CREATING CHECKOUT...' : 'PROCEED TO CHECKOUT'}
                       </motion.button>
+                    </div>
+
+                    {/* Trust Indicators */}
+                    <div className="pt-4 border-t border-border/10">
+                      <TrustBadges variant="compact" />
                     </div>
                   </div>
                 </>

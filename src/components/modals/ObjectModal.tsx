@@ -1,15 +1,20 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft } from "lucide-react";
+import { X, ArrowLeft, Package, Ruler, Eye, Star } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { OrderLanguage } from "@/lib/orderLanguage";
 import { latin } from "@/lib/brandLanguage";
 import { ProductMediaGallery } from "./ProductMediaGallery";
+import ReviewsSection from "@/components/reviews/ReviewsSection";
+import TrustBadges from "@/components/trust/TrustBadges";
+
+type TabType = 'overview' | 'specs' | 'reviews';
 
 const ObjectModal = () => {
   const { activeModal, objectData, closeModal, openModal } = useModalStore();
   const isOpen = activeModal === 'object';
+  const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -31,6 +36,16 @@ const ObjectModal = () => {
 
   // Support both old (image) and new (media) format
   const mediaItems = objectData.media || (objectData.image ? [{ type: 'image' as const, url: objectData.image }] : []);
+
+  // Mock specs (in real app, would come from product data)
+  const mockSpecs = {
+    'Material': 'Premium stainless steel',
+    'Dimensions': '42mm diameter, 12mm thickness',
+    'Weight': '180g',
+    'Water Resistance': '100m / 10 ATM',
+    'Movement': 'Automatic mechanical',
+    'Power Reserve': '42 hours'
+  };
 
   return (
     <AnimatePresence>
@@ -138,8 +153,8 @@ const ObjectModal = () => {
               <ProductMediaGallery media={mediaItems} title={objectData.title} />
             </div>
 
-            {/* Right Panel - Story & Details */}
-            <div className="flex-1 flex flex-col justify-center space-y-4 md:space-y-6 relative pb-20 md:pb-0">
+            {/* Right Panel - Product Details with Tabs */}
+            <div className="flex-1 flex flex-col relative pb-20 md:pb-0 overflow-y-auto momentum-scroll">
               {/* Rotating sigil watermark */}
               <motion.div
                 className="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none"
@@ -153,12 +168,11 @@ const ObjectModal = () => {
                 </svg>
               </motion.div>
 
-              <div className="relative">
+              {/* Header Section */}
+              <div className="relative mb-6">
                 {/* Golden geometry frame corners */}
                 <div className="absolute -top-2 -left-2 w-6 h-6 border-l-2 border-t-2 border-ancient-gold/50" />
                 <div className="absolute -top-2 -right-2 w-6 h-6 border-r-2 border-t-2 border-ancient-gold/50" />
-                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-l-2 border-b-2 border-ancient-gold/50" />
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-r-2 border-b-2 border-ancient-gold/50" />
                 
                 {/* Latin inscription based on category */}
                 <p className="font-serif italic text-ancient-gold/40 text-xs tracking-[0.3em] uppercase mb-2">
@@ -172,7 +186,6 @@ const ObjectModal = () => {
 
                 {/* Title with ambient glow */}
                 <div className="relative mb-4">
-                  {/* Glow backdrop */}
                   <div className="absolute -inset-4 bg-ancient-gold/10 blur-2xl rounded-full" />
                   
                   <h2 className="relative font-ancient text-4xl md:text-5xl text-ancient-gold 
@@ -182,15 +195,25 @@ const ObjectModal = () => {
                   </h2>
                 </div>
 
-                {/* Subtitle - using Cormorant Garamond */}
+                {/* Subtitle */}
                 <p className="font-serif text-base md:text-lg leading-relaxed text-foreground/80 mb-1">
                   {objectData.description}
                 </p>
+
+                {/* Rating Preview */}
+                <div className="flex items-center gap-2 mt-3">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star key={star} size={14} className="fill-primary text-primary" />
+                    ))}
+                  </div>
+                  <span className="text-xs text-muted-foreground">4.8 (127 reviews)</span>
+                </div>
               </div>
 
               {/* Price Display */}
               {objectData.price && (
-                <div className="pt-6 pb-4 border-t border-ancient-gold/20">
+                <div className="pb-6 border-b border-ancient-gold/20">
                   <p className="text-xs font-cinzel tracking-[0.2em] text-ancient-gold/60 uppercase mb-1">
                     Investment
                   </p>
@@ -200,14 +223,84 @@ const ObjectModal = () => {
                 </div>
               )}
 
-              {/* Philosophical tagline */}
-              {objectData.story && (
-                <div className="pt-4">
-                  <p className="font-serif italic text-sm text-ancient-silver/60 leading-relaxed">
-                    "{objectData.story}"
-                  </p>
-                </div>
-              )}
+              {/* Tabs Navigation */}
+              <div className="flex gap-1 border-b border-border/20 mt-6 mb-6">
+                {[
+                  { id: 'overview' as TabType, label: 'Overview', icon: Eye },
+                  { id: 'specs' as TabType, label: 'Specifications', icon: Ruler },
+                  { id: 'reviews' as TabType, label: 'Reviews', icon: Star }
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <motion.button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center gap-2 px-4 py-2 text-sm font-medium
+                                 border-b-2 transition-colors relative
+                                 ${activeTab === tab.id 
+                                   ? 'border-primary text-primary' 
+                                   : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+                      whileHover={{ y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Icon size={14} />
+                      {tab.label}
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              {/* Tab Content */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex-1"
+                >
+                  {activeTab === 'overview' && (
+                    <div className="space-y-6">
+                      {/* Philosophical tagline */}
+                      {objectData.story && (
+                        <div>
+                          <p className="font-serif italic text-sm text-ancient-silver/60 leading-relaxed">
+                            "{objectData.story}"
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Trust Badges */}
+                      <div>
+                        <h3 className="text-sm font-ancient text-foreground mb-4">Why Choose APOLLON</h3>
+                        <TrustBadges variant="compact" />
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'specs' && (
+                    <div className="space-y-3">
+                      {Object.entries(mockSpecs).map(([key, value], index) => (
+                        <motion.div
+                          key={key}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className="flex items-start justify-between py-3 border-b border-border/10"
+                        >
+                          <span className="text-sm text-muted-foreground">{key}</span>
+                          <span className="text-sm text-foreground font-medium text-right">{value}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+
+                  {activeTab === 'reviews' && (
+                    <ReviewsSection productId={objectData.title} />
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* CTA - Fixed at bottom on mobile, inline on desktop */}

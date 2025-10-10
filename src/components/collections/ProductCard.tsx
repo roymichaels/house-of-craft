@@ -96,7 +96,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <motion.div
       onClick={handleCardClick}
-      className="group cursor-pointer"
+      className="group cursor-pointer relative"
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       transition={{
@@ -105,12 +105,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
         damping: 30,
       }}
     >
-      {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden rounded-lg mb-3 bg-muted/20">
-        <img
+      {/* Hover glow effect */}
+      <motion.div
+        className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 
+                   rounded-lg opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"
+        initial={false}
+      />
+      
+      <div className="relative">{/* Image Container */}
+      <div className="relative aspect-square overflow-hidden rounded-lg mb-3 bg-muted/20"
+           style={{ transformStyle: 'preserve-3d' }}>
+        <motion.img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.08 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         />
         
         {/* Wishlist Button */}
@@ -169,6 +179,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Truck size={10} />
           <span>{estimatedDelivery}</span>
         </div>
+      </div>
       </div>
     </motion.div>
   );
