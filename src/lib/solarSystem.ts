@@ -271,53 +271,14 @@ export function initSolarSystem(container: HTMLElement) {
   });
   const chromosphere = new THREE.Mesh(chromoGeometry, chromoMaterial);
   sunGroup.add(chromosphere);
-  
-  // Corona 1 - orange glow
-  const corona1Geometry = new THREE.SphereGeometry(6.0, 32, 32);
-  const corona1Material = new THREE.MeshBasicMaterial({
-    color: 0xFF6600,
-    transparent: true,
-    opacity: 0.3,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const corona1 = new THREE.Mesh(corona1Geometry, corona1Material);
-  sunGroup.add(corona1);
-  
-  // Corona 2 - yellow glow
-  const corona2Geometry = new THREE.SphereGeometry(7.0, 32, 32);
-  const corona2Material = new THREE.MeshBasicMaterial({
-    color: 0xFFAA00,
-    transparent: true,
-    opacity: 0.2,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const corona2 = new THREE.Mesh(corona2Geometry, corona2Material);
-  sunGroup.add(corona2);
-  
-  // Outer corona - soft yellow-white
-  const corona3Geometry = new THREE.SphereGeometry(8.5, 32, 32);
-  const corona3Material = new THREE.MeshBasicMaterial({
-    color: 0xFFDD88,
-    transparent: true,
-    opacity: 0.15,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const corona3 = new THREE.Mesh(corona3Geometry, corona3Material);
-  sunGroup.add(corona3);
-  
+
   scene.add(sunGroup);
-  
+
   // Store references for animation
   sunLayers = {
     core: sunCore,
     surface: sunSurface,
     chromosphere,
-    corona1,
-    corona2,
-    corona3,
     material: surfaceMaterial
   };
   
@@ -418,20 +379,6 @@ export function initSolarSystem(container: HTMLElement) {
       sunLayers.surface.rotation.y += 0.0008;
       sunLayers.surface.rotation.x += 0.0002;
       sunLayers.chromosphere.rotation.y -= 0.0006;
-      
-      // Pulsating glow on corona layers
-      const glowPulse1 = 0.3 + Math.sin(time * 0.8) * 0.1;
-      const glowPulse2 = 0.2 + Math.sin(time * 1.1) * 0.08;
-      const glowPulse3 = 0.15 + Math.sin(time * 0.6) * 0.05;
-      
-      sunLayers.corona1.material.opacity = glowPulse1;
-      sunLayers.corona2.material.opacity = glowPulse2;
-      sunLayers.corona3.material.opacity = glowPulse3;
-      
-      // Slight rotation variation on coronas
-      sunLayers.corona1.rotation.y += 0.0003;
-      sunLayers.corona2.rotation.y -= 0.0002;
-      sunLayers.corona3.rotation.y += 0.0001;
     }
     
     // Update planets
