@@ -2,6 +2,8 @@ import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import OrbModel from "../hero/OrbModel";
+import { Pillars } from "../3d/effects/Pillars";
+import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberAtriumProps {
   lightColor: string;
@@ -39,19 +41,11 @@ const ChamberAtrium = ({ lightColor }: ChamberAtriumProps) => {
       {/* Central Orb */}
       <OrbModel rotationSpeed={0.3} lightColor={lightColor} />
       
-      {/* Distant Roman Pillars */}
-      <group ref={pillarsRef}>
-        {pillars.map((pillar) => (
-          <mesh key={pillar.key} position={pillar.position} castShadow>
-            <cylinderGeometry args={[0.4, 0.5, 8, 12]} />
-            <meshStandardMaterial 
-              color="#3a3530" 
-              roughness={0.8}
-              metalness={0.1}
-            />
-          </mesh>
-        ))}
-      </group>
+      {/* Roman Pillars */}
+      <Pillars count={8} radius={18} height={8} lightColor={lightColor} />
+      
+      {/* Latin Inscription */}
+      <LatinInscription mode="hero" position={[0, 3, -8]} />
     </group>
   );
 };

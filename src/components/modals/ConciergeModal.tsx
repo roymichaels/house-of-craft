@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Shield, Wrench, TrendingUp } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
+import { useSceneStore } from "@/contexts/SceneContext";
 import { useEffect } from "react";
 import ServiceCard from "@/components/concierge/ServiceCard";
 import ContactForm from "@/components/concierge/ContactForm";
+import OathRitual from "@/components/concierge/OathRitual";
 
 const services = [
   {
@@ -34,7 +36,9 @@ const services = [
 
 const ConciergeModal = () => {
   const { activeModal, closeModal } = useModalStore();
+  const { mode } = useSceneStore();
   const isOpen = activeModal === 'concierge';
+  const isInnerChamber = mode === 'circle';
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -78,64 +82,73 @@ const ConciergeModal = () => {
                   <X className="h-5 w-5" />
                 </button>
 
-                {/* Header */}
-                <div className="text-center pt-16 pb-12 px-6 border-b border-primary/10">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <p className="font-ancient text-primary text-sm tracking-wider mb-4">
-                      White Glove Service
-                    </p>
-                    <h2 className="text-4xl md:text-6xl font-serif mb-4">
-                      Personal Concierge
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                      Expert guidance for discerning collectors. From sourcing rare pieces to portfolio management, we're your trusted advisors in horology.
-                    </p>
-                  </motion.div>
-                </div>
-
-                {/* Services */}
-                <div className="px-6 py-16">
-                  <motion.div
-                    className="text-center mb-12"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <h3 className="text-3xl md:text-4xl font-serif mb-4">Our Services</h3>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                      Comprehensive support for every aspect of your collecting journey
-                    </p>
-                  </motion.div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                    {services.map((service, index) => (
-                      <ServiceCard key={service.title} service={service} index={index} />
-                    ))}
+                {/* Conditional Content: Oath Ritual or Standard Concierge */}
+                {isInnerChamber ? (
+                  <div className="px-6 py-16">
+                    <OathRitual />
                   </div>
+                ) : (
+                  <>
+                    {/* Header */}
+                    <div className="text-center pt-16 pb-12 px-6 border-b border-primary/10">
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <p className="font-ancient text-primary text-sm tracking-wider mb-4">
+                          White Glove Service
+                        </p>
+                        <h2 className="text-4xl md:text-6xl font-serif mb-4">
+                          Personal Concierge
+                        </h2>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                          Expert guidance for discerning collectors. From sourcing rare pieces to portfolio management, we're your trusted advisors in horology.
+                        </p>
+                      </motion.div>
+                    </div>
 
-                  {/* Contact Form */}
-                  <div className="border-t border-primary/10 pt-16">
-                    <motion.div
-                      className="text-center mb-12"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8 }}
-                    >
-                      <h3 className="text-3xl md:text-4xl font-serif mb-4">Get in Touch</h3>
-                      <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Share your collecting goals, and we'll craft a personalized approach
-                      </p>
-                    </motion.div>
+                    {/* Services */}
+                    <div className="px-6 py-16">
+                      <motion.div
+                        className="text-center mb-12"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                      >
+                        <h3 className="text-3xl md:text-4xl font-serif mb-4">Our Services</h3>
+                        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                          Comprehensive support for every aspect of your collecting journey
+                        </p>
+                      </motion.div>
 
-                    <ContactForm />
-                  </div>
-                </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                        {services.map((service, index) => (
+                          <ServiceCard key={service.title} service={service} index={index} />
+                        ))}
+                      </div>
+
+                      {/* Contact Form */}
+                      <div className="border-t border-primary/10 pt-16">
+                        <motion.div
+                          className="text-center mb-12"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.8 }}
+                        >
+                          <h3 className="text-3xl md:text-4xl font-serif mb-4">Get in Touch</h3>
+                          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                            Share your collecting goals, and we'll craft a personalized approach
+                          </p>
+                        </motion.div>
+
+                        <ContactForm />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

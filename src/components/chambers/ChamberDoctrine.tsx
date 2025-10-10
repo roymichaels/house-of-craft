@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberDoctrineProps {
   lightColor: string;
@@ -32,6 +33,10 @@ const ChamberDoctrine = ({ lightColor }: ChamberDoctrineProps) => {
 
   return (
     <group>
+      {/* Latin Inscription */}
+      <LatinInscription mode="doctrine" position={[0, 4, -3]} />
+      
+      {/* Floating Tablets */}
       {tablets.map((tablet) => (
         <group key={tablet.key}>
           <mesh 

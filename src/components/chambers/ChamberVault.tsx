@@ -3,6 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
 import { relics } from "@/data/relics";
+import { Pillars } from "../3d/effects/Pillars";
+import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberVaultProps {
   lightColor: string;
@@ -41,6 +43,13 @@ const ChamberVault = ({ lightColor }: ChamberVaultProps) => {
 
   return (
     <group>
+      {/* Pillars */}
+      <Pillars count={6} radius={14} height={10} lightColor={lightColor} />
+      
+      {/* Latin Inscription */}
+      <LatinInscription mode="objects" position={[0, 3.5, -6]} />
+      
+      {/* Pedestals and Relics */}
       {pedestalConfigs.map((config) => (
         <group key={config.key} position={config.position}>
           {/* Glass pedestal */}

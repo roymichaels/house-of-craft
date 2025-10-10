@@ -3,6 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
 import { relics } from "@/data/relics";
+import { Pillars } from "../3d/effects/Pillars";
+import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberMasteryProps {
   lightColor: string;
@@ -29,6 +31,13 @@ const ChamberMastery = ({ lightColor, accentColor }: ChamberMasteryProps) => {
 
   return (
     <group ref={groupRef}>
+      {/* Pillars */}
+      <Pillars count={6} radius={10} height={9} lightColor={lightColor} />
+      
+      {/* Latin Inscription */}
+      <LatinInscription mode="mindcraft" position={[0, 3.5, -4]} />
+      
+      {/* Orbiting Relics */}
       {relicConfigs.map((config) => (
         <InteractiveRelic
           key={config.data.id}

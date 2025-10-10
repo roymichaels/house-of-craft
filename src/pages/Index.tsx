@@ -18,16 +18,27 @@ import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
 import { useSceneStore } from "@/contexts/SceneContext";
 import { useHeroScene } from "@/hooks/useHeroScene";
+import { initChamberAudio, switchChamberAudio } from "@/lib/chamberAudio";
 
 const Index = () => {
   const { data } = useHeroScene();
-  const { setMode, setScrollProgress } = useSceneStore();
+  const { mode, setMode, setScrollProgress } = useSceneStore();
   const { scrollYProgress } = useScroll();
   
   const mindcraftRef = useRef<HTMLElement>(null);
   const objectsRef = useRef<HTMLElement>(null);
   const doctrineRef = useRef<HTMLElement>(null);
   const circleRef = useRef<HTMLElement>(null);
+
+  // Initialize chamber audio on mount
+  useEffect(() => {
+    initChamberAudio();
+  }, []);
+
+  // Switch chamber audio when mode changes
+  useEffect(() => {
+    switchChamberAudio(mode);
+  }, [mode]);
 
   const config = {
     rotationSpeed: data?.rotation_speed ?? 0.3,

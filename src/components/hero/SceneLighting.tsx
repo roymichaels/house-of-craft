@@ -12,17 +12,17 @@ interface SceneLightingProps {
 const getLightingForMode = (mode: SceneMode) => {
   switch (mode) {
     case 'hero':
-      return { keyLight: 0.8, jewelLight: 0.3 };
+      return { keyLight: 0.8, jewelLight: 0.3, accentIntensity: 0.6 };
     case 'mindcraft':
-      return { keyLight: 0.6, jewelLight: 0.5 };
+      return { keyLight: 0.6, jewelLight: 0.5, accentIntensity: 0.5 };
     case 'objects':
-      return { keyLight: 0.9, jewelLight: 0.2 };
+      return { keyLight: 0.9, jewelLight: 0.2, accentIntensity: 0.4 };
     case 'doctrine':
-      return { keyLight: 0.5, jewelLight: 0.1 };
+      return { keyLight: 0.5, jewelLight: 0.1, accentIntensity: 0.3 };
     case 'circle':
-      return { keyLight: 0.8, jewelLight: 0.4 };
+      return { keyLight: 0.8, jewelLight: 0.4, accentIntensity: 0.7 };
     default:
-      return { keyLight: 0.8, jewelLight: 0.3 };
+      return { keyLight: 0.8, jewelLight: 0.3, accentIntensity: 0.5 };
   }
 };
 
@@ -30,6 +30,7 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
   const keyLightRef = useRef<SpotLight>(null);
   const sweepLightRef = useRef<SpotLight>(null);
   const jewelLightRef = useRef<PointLight>(null);
+  const burgundyRimRef = useRef<PointLight>(null);
 
   useEffect(() => {
     // Smoothly transition lighting based on scene mode
@@ -129,6 +130,15 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         color={lightColor}
         intensity={0.4}
         distance={5}
+      />
+
+      {/* Burgundy rim light - Order of Command accent */}
+      <pointLight
+        ref={burgundyRimRef}
+        position={[-10, 5, 0]}
+        color="#8B1C1C"
+        intensity={getLightingForMode(mode).accentIntensity}
+        distance={20}
       />
 
       {/* Native Three.js fog for atmospheric depth */}
