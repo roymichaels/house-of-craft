@@ -11,7 +11,7 @@ const RitualEntry = () => {
   const { openModal } = useModalStore();
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("apollon-visited");
+    const hasVisited = localStorage.getItem("apollo-visited");
     
     if (!hasVisited) {
       setShowEntry(true);
@@ -22,13 +22,13 @@ const RitualEntry = () => {
 
   const handleEnter = () => {
     playModalClick();
-    localStorage.setItem("apollon-visited", "true");
+    localStorage.setItem("apollo-visited", "true");
     setShowEntry(false);
     setTimeout(() => {
       setHasEntered(true);
       
       // Show email capture modal after entry if user hasn't signed up yet
-      const hasSignedUp = localStorage.getItem("apollon_email_signup");
+      const hasSignedUp = localStorage.getItem("apollo_email_signup");
       if (!hasSignedUp) {
         setTimeout(() => openModal('email-capture'), 2000);
       }

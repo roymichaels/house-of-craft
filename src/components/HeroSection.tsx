@@ -19,7 +19,7 @@ const HeroSection = () => {
 
   // Default values while loading or if query fails
   const config = heroScene || {
-    title: "APOLLON",
+    title: "APOLLO",
     subtitle: "Built to last decades. Forged for men who value time, not trends.",
     rotation_speed: 0.3,
     light_color: "#C4A661",
@@ -34,7 +34,7 @@ const HeroSection = () => {
     hand_style: "classic",
     text_delay_ms: 3000,
     show_logo: true,
-    logo_text: "APOLLON",
+    logo_text: "APOLLO",
     cta_style: "seal",
   };
 
@@ -43,7 +43,7 @@ const HeroSection = () => {
       {/* Header */}
       <Navigation />
 
-      {/* 3D Scene with Orb and APOLLON text */}
+      {/* 3D Scene with Orb and APOLLO text */}
       <div className="flex-1 relative flex items-center justify-center">
         <Canvas className="absolute inset-0" dpr={[1, isMobile ? 1.5 : 2]}>
           <Suspense fallback={null}>

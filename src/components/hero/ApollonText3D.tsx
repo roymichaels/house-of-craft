@@ -3,7 +3,7 @@ import { Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const ApollonText3D = () => {
+const ApolloText3D = () => {
   const textRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
@@ -28,7 +28,7 @@ const ApollonText3D = () => {
         anchorX="center"
         anchorY="middle"
       >
-        APOLLON
+        APOLLO
         <meshStandardMaterial
           color="#D4AF37"
           emissive="#C4A661"
@@ -53,4 +53,4 @@ const ApollonText3D = () => {
   );
 };
 
-export default ApollonText3D;
+export default ApolloText3D;

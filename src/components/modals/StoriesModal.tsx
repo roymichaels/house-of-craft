@@ -63,7 +63,7 @@ const StoriesModal = () => {
                       The Doctrine of
                     </p>
                     <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4">
-                      APOLLON
+                      APOLLO
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                       Where clarity becomes command

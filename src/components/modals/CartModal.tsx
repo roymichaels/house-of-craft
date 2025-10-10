@@ -71,7 +71,7 @@ const CartModal = () => {
 
   const handleApplyPromo = () => {
     const validCodes: Record<string, number> = {
-      'APOLLON10': 0.10,
+      'APOLLO10': 0.10,
       'WELCOME15': 0.15,
       'LUXURY20': 0.20
     };

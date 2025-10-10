@@ -14,7 +14,7 @@ const Footer = () => {
           <div className="text-center mb-12">
             <h3 className="text-4xl md:text-5xl font-ancient tracking-wider text-ancient-gold mb-4
                            drop-shadow-[0_0_30px_rgba(212,175,55,0.3)]">
-              APOLLON
+              APOLLO
             </h3>
             <p className="text-xs font-order text-primary/60 tracking-[0.3em] mb-6">
               LUX EST DISCIPLINA
@@ -60,7 +60,7 @@ const Footer = () => {
           {/* Bottom Copyright */}
           <div className="pt-8 border-t border-border/30 text-center">
             <p className="text-xs text-muted-foreground/60">
-              © MMXXV APOLLON
+              © MMXXV APOLLO
             </p>
           </div>
         </div>

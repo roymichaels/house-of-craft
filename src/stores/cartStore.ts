@@ -84,7 +84,7 @@ export const useCartStore = create<CartStore>()(
       }
     }),
     {
-      name: 'apollon-cart'
+      name: 'apollo-cart'
     }
   )
 );

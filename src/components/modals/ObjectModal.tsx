@@ -415,7 +415,7 @@ const ObjectModal = () => {
 
                       {/* Trust Badges */}
                       <div>
-                        <h3 className="text-sm font-ancient text-foreground mb-4">Why Choose APOLLON</h3>
+                        <h3 className="text-sm font-ancient text-foreground mb-4">Why Choose APOLLO</h3>
                         <TrustBadges variant="compact" />
                       </div>
                     </div>

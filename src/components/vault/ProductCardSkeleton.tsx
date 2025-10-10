@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const ProductCardSkeleton = () => {
   return (
     <div className="overflow-hidden rounded-lg">
-      {/* Image skeleton with APOLLON seal animation */}
+      {/* Image skeleton with APOLLO seal animation */}
       <div className="relative aspect-square bg-gradient-to-br from-muted/30 to-muted/10 rounded-lg overflow-hidden">
         {/* Animated golden shimmer */}
         <motion.div
@@ -18,7 +18,7 @@ const ProductCardSkeleton = () => {
           }}
         />
 
-        {/* Apollon seal in center */}
+        {/* Apollo seal in center */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative w-16 h-16">
             {/* Outer ring */}

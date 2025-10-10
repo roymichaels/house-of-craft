@@ -49,7 +49,7 @@ const HeroScene = ({
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
           
           {/* Unified Temple - All chambers in one connected space */}
-          <group name="apollon-temple">
+          <group name="apollo-temple">
             {/* Central Atrium */}
             <group position={[0, 1.5, 0]}>
               <ChamberAtrium lightColor={lightColor} />

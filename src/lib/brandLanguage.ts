@@ -1,4 +1,4 @@
-// APOLLON - Brand Language System
+// APOLLO - Brand Language System
 // Modern commerce terminology with philosophical grounding
 
 export const BrandLanguage = {

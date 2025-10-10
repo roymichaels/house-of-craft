@@ -1,4 +1,4 @@
-// APOLLON - Modern Product Catalog
+// APOLLO - Modern Product Catalog
 // Architecture: Category > Subcategory > Product
 
 export interface Product {

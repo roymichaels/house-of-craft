@@ -14,7 +14,7 @@ const BrandedLoader = ({ size = 'md', text }: BrandedLoaderProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {/* Apollon Seal Animation */}
+      {/* Apollo Seal Animation */}
       <div className="relative" style={{ width: sizeClasses[size], height: sizeClasses[size] }}>
         {/* Outer ring */}
         <motion.div

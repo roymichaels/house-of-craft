@@ -65,7 +65,7 @@ All colors MUST be HSL.
 
     --radius: 0.375rem;
     
-    /* APOLLON brand tokens */
+    /* APOLLO brand tokens */
     --ancient-gold: 43 70% 56%; /* Warmer, richer gold #D4AF37 */
     --ancient-silver: 0 0% 75%;
     --ancient-patina: 40 25% 45%;
@@ -271,7 +271,7 @@ body p {
 }
 
 /* Apollinean utilities */
-.font-apollon {
+.font-apollo {
   font-family: 'Ancient', serif;
   text-shadow: 0 0 30px hsla(var(--ancient-gold) / 0.4);
 }

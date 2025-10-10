@@ -21,10 +21,10 @@ const EmailCaptureForm = () => {
     }
 
     // Store in localStorage
-    localStorage.setItem("apollon_email_signup", email);
-    localStorage.setItem("apollon_initiation_code", "APOLLON10");
-
-    toast.success("Welcome to APOLLON! Your initiation code: APOLLON10", {
+    localStorage.setItem("apollo_email_signup", email);
+    localStorage.setItem("apollo_initiation_code", "APOLLO10");
+    
+    toast.success("Welcome to APOLLO! Your initiation code: APOLLO10", {
       duration: 8000,
       description: "You have been granted early access to sacred instruments and teachings.",
     });
@@ -64,7 +64,7 @@ const EmailCaptureForm = () => {
           Tempus Domini Solis
         </h2>
         <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto">
-          Join The Order and receive early access to APOLLON's curated instruments and sacred teachings.
+          Join The Order and receive early access to APOLLO's curated instruments and sacred teachings.
         </p>
         <p className="text-ancient-gold font-medium text-xl">
           10% initiation gift granted.
