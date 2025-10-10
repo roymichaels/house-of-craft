@@ -1,6 +1,6 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Mesh, Group } from "three";
+import { useRef, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Mesh, Group, Vector2 } from "three";
 
 interface OrbModelProps {
   rotationSpeed: number;
@@ -14,14 +14,71 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
   const ring2Ref = useRef<Mesh>(null);
   const ring3Ref = useRef<Mesh>(null);
 
+  const [isDragging, setIsDragging] = useState(false);
+  const [previousMouse, setPreviousMouse] = useState(new Vector2());
+  const [rotationVelocity, setRotationVelocity] = useState({ x: 0, y: 0 });
+
+  const { size } = useThree();
+
+  const handlePointerDown = (e: any) => {
+    e.stopPropagation();
+    setIsDragging(true);
+    setPreviousMouse(new Vector2(e.clientX || e.touches?.[0]?.clientX, e.clientY || e.touches?.[0]?.clientY));
+  };
+
+  const handlePointerMove = (e: any) => {
+    if (!isDragging || !groupRef.current) return;
+    
+    const currentX = e.clientX || e.touches?.[0]?.clientX;
+    const currentY = e.clientY || e.touches?.[0]?.clientY;
+    
+    const deltaX = currentX - previousMouse.x;
+    const deltaY = currentY - previousMouse.y;
+
+    // Update rotation velocity
+    setRotationVelocity({
+      x: deltaY * 0.01,
+      y: deltaX * 0.01
+    });
+
+    setPreviousMouse(new Vector2(currentX, currentY));
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+  };
+
   useFrame((state) => {
     if (groupRef.current) {
-      // Slower rotation for ancient mechanical feel
-      groupRef.current.rotation.y += rotationSpeed * 0.003;
+      // Apply rotation from dragging or default rotation
+      if (isDragging) {
+        groupRef.current.rotation.y += rotationVelocity.y;
+        groupRef.current.rotation.x += rotationVelocity.x;
+      } else {
+        // Slower rotation for ancient mechanical feel
+        groupRef.current.rotation.y += rotationSpeed * 0.003;
+        
+        // Dampen velocity
+        setRotationVelocity({
+          x: rotationVelocity.x * 0.95,
+          y: rotationVelocity.y * 0.95
+        });
+      }
       
       // Breathing animation
       const breathe = Math.sin(state.clock.elapsedTime * (Math.PI / 2)) * 0.015;
       groupRef.current.scale.setScalar(1 + breathe);
+    }
+
+    // Individual ring rotations
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.z += rotationSpeed * 0.002;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.x += rotationSpeed * 0.0025;
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.y += rotationSpeed * 0.003;
     }
 
     // Pulsing glow on orb
@@ -33,7 +90,13 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
   });
 
   return (
-    <group ref={groupRef}>
+    <group 
+      ref={groupRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+    >
       {/* Central Astrolabe Core - Dark Bronze */}
       <mesh ref={orbRef} position={[0, 0, 0]} castShadow receiveShadow>
         <sphereGeometry args={[0.8, 64, 64]} />
@@ -60,8 +123,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 1 - Outer bronze astrolabe band - removed individual ref */}
-      <mesh rotation={[Math.PI / 4, 0, 0]}>
+      {/* Ring 1 - Outer bronze astrolabe band */}
+      <mesh ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
         <torusGeometry args={[1.5, 0.04, 16, 100]} />
         <meshPhysicalMaterial
           color="#5A5040"
@@ -73,8 +136,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 2 - Middle brass band - removed individual ref */}
-      <mesh rotation={[0, Math.PI / 3, Math.PI / 4]}>
+      {/* Ring 2 - Middle brass band */}
+      <mesh ref={ring2Ref} rotation={[0, Math.PI / 3, Math.PI / 4]}>
         <torusGeometry args={[1.3, 0.03, 16, 100]} />
         <meshPhysicalMaterial
           color="#B8860B"
@@ -86,8 +149,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         />
       </mesh>
 
-      {/* Ring 3 - Inner oxidized copper - removed individual ref */}
-      <mesh rotation={[Math.PI / 6, Math.PI / 2, 0]}>
+      {/* Ring 3 - Inner oxidized copper */}
+      <mesh ref={ring3Ref} rotation={[Math.PI / 6, Math.PI / 2, 0]}>
         <torusGeometry args={[1.1, 0.025, 16, 100]} />
         <meshPhysicalMaterial
           color="#7A6A4F"
