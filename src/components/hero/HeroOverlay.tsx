@@ -11,11 +11,11 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
   const { openModal } = useModalStore();
 
   return (
-    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-8 h-full pointer-events-none">
-      <div className="flex flex-col items-center justify-center h-full space-y-6 md:space-y-8">
-        {/* APOLLON Title */}
+    <div className="absolute inset-0 z-20 flex flex-col text-center px-8 h-full pointer-events-none">
+      <div className="flex flex-col h-full justify-between py-8">
+        {/* APOLLON Title - Top */}
         <motion.h1
-          className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)]"
+          className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)] pt-12"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -23,9 +23,11 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           APOLLON
         </motion.h1>
 
-        {/* Subtitle with decorative divider - positioned below 3D APOLLON text */}
-        <motion.div
-          className="max-w-2xl mx-auto mb-8"
+        {/* Bottom Section - Subtitle + CTAs */}
+        <div className="flex flex-col items-center gap-8 pb-12">
+          {/* Subtitle with decorative divider */}
+          <motion.div
+          className="max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
@@ -43,11 +45,11 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             <div className="imperial-caps text-xs text-ancient-gold/60 tracking-widest">EST. MMXXIV</div>
             <div className="h-px flex-1 bg-gradient-to-l from-transparent via-ancient-gold/40 to-ancient-gold/40" />
           </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Three Actions - Enhanced with icons and glow */}
-        <motion.div
-          className="flex flex-col md:flex-row items-center gap-4 md:gap-6 pt-8 pointer-events-auto"
+          {/* Three Actions - Enhanced with icons and glow */}
+          <motion.div
+          className="flex flex-col md:flex-row items-center gap-4 md:gap-6 pointer-events-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 1, ease: [0.16, 1, 0.3, 1] }}
@@ -128,6 +130,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             </span>
           </motion.button>
         </motion.div>
+        </div>
       </div>
     </div>
   );

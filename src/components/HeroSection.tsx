@@ -9,7 +9,6 @@ import FloatingGeometry from "./hero/FloatingGeometry";
 import LightRays from "./hero/LightRays";
 import ConstellationField from "./hero/ConstellationField";
 import MouseLight from "./hero/MouseLight";
-import ScrollIndicator from "./hero/ScrollIndicator";
 import { useHeroScene } from "@/hooks/useHeroScene";
 import Navigation from "./Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -101,9 +100,6 @@ const HeroSection = () => {
             backgroundSize: '60px 60px'
           }} />
         </div>
-        
-        {/* Scroll Indicator */}
-        <ScrollIndicator />
 
         {/* Text Overlay with CTAs */}
         <HeroOverlay
