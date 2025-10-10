@@ -103,7 +103,7 @@ export function initSolarSystem(container: HTMLElement) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMappingExposure = 0.85;  // Darker exposure to emphasize lava ball darkness
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   
@@ -114,12 +114,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // Minimal bloom - only for sun, prevents star square artifacts
+  // Very minimal bloom - subtle glow only
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.5,  // strength - minimal to prevent artifacts
-    0.4,  // radius - very tight, circular bloom
-    0.85  // threshold - high, only sun blooms
+    0.25,  // strength - very low for minimal glow
+    0.3,   // radius - tight, minimal spread
+    0.9    // threshold - very high, only brightest parts glow
   );
   composer.addPass(bloomPass);
 
@@ -139,14 +139,14 @@ export function initSolarSystem(container: HTMLElement) {
   controls.maxDistance = 200;
   
   // ============================================================================
-  // LIGHTING - Physically Based
+  // LIGHTING - Brighter space to see planets
   // ============================================================================
-  // Reduced ambient for deeper space darkness
-  const ambientLight = new THREE.AmbientLight(0x0a0a15, 0.08);
+  // Increased ambient for visible planets
+  const ambientLight = new THREE.AmbientLight(0x4a4a5a, 0.35);  // Much brighter ambient
   scene.add(ambientLight);
 
-  // Main sun light - warm apocalyptic fireball color
-  const sunLight = new THREE.PointLight(0xFF9933, 28.0, 800, 2);  // Intense warm orange
+  // Main sun light - warm molten lava color with reduced intensity
+  const sunLight = new THREE.PointLight(0xDD5500, 18.0, 800, 2);  // Dark warm orange, lower intensity
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -155,13 +155,13 @@ export function initSolarSystem(container: HTMLElement) {
   sunLight.shadow.camera.far = 500;
   scene.add(sunLight);
 
-  // Subtle rim light for depth separation
-  const rimLight = new THREE.DirectionalLight(0x2a4a7a, 0.15);
+  // Stronger rim light for planet visibility
+  const rimLight = new THREE.DirectionalLight(0x6a7a9a, 0.4);  // Brighter rim light
   rimLight.position.set(-100, 50, -100);
   scene.add(rimLight);
 
-  // Secondary fill light for subtle illumination of dark sides
-  const fillLight = new THREE.PointLight(0x1a1a30, 0.5, 300, 2);
+  // Stronger fill light for illuminating planets
+  const fillLight = new THREE.PointLight(0x5a5a7a, 1.5, 400, 2);  // Much brighter fill
   fillLight.position.set(80, 40, -80);
   scene.add(fillLight);
   
@@ -180,17 +180,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   const sunGroup = new THREE.Group();
   
-  // Apocalyptic fireball shader - Intense warm colors
+  // Apocalyptic lava ball shader - Dark molten surface with fiery cracks
   const solarShader = {
     uniforms: {
       time: { value: 0 },
-      // Apocalyptic fireball color palette - warm and intense
-      colorCore: { value: new THREE.Color(0xFFDD44) },      // Intense yellow-orange core
-      colorPhotosphere: { value: new THREE.Color(0xFF9933) }, // Hot orange surface
-      colorGranule: { value: new THREE.Color(0xFF7722) },   // Deep orange cells
-      colorCool: { value: new THREE.Color(0xFF5511) },      // Burnt orange regions
-      colorDark: { value: new THREE.Color(0xDD2200) },      // Deep red-orange dark areas
-      colorChromosphere: { value: new THREE.Color(0xFF3300) } // Blazing red atmosphere
+      // Apocalyptic lava ball color palette - dark with fiery cracks
+      colorCore: { value: new THREE.Color(0xFF8800) },      // Hot orange-red core
+      colorPhotosphere: { value: new THREE.Color(0xDD4400) }, // Dark burnt orange
+      colorGranule: { value: new THREE.Color(0xCC3300) },   // Dark red-orange cells
+      colorCool: { value: new THREE.Color(0x661100) },      // Very dark brown-red
+      colorDark: { value: new THREE.Color(0x220000) },      // Almost black, deep charcoal
+      colorChromosphere: { value: new THREE.Color(0x991100) } // Dark crimson atmosphere
     },
     vertexShader: `
       uniform float time;
@@ -399,10 +399,10 @@ export function initSolarSystem(container: HTMLElement) {
     `
   };
   
-  // Inner core - intense fiery orange-yellow light
+  // Inner core - molten lava core with reduced intensity
   const coreGeometry = new THREE.SphereGeometry(3.5, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(3.5, 1.8, 0.5),  // Intense orange-yellow fireball
+    color: new THREE.Color(2.0, 0.8, 0.2),  // Darker molten orange
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
@@ -418,13 +418,13 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Corona - blazing apocalyptic atmosphere
+  // Corona - dark crimson atmosphere with reduced glow
   const coronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
   const coronaMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      coronaColor: { value: new THREE.Color(0xFF6600) },        // Deep fiery orange
-      chromosphereColor: { value: new THREE.Color(0xFF3300) }   // Blazing red-orange
+      coronaColor: { value: new THREE.Color(0x883300) },        // Dark burnt orange
+      chromosphereColor: { value: new THREE.Color(0x661100) }   // Dark red-brown
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -452,9 +452,9 @@ export function initSolarSystem(container: HTMLElement) {
         // Layer atmospheric colors - chromosphere closer, corona farther
         vec3 atmosphereColor = mix(chromosphereColor, coronaColor, fresnel * 0.6);
 
-        float intensity = fresnel * 0.35 * activity;
+        float intensity = fresnel * 0.2 * activity;  // Reduced glow
 
-        gl_FragColor = vec4(atmosphereColor * intensity, intensity * 0.3);
+        gl_FragColor = vec4(atmosphereColor * intensity, intensity * 0.2);
       }
     `,
     transparent: true,
