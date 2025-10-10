@@ -58,26 +58,26 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           <motion.button
             onClick={() => openModal('collections')}
             className="
-              relative group h-14 px-10 md:px-12 rounded overflow-hidden
+              relative group h-12 px-8 md:px-10 rounded-sm overflow-hidden
               bg-gradient-to-r from-ancient-gold via-aureate to-ancient-gold
               bg-[length:200%_100%]
               text-background
-              font-romania text-sm md:text-base tracking-[0.2em] font-bold
-              shadow-[0_0_30px_hsl(var(--ancient-gold)/0.5),inset_0_1px_1px_rgba(255,255,255,0.3)]
-              hover:shadow-[0_0_50px_hsl(var(--ancient-gold)/0.8),inset_0_1px_1px_rgba(255,255,255,0.5)]
+              font-romania text-xs md:text-sm tracking-[0.25em] font-semibold uppercase
+              shadow-[0_0_20px_hsl(var(--ancient-gold)/0.4),inset_0_1px_0_rgba(255,255,255,0.2)]
+              hover:shadow-[0_0_35px_hsl(var(--ancient-gold)/0.7),inset_0_1px_0_rgba(255,255,255,0.4)]
               hover:bg-[position:100%_0]
               transition-all duration-500 ease-out
-              focus:outline-none focus:ring-2 focus:ring-ancient-gold focus:ring-offset-2
+              focus:outline-none focus:ring-1 focus:ring-ancient-gold focus:ring-offset-1
               focus:ring-offset-background
-              before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+              before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/15 before:to-transparent
               before:translate-x-[-100%] before:transition-transform before:duration-700
               hover:before:translate-x-[100%]
             "
-            whileHover={{ scale: 1.05, rotateX: 2 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <span className="relative z-10 flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
               EXPLORE COLLECTIONS
             </span>
           </motion.button>
@@ -86,22 +86,22 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           <motion.button
             onClick={() => openModal('philosophy')}
             className="
-              relative group h-14 px-10 md:px-12 rounded
-              bg-black/20 backdrop-blur-md
-              border-2 border-ancient-gold/40
+              relative group h-12 px-8 md:px-10 rounded-sm
+              bg-black/10 backdrop-blur-sm
+              border border-ancient-gold/30
               text-ancient-gold
-              font-romania text-sm md:text-base tracking-[0.2em] font-bold
-              hover:border-ancient-gold hover:bg-ancient-gold/10
-              hover:shadow-[0_0_30px_hsl(var(--ancient-gold)/0.4),inset_0_0_20px_hsl(var(--ancient-gold)/0.1)]
+              font-romania text-xs md:text-sm tracking-[0.25em] font-semibold uppercase
+              hover:border-ancient-gold/60 hover:bg-ancient-gold/5
+              hover:shadow-[0_0_20px_hsl(var(--ancient-gold)/0.3),inset_0_0_15px_hsl(var(--ancient-gold)/0.05)]
               transition-all duration-500 ease-out
-              focus:outline-none focus:ring-2 focus:ring-ancient-gold/50 focus:ring-offset-2
+              focus:outline-none focus:ring-1 focus:ring-ancient-gold/50 focus:ring-offset-1
               focus:ring-offset-background
             "
-            whileHover={{ scale: 1.05, rotateX: 2 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <span className="relative z-10 flex items-center gap-2">
-              <Eye className="w-4 h-4" />
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Eye className="w-3.5 h-3.5" />
               PHILOSOPHY
             </span>
           </motion.button>
@@ -110,22 +110,22 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           <motion.button
             onClick={() => openModal('mission')}
             className="
-              relative group h-14 px-10 md:px-12
-              text-ancient-gold
-              font-romania text-sm md:text-base tracking-[0.2em] font-bold
-              hover:text-aureate
+              relative group h-12 px-8 md:px-10
+              text-ancient-gold/90
+              font-romania text-xs md:text-sm tracking-[0.25em] font-semibold uppercase
+              hover:text-ancient-gold
               transition-all duration-300 ease-out
               focus:outline-none
-              before:absolute before:bottom-3 before:left-0 before:right-0 before:h-px
-              before:bg-gradient-to-r before:from-transparent before:via-ancient-gold before:to-transparent
+              before:absolute before:bottom-2 before:left-0 before:right-0 before:h-px
+              before:bg-gradient-to-r before:from-transparent before:via-ancient-gold/50 before:to-transparent
               before:scale-x-0 before:origin-center before:transition-transform before:duration-500
               hover:before:scale-x-100
             "
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            <span className="relative z-10 flex items-center gap-2">
-              <Scroll className="w-4 h-4" />
+            <span className="relative z-10 flex items-center gap-1.5">
+              <Scroll className="w-3.5 h-3.5" />
               MISSION
             </span>
           </motion.button>
