@@ -5,7 +5,8 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useEffect } from "react";
 
 const ObjectModal = () => {
-  const { isOpen, objectData, closeModal } = useModalStore();
+  const { activeModal, objectData, closeModal } = useModalStore();
+  const isOpen = activeModal === 'object';
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {

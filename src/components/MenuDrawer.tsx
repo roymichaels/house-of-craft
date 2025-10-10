@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, User } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useModalStore } from "@/stores/modalStore";
+import type { ModalType } from "@/stores/modalStore";
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -11,29 +13,46 @@ interface MenuDrawerProps {
 const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { openModal } = useModalStore();
   const isHomepage = location.pathname === "/";
 
   const navItems = [
-    { name: "Mindcraft", scrollTo: "mindcraft", path: "/collections" },
-    { name: "Objects", scrollTo: "objects", path: "/collections" },
-    { name: "Doctrine", scrollTo: "doctrine", path: "/stories" },
-    { name: "Circle", scrollTo: "circle", path: "/concierge" },
+    { name: "Mindcraft", scrollTo: "mindcraft", type: "scroll" as const },
+    { name: "Objects", scrollTo: "objects", type: "scroll" as const },
+    { name: "Doctrine", scrollTo: "doctrine", type: "scroll" as const },
+    { name: "Circle", scrollTo: "circle", type: "scroll" as const },
+    { name: "Collections", modal: "collections" as ModalType, type: "modal" as const },
+    { name: "Stories", modal: "stories" as ModalType, type: "modal" as const },
+    { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];
 
-  const handleNavClick = (item: { name: string; scrollTo: string; path: string }) => {
+  const handleNavClick = (item: typeof navItems[0]) => {
     onClose();
     
-    if (isHomepage) {
-      // On homepage, scroll to section
+    if (item.type === "scroll") {
+      if (isHomepage) {
+        // On homepage, scroll to section
+        setTimeout(() => {
+          const element = document.getElementById(item.scrollTo);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 300);
+      } else {
+        // Navigate home first, then scroll
+        navigate("/");
+        setTimeout(() => {
+          const element = document.getElementById(item.scrollTo);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 500);
+      }
+    } else if (item.type === "modal" && item.modal) {
+      // Open modal
       setTimeout(() => {
-        const element = document.getElementById(item.scrollTo);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        openModal(item.modal as ModalType);
       }, 300);
-    } else {
-      // On other pages, navigate to dedicated page
-      navigate(item.path);
     }
   };
 
@@ -72,7 +91,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             <nav className="flex flex-col items-center gap-8">
               {navItems.map((item, index) => (
                 <motion.div
-                  key={item.scrollTo}
+                  key={item.type === "scroll" ? item.scrollTo : item.name}
                   initial={{ opacity: 0, x: -100 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{

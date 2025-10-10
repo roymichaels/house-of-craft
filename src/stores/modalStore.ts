@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge';
+
 interface ObjectData {
   title: string;
   category: string;
@@ -10,15 +12,15 @@ interface ObjectData {
 }
 
 interface ModalState {
-  isOpen: boolean;
+  activeModal: ModalType;
   objectData: ObjectData | null;
-  openModal: (data: ObjectData) => void;
+  openModal: (type: ModalType, data?: ObjectData) => void;
   closeModal: () => void;
 }
 
 export const useModalStore = create<ModalState>((set) => ({
-  isOpen: false,
+  activeModal: 'none',
   objectData: null,
-  openModal: (data) => set({ isOpen: true, objectData: data }),
-  closeModal: () => set({ isOpen: false, objectData: null }),
+  openModal: (type, data) => set({ activeModal: type, objectData: data || null }),
+  closeModal: () => set({ activeModal: 'none', objectData: null }),
 }));

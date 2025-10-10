@@ -10,6 +10,9 @@ import Circle from "@/components/sections/Circle";
 import Footer from "@/components/Footer";
 import EmailCaptureModal from "@/components/EmailCaptureModal";
 import ObjectModal from "@/components/modals/ObjectModal";
+import CollectionsModal from "@/components/modals/CollectionsModal";
+import StoriesModal from "@/components/modals/StoriesModal";
+import ConciergeModal from "@/components/modals/ConciergeModal";
 import CursorGlow from "@/components/effects/CursorGlow";
 import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
@@ -91,6 +94,9 @@ const Index = () => {
       
       <EmailCaptureModal />
       <ObjectModal />
+      <CollectionsModal />
+      <StoriesModal />
+      <ConciergeModal />
     </>
   );
 };

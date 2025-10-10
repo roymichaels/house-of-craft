@@ -42,7 +42,7 @@ const Objects = () => {
           className="text-center mb-20"
         >
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            SELECTED OBJECTS
+            Selected Objects
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
             Curated instruments of precision and presence.
@@ -63,7 +63,7 @@ const Objects = () => {
               }}
             >
               <button
-                onClick={() => openModal({
+                onClick={() => openModal('object', {
                   title: collection.title,
                   category: collection.category,
                   description: collection.description,

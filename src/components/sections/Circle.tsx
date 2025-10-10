@@ -1,11 +1,12 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Lock, Users, Zap, Crown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useModalStore } from "@/stores/modalStore";
 
 const Circle = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
+  const { openModal } = useModalStore();
 
   const benefits = [
     {
@@ -50,7 +51,7 @@ const Circle = () => {
           </div>
           
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            THE INNER CHAMBER
+            The Inner Chamber
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
             Private chambers of The House—collaborations, commissions, and mastery.
@@ -101,12 +102,12 @@ const Circle = () => {
             </p>
           </div>
           
-          <Link
-            to="/concierge"
+          <button
+            onClick={() => openModal('concierge')}
             className="inline-flex items-center gap-3 px-12 py-5 bg-ancient-gold text-background font-ancient text-lg tracking-widest hover:bg-ancient-gold/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-ancient-gold/20"
           >
             REQUEST ENTRY
-          </Link>
+          </button>
         </motion.div>
 
         {/* Decorative elements */}

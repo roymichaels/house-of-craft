@@ -43,7 +43,7 @@ const Mindcraft = () => {
           className="text-center mb-20"
         >
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            THE HYPNOTIST'S INSTRUMENTS
+            The Hypnotist's Instruments
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
             Where precision meets perception. Tools of mastery.

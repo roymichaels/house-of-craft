@@ -1,6 +1,3 @@
-import { Suspense } from "react";
-import heroImage from "@/assets/hero-watch.jpg";
-import HeroScene from "./hero/HeroScene";
 import HeroOverlay from "./hero/HeroOverlay";
 import { useHeroScene } from "@/hooks/useHeroScene";
 
@@ -29,31 +26,9 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grain">
-      {/* Fallback Background Image - subtle depth layer */}
-      <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="Luxury timepiece collection"
-          className="w-full h-full object-cover opacity-15 blur-sm"
-        />
-      </div>
-
-      {/* CSS Vignette - Depth enhancement without post-processing */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* CSS Vignette - Depth enhancement */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] pointer-events-none z-10" />
-
-      {/* 3D Scene Layer */}
-      {!isLoading && (
-        <Suspense fallback={null}>
-          <HeroScene
-            rotationSpeed={config.rotation_speed}
-            lightColor={config.light_color}
-            accentColor={config.accent_color}
-            cameraFov={config.camera_fov}
-            cameraPosition={config.camera_position}
-          />
-        </Suspense>
-      )}
 
       {/* Text Overlay */}
       <HeroOverlay

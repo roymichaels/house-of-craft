@@ -1,11 +1,12 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FileText, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useModalStore } from "@/stores/modalStore";
 
 const Doctrine = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
+  const { openModal } = useModalStore();
 
   const writings = [
     {
@@ -41,7 +42,7 @@ const Doctrine = () => {
           className="text-center mb-20"
         >
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            THE DOCTRINE
+            The Doctrine
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
             Essays, aphorisms, and manifestos. Luxury begins in the mind.
@@ -74,13 +75,13 @@ const Doctrine = () => {
                   <p className="text-muted-foreground text-lg leading-relaxed mb-4 font-serif italic">
                     "{writing.excerpt}"
                   </p>
-                  <Link
-                    to="/stories"
+                  <button
+                    onClick={() => openModal('stories')}
                     className="inline-flex items-center text-ancient-gold text-sm font-medium group-hover:translate-x-2 transition-transform duration-300"
                   >
                     Read Full Essay
                     <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
+                  </button>
                 </div>
               </div>
 
@@ -97,13 +98,13 @@ const Doctrine = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center mt-16"
         >
-          <Link
-            to="/stories"
+          <button
+            onClick={() => openModal('stories')}
             className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300"
           >
             EXPLORE THE DOCTRINE
             <ArrowRight className="w-5 h-5" />
-          </Link>
+          </button>
         </motion.div>
       </div>
     </section>
