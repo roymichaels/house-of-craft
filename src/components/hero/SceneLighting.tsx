@@ -31,6 +31,10 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
   const sweepLightRef = useRef<SpotLight>(null);
   const jewelLightRef = useRef<PointLight>(null);
   const burgundyRimRef = useRef<PointLight>(null);
+  const leftColumnLightRef = useRef<SpotLight>(null);
+  const rightColumnLightRef = useRef<SpotLight>(null);
+  const leftRimLightRef = useRef<PointLight>(null);
+  const rightRimLightRef = useRef<PointLight>(null);
 
   useEffect(() => {
     // Smoothly transition lighting based on scene mode
@@ -139,6 +143,45 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         color="#8B1C1C"
         intensity={getLightingForMode(mode).accentIntensity}
         distance={20}
+      />
+
+      {/* Temple Column Lighting - Left Side */}
+      <spotLight
+        ref={leftColumnLightRef}
+        position={[-12, 6, 4]}
+        color="#D4AF37"
+        intensity={1.2}
+        angle={0.5}
+        penumbra={0.6}
+        target-position={[-10, 0, 0]}
+      />
+
+      {/* Temple Column Lighting - Right Side */}
+      <spotLight
+        ref={rightColumnLightRef}
+        position={[12, 6, 4]}
+        color="#D4AF37"
+        intensity={1.2}
+        angle={0.5}
+        penumbra={0.6}
+        target-position={[10, 0, 0]}
+      />
+
+      {/* Column Rim Lights - Bronze undertone */}
+      <pointLight
+        ref={leftRimLightRef}
+        position={[-11, 3, -1]}
+        color="#8B7355"
+        intensity={0.8}
+        distance={8}
+      />
+
+      <pointLight
+        ref={rightRimLightRef}
+        position={[11, 3, -1]}
+        color="#8B7355"
+        intensity={0.8}
+        distance={8}
       />
 
       {/* Native Three.js fog for atmospheric depth */}

@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
 import { relics } from "@/data/relics";
-import { Pillars } from "../3d/effects/Pillars";
+import { TempleColumns } from "../3d/effects/TempleColumns";
 import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberMasteryProps {
@@ -31,8 +31,8 @@ const ChamberMastery = ({ lightColor, accentColor }: ChamberMasteryProps) => {
 
   return (
     <group ref={groupRef}>
-      {/* Pillars */}
-      <Pillars count={6} radius={10} height={9} lightColor={lightColor} />
+      {/* Roman Temple Columns - Circular layout for orbital relics */}
+      <TempleColumns layout="circular" count={6} radius={10} height={11} lightColor={lightColor} />
       
       {/* Latin Inscription */}
       <LatinInscription mode="mindcraft" position={[0, 3.5, -4]} />
