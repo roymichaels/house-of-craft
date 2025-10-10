@@ -60,53 +60,40 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <motion.div
       onClick={handleCardClick}
-      className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
-                 border border-border/30 hover:border-primary/40
-                 shadow-lg hover:shadow-2xl hover:shadow-primary/10
-                 transition-all duration-300 cursor-pointer flex flex-col"
+      className="group cursor-pointer"
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
     >
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60 
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 
-                      pointer-events-none" />
-      
-      {/* Golden glow */}
-      <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10
-                      pointer-events-none rounded-2xl" />
-
-      {/* Image Container - Fixed aspect ratio */}
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10">
+      {/* Image Container */}
+      <div className="relative aspect-square overflow-hidden rounded-lg mb-3 bg-muted/20">
         <img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        
-        {/* Golden glow overlay */}
-        <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent
-                        opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-      {/* Content Area - Text below image */}
-      <div className="relative p-4 space-y-2 flex-1 flex flex-col bg-card/80">
-        {/* Product Name */}
-        <h3 className="text-base md:text-lg font-ancient tracking-wide text-foreground 
-                       group-hover:text-ancient-gold transition-colors duration-200 line-clamp-1">
+      {/* Product Details */}
+      <div className="space-y-1">
+        {/* Title */}
+        <h3 className="text-sm font-medium text-foreground line-clamp-1">
           {product.name}
         </h3>
         
-        {/* Short Description */}
-        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 leading-relaxed flex-1">
+        {/* Subtitle/Description */}
+        <p className="text-xs text-muted-foreground line-clamp-1">
           {product.description}
         </p>
 
         {/* Price */}
-        <div className="pt-2">
-          <span className="text-sm md:text-base font-semibold text-foreground">
-            {displayPrice}
-          </span>
-        </div>
+        <p className="text-sm font-semibold text-foreground pt-1">
+          {displayPrice}
+        </p>
       </div>
     </motion.div>
   );
