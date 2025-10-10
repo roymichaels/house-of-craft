@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface MenuDrawerProps {
@@ -8,21 +9,31 @@ interface MenuDrawerProps {
 }
 
 const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHomepage = location.pathname === "/";
+
   const navItems = [
-    { name: "Collections", scrollTo: "collections" },
-    { name: "Stories", scrollTo: "trust" },
-    { name: "The House", scrollTo: "footer" },
-    { name: "Concierge", scrollTo: "footer" },
+    { name: "Collections", scrollTo: "collections", path: "/collections" },
+    { name: "Stories", scrollTo: "trust", path: "/stories" },
+    { name: "Concierge", scrollTo: "footer", path: "/concierge" },
   ];
 
-  const handleNavClick = (scrollTo: string) => {
+  const handleNavClick = (item: { name: string; scrollTo: string; path: string }) => {
     onClose();
-    setTimeout(() => {
-      const element = document.getElementById(scrollTo);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 300);
+    
+    if (isHomepage) {
+      // On homepage, scroll to section
+      setTimeout(() => {
+        const element = document.getElementById(item.scrollTo);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
+    } else {
+      // On other pages, navigate to dedicated page
+      navigate(item.path);
+    }
   };
 
   return (
@@ -70,8 +81,8 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                   }}
                 >
                   <button
-                    onClick={() => handleNavClick(item.scrollTo)}
-                    className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-ancient-gold/70 
+                    onClick={() => handleNavClick(item)}
+                    className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-ancient-gold/70
                                transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
                                hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
                   >

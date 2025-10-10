@@ -1,6 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import watchesImage from "@/assets/collection-watches.jpg";
 import tailoringImage from "@/assets/collection-tailoring.jpg";
 import leatherImage from "@/assets/collection-leather.jpg";
@@ -10,19 +11,19 @@ const collections = [
     title: "Modern Icons",
     description: "Contemporary pieces that define our moment in time",
     image: watchesImage,
-    path: "/collections/watches",
+    path: "/collections?category=modern",
   },
   {
     title: "Certified Classics",
     description: "Heritage timepieces with authenticated provenance",
     image: tailoringImage,
-    path: "/collections/tailoring",
+    path: "/collections?category=classic",
   },
   {
     title: "Vintage Soul",
     description: "Rare finds from exceptional eras of craftsmanship",
     image: leatherImage,
-    path: "/collections/leather",
+    path: "/collections?category=vintage",
   },
 ];
 
@@ -46,10 +47,12 @@ const FeaturedCollections = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {collections.map((collection, index) => (
-          <motion.a
+          <Link
             key={collection.title}
-            href={collection.path}
-            className="group relative overflow-hidden rounded-sm aspect-[4/5] bg-card"
+            to={collection.path}
+          >
+            <motion.div
+              className="group relative overflow-hidden rounded-sm aspect-[4/5] bg-card"
             initial={{ opacity: 0, y: 50 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
             transition={{ 
@@ -79,7 +82,8 @@ const FeaturedCollections = () => {
 
             {/* Hover Border Effect */}
             <div className="absolute inset-0 border-2 border-primary/0 group-hover:border-primary/20 transition-colors duration-500 pointer-events-none" />
-          </motion.a>
+          </motion.div>
+          </Link>
         ))}
       </div>
     </div>
