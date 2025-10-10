@@ -15,7 +15,7 @@ export interface CategoryShowcase {
 export const categoryShowcase: CategoryShowcase[] = [
   {
     id: 'timepieces',
-    name: 'TIMEPIECES',
+    name: 'Timepieces',
     tagline: 'Master hours, not chase them',
     heroImage: timepieceImage,
     productCount: 12,
@@ -23,7 +23,7 @@ export const categoryShowcase: CategoryShowcase[] = [
   },
   {
     id: 'accessories',
-    name: 'ACCESSORIES',
+    name: 'Accessories',
     tagline: 'Symbols of presence and order',
     heroImage: accessoriesImage,
     productCount: 18,
@@ -31,7 +31,7 @@ export const categoryShowcase: CategoryShowcase[] = [
   },
   {
     id: 'leather-goods',
-    name: 'LEATHER GOODS',
+    name: 'Leather Goods',
     tagline: 'Carriers of intent',
     heroImage: leatherImage,
     productCount: 15,
@@ -39,7 +39,7 @@ export const categoryShowcase: CategoryShowcase[] = [
   },
   {
     id: 'apparel',
-    name: 'APPAREL',
+    name: 'Apparel',
     tagline: 'Tailored discipline',
     heroImage: tailoringImage,
     productCount: 24,
@@ -47,7 +47,7 @@ export const categoryShowcase: CategoryShowcase[] = [
   },
   {
     id: 'home-ritual',
-    name: 'HOME & RITUAL',
+    name: 'Home & Ritual',
     tagline: 'Space as discipline',
     heroImage: leatherImage,
     productCount: 16,
@@ -55,7 +55,7 @@ export const categoryShowcase: CategoryShowcase[] = [
   },
   {
     id: 'print-media',
-    name: 'PRINT & MEDIA',
+    name: 'Print & Media',
     tagline: 'Reflections for the modern stoic',
     heroImage: accessoriesImage,
     productCount: 8,
