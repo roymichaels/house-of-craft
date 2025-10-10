@@ -48,7 +48,12 @@ const HeroLogo = ({ logoText, show }: HeroLogoProps) => {
         transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.5 }}
       />
       
-      <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.7)] transition-all duration-300">
+      <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold 
+        bg-gradient-to-b from-[#FFE5A0] via-[#D4B56D] to-[#A68F5C] bg-clip-text text-transparent
+        drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]
+        [text-shadow:_0_1px_2px_rgba(255,229,160,0.9),_0_4px_12px_rgba(196,166,97,0.6),_0_-1px_4px_rgba(255,255,255,0.3)]
+        group-hover:[text-shadow:_0_1px_2px_rgba(255,229,160,1),_0_6px_20px_rgba(196,166,97,0.9),_0_-1px_6px_rgba(255,255,255,0.5)]
+        transition-all duration-300">
         {logoText}
       </h2>
       <p className="imperial-caps text-[9px] tracking-widest text-ancient-silver/60">
