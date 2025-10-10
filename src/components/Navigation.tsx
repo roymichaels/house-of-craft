@@ -41,7 +41,7 @@ const Navigation = () => {
             {/* Brand Title - Using exact HeroLogo styling */}
             <div className="hidden sm:flex flex-col gap-0.5">
               <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
-                APOLLON
+                Apollon
               </h2>
               <p className="imperial-caps text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
                 The Order of Light
