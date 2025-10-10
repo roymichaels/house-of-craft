@@ -76,8 +76,8 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
-  // Lighter fog for better visibility - exponential falloff
-  scene.fog = new THREE.FogExp2(0x0a0510, 0.0015);
+  // Minimal fog for maximum planet visibility
+  scene.fog = new THREE.FogExp2(0x1a1a2a, 0.0005);
   
   // ============================================================================
   // CAMERA
@@ -103,7 +103,7 @@ export function initSolarSystem(container: HTMLElement) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;  // Balanced exposure for realistic appearance
+  renderer.toneMappingExposure = 1.3;  // Increased exposure for brighter planets
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   
@@ -114,12 +114,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // REALISTIC BLOOM - subtle atmospheric glow like photograph
+  // REDUCED BLOOM - minimal sun glow, emphasize planets
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.8,  // strength - moderate realistic glow
-    0.6,   // radius - tight, realistic spread
-    0.6   // threshold - only brightest areas glow
+    0.3,  // strength - reduced for less sun glow
+    0.3,   // radius - very tight containment
+    0.85   // threshold - only the very brightest sun areas glow
   );
   composer.addPass(bloomPass);
 
@@ -141,12 +141,12 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   // LIGHTING - Enhanced for 3D volumetric sun and planet visibility
   // ============================================================================
-  // Balanced ambient for visible planets without washing out sun
-  const ambientLight = new THREE.AmbientLight(0x4a4a5a, 0.4);
+  // STRONG ambient for highly visible planets
+  const ambientLight = new THREE.AmbientLight(0x6a6a8a, 1.2);
   scene.add(ambientLight);
 
-  // Main sun light - realistic orange sun color
-  const sunLight = new THREE.PointLight(0xFF8833, 20.0, 800, 2);
+  // Reduced sun light - less dominance
+  const sunLight = new THREE.PointLight(0xFF8833, 5.0, 800, 2);
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -155,24 +155,33 @@ export function initSolarSystem(container: HTMLElement) {
   sunLight.shadow.camera.far = 500;
   scene.add(sunLight);
 
-  // Rim light for planet visibility and depth
-  const rimLight = new THREE.DirectionalLight(0x7a8aaa, 0.6);
+  // Strong rim light for planet visibility and depth
+  const rimLight = new THREE.DirectionalLight(0x9aaacc, 2.0);
   rimLight.position.set(-100, 50, -100);
   scene.add(rimLight);
 
-  // Fill light for illuminating planets
-  const fillLight = new THREE.PointLight(0x6a6a8a, 2.0, 500, 2);
+  // Powerful fill lights for illuminating planets
+  const fillLight = new THREE.PointLight(0x8a8aaa, 4.0, 500, 2);
   fillLight.position.set(80, 40, -80);
   scene.add(fillLight);
 
-  // Additional fill lights from multiple angles
-  const fillLight2 = new THREE.PointLight(0x5a5a7a, 1.8, 450, 2);
+  // Additional strong fill lights from multiple angles
+  const fillLight2 = new THREE.PointLight(0x7a7a9a, 3.6, 450, 2);
   fillLight2.position.set(-80, 40, 80);
   scene.add(fillLight2);
 
-  const topLight = new THREE.PointLight(0x6a7a8a, 1.2, 400, 2);
+  const topLight = new THREE.PointLight(0x8a9aaa, 2.4, 400, 2);
   topLight.position.set(0, 100, 0);
   scene.add(topLight);
+
+  // Additional directional lights for planet illumination
+  const sideLight1 = new THREE.DirectionalLight(0x7a8aaa, 1.5);
+  sideLight1.position.set(100, 0, 0);
+  scene.add(sideLight1);
+
+  const sideLight2 = new THREE.DirectionalLight(0x7a8aaa, 1.5);
+  sideLight2.position.set(-100, 0, 0);
+  scene.add(sideLight2);
   
   // ============================================================================
   // STARFIELD
@@ -400,17 +409,17 @@ export function initSolarSystem(container: HTMLElement) {
   
   // REALISTIC VOLCANIC SUN CONSTRUCTION
 
-  // Inner core - bright orange-yellow core
-  const innerCoreGeometry = new THREE.SphereGeometry(3.0, 128, 128);
+  // Inner core - reduced brightness
+  const innerCoreGeometry = new THREE.SphereGeometry(2.1, 128, 128);
   const innerCoreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(3.5, 2.0, 0.5),  // Bright orange core
+    color: new THREE.Color(1.5, 0.8, 0.2),  // Reduced orange core brightness
     toneMapped: false
   });
   const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
   sunGroup.add(innerCore);
 
-  // Main photosphere - realistic textured surface
-  const surfaceGeometry = new THREE.SphereGeometry(5.0, 256, 256);
+  // Main photosphere - realistic textured surface with reduced size
+  const surfaceGeometry = new THREE.SphereGeometry(3.5, 256, 256);
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: solarShader.uniforms,
     vertexShader: solarShader.vertexShader,
@@ -419,8 +428,8 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Subtle atmospheric glow layer
-  const atmosphereGeometry = new THREE.SphereGeometry(6.5, 96, 96);
+  // Minimal atmospheric glow layer
+  const atmosphereGeometry = new THREE.SphereGeometry(4.5, 96, 96);
   const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
@@ -445,9 +454,9 @@ export function initSolarSystem(container: HTMLElement) {
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.5);
 
-        float intensity = fresnel * 0.25;
+        float intensity = fresnel * 0.1;
 
-        gl_FragColor = vec4(glowColor * 1.2, intensity * 0.4);
+        gl_FragColor = vec4(glowColor * 0.4, intensity * 0.15);
       }
     `,
     transparent: true,
@@ -481,23 +490,25 @@ export function initSolarSystem(container: HTMLElement) {
     // Create planet with enhanced PBR materials
     const geometry = new THREE.SphereGeometry(planetData.radius, 64, 64);
 
-    // Planet-specific material properties for realism
-    let roughness = 0.9;
-    let metalness = 0.0;
-    let emissive = new THREE.Color(0x000000);
-    let emissiveIntensity = 0.0;
+    // Planet-specific material properties - ENHANCED FOR VISIBILITY
+    let roughness = 0.5;
+    let metalness = 0.2;
+    let emissive = new THREE.Color(planetData.color);
+    let emissiveIntensity = 0.4;  // Strong base emissive
 
     // Customize materials based on planet type
     if (planetData.name === 'Venus' || planetData.name === 'Mars') {
-      roughness = 0.95; // Very rough, rocky surface
+      roughness = 0.6;
+      emissiveIntensity = 0.5;  // Very bright rocky planets
     } else if (planetData.name === 'Earth') {
-      roughness = 0.6; // Oceans are smoother
-      emissive = new THREE.Color(0x0a1a2a);
-      emissiveIntensity = 0.05; // Subtle city lights effect
+      roughness = 0.4;
+      emissive = new THREE.Color(0x4169E1);  // Bright blue
+      emissiveIntensity = 0.6;  // Very visible Earth
     } else if (planetData.name === 'Jupiter' || planetData.name === 'Saturn' ||
                planetData.name === 'Uranus' || planetData.name === 'Neptune') {
-      roughness = 0.4; // Gas giants are smoother, more reflective
-      metalness = 0.1;
+      roughness = 0.3;  // Very reflective gas giants
+      metalness = 0.4;  // More metallic for reflection
+      emissiveIntensity = 0.7;  // Brightest planets
     }
 
     const material = new THREE.MeshStandardMaterial({
@@ -506,7 +517,8 @@ export function initSolarSystem(container: HTMLElement) {
       metalness: metalness,
       emissive: emissive,
       emissiveIntensity: emissiveIntensity,
-      envMapIntensity: 0.8
+      envMapIntensity: 1.2,
+      toneMapped: false  // Disable tone mapping for maximum brightness
     });
     const planet = new THREE.Mesh(geometry, material);
     planet.castShadow = true;
@@ -533,11 +545,14 @@ export function initSolarSystem(container: HTMLElement) {
         64
       );
       const ringMaterial = new THREE.MeshStandardMaterial({
-        color: 0xC4A35A,
+        color: 0xFFE4B5,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.8,
-        roughness: 0.8
+        opacity: 0.9,
+        roughness: 0.5,
+        emissive: new THREE.Color(0xFFE4B5),
+        emissiveIntensity: 0.5,
+        toneMapped: false
       });
       const rings = new THREE.Mesh(ringGeometry, ringMaterial);
       rings.rotation.x = Math.PI / 2;
@@ -549,9 +564,12 @@ export function initSolarSystem(container: HTMLElement) {
       const moonGeometry = new THREE.SphereGeometry(planetData.moon.radius, 32, 32);
       const moonMaterial = new THREE.MeshStandardMaterial({
         color: planetData.moon.color,
-        roughness: 0.95,
-        metalness: 0.0,
-        envMapIntensity: 0.3
+        roughness: 0.6,
+        metalness: 0.1,
+        emissive: new THREE.Color(planetData.moon.color),
+        emissiveIntensity: 0.4,
+        envMapIntensity: 0.8,
+        toneMapped: false
       });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
       moon.castShadow = true;
@@ -844,7 +862,7 @@ function createSpaceDust() {
   // Custom shader material for smooth circular dust particles
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      opacity: { value: 0.12 }
+      opacity: { value: 0.05 }
     },
     vertexShader: `
       attribute float size;
