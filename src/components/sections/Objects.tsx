@@ -55,7 +55,7 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
         "bg-black/80 backdrop-blur-xl border border-ancient-gold/10",
         "hover:border-ancient-gold/40 hover:bg-black/90",
         "transition-all duration-500",
-        "aspect-[16/6] p-8 md:p-10",
+        "p-8 md:p-10",
         "opacity-85 hover:opacity-100",
         "shadow-[0_4px_40px_rgba(0,0,0,0.4)]",
         "hover:shadow-[0_8px_60px_rgba(196,166,97,0.1)]",
@@ -124,7 +124,7 @@ const Objects = () => {
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   // Get all categories in the desired order
-  const [timepieces, accessories, leatherGoods, apparel, homeRitual, printMedia, limitedEdition] = categoryShowcase;
+  const [timepieces, accessories, leatherGoods, apparel, homeRitual, printMedia] = categoryShowcase;
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 px-6 md:px-12">
@@ -145,24 +145,19 @@ const Objects = () => {
           </p>
         </motion.div>
 
-        {/* Category Showcase Grid */}
-        <div className="space-y-6 md:space-y-8">
+        {/* Category Showcase Grid - 1-3-2 Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Row 1: Timepieces */}
           <CategoryCard category={timepieces} delay={0} />
 
-          {/* Row 2: Three Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <CategoryCard category={accessories} delay={0.1} />
-            <CategoryCard category={leatherGoods} delay={0.15} />
-            <CategoryCard category={apparel} delay={0.2} />
-          </div>
+          {/* Row 2: Accessories, Leather Goods, Apparel */}
+          <CategoryCard category={accessories} delay={0.1} />
+          <CategoryCard category={leatherGoods} delay={0.15} />
+          <CategoryCard category={apparel} delay={0.2} />
 
-          {/* Row 3: Three Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <CategoryCard category={homeRitual} delay={0.25} />
-            <CategoryCard category={printMedia} delay={0.3} />
-            <CategoryCard category={limitedEdition} delay={0.35} />
-          </div>
+          {/* Row 3: Home & Ritual, Print & Media */}
+          <CategoryCard category={homeRitual} delay={0.25} />
+          <CategoryCard category={printMedia} delay={0.3} />
         </div>
       </div>
     </section>

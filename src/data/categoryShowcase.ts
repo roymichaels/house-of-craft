@@ -60,13 +60,5 @@ export const categoryShowcase: CategoryShowcase[] = [
     heroImage: accessoriesImage,
     productCount: 8,
     icon: 'PenTool'
-  },
-  {
-    id: 'limited-edition',
-    name: 'LIMITED EDITION',
-    tagline: 'Exclusive pieces for the discerning',
-    heroImage: timepieceImage,
-    productCount: 4,
-    icon: 'Sparkles'
   }
 ];
