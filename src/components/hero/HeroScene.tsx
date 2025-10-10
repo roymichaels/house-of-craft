@@ -1,16 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { Environment, Stars } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import SolarSystem from "./SolarSystem";
 import * as THREE from "three";
-import SceneLighting from "./SceneLighting";
-import CameraController from "./CameraController";
-import AmbientDust from "./AmbientDust";
-import { useSceneStore } from "@/contexts/SceneContext";
-import ChamberAtrium from "@/components/chambers/ChamberAtrium";
-import ChamberMastery from "@/components/chambers/ChamberMastery";
-import ChamberVault from "@/components/chambers/ChamberVault";
-import ChamberDoctrine from "@/components/chambers/ChamberDoctrine";
-import ChamberInner from "@/components/chambers/ChamberInner";
 
 interface HeroSceneProps {
   rotationSpeed: number;
@@ -27,70 +20,73 @@ const HeroScene = ({
   cameraFov,
   cameraPosition,
 }: HeroSceneProps) => {
-  const mode = useSceneStore(state => state.mode);
-  
   return (
     <div className="absolute inset-0 z-0">
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={[1, 2]}
         gl={{ 
           antialias: true, 
-          alpha: true,
-          powerPreference: "high-performance"
+          alpha: false,
+          powerPreference: "high-performance",
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.2,
+          outputColorSpace: THREE.SRGBColorSpace,
         }}
-        shadows
+        shadows="soft"
         className="w-full h-full"
       >
+        <color attach="background" args={['#000814']} />
+        <fog attach="fog" args={['#000814', 180, 250]} />
+        
         <Suspense fallback={null}>
-          {/* Apollinean atmosphere - extended fog for unified temple (dimmer) */}
-          <fog attach="fog" args={['#0a0820', 8, 30]} />
-          
-          <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
-          <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
-          
-          {/* Unified Temple - All chambers in one connected space */}
-          <group name="apollo-temple">
-            {/* Central Atrium */}
-            <group position={[0, 1.5, 0]}>
-              <ChamberAtrium lightColor={lightColor} />
-            </group>
-
-            {/* East Wing - Mastery */}
-            <group position={[8, 0, -3]}>
-              <ChamberMastery lightColor={lightColor} accentColor={accentColor} />
-            </group>
-
-            {/* West Gallery - Vault */}
-            <group position={[-8, 0, -3]}>
-              <ChamberVault lightColor={lightColor} />
-            </group>
-
-            {/* Upper Terrace - Doctrine */}
-            <group position={[0, 4, -6]}>
-              <ChamberDoctrine lightColor={lightColor} />
-            </group>
-
-            {/* Inner Sanctum - Circle */}
-            <group position={[0, 8, -4]}>
-              <ChamberInner lightColor={lightColor} />
-            </group>
-          </group>
-          
-          <Environment preset="city" />
-          
-          {/* Environmental particles - vibrant space colors */}
-          <Stars 
-            radius={50} 
-            depth={50} 
-            count={500} 
-            factor={2} 
-            saturation={0.6} 
-            fade 
-            speed={0.3}
+          <PerspectiveCamera 
+            makeDefault 
+            position={[0, 20, 80]} 
+            fov={75}
+            near={0.1}
+            far={1000}
           />
-
-          {/* Ambient dust particles */}
-          <AmbientDust />
+          
+          {/* Lighting matching original repo */}
+          <ambientLight intensity={0.5} color={new THREE.Color(0.13, 0.13, 0.13)} />
+          <pointLight 
+            position={[0, 0, 0]} 
+            intensity={10} 
+            distance={1000} 
+            decay={0.5}
+            color={new THREE.Color(1.0, 1.0, 1.0)}
+          />
+          <pointLight
+            position={[50, 50, -100]}
+            intensity={2}
+            distance={100}
+            decay={1}
+            color={new THREE.Color(0.2, 0.4, 1.0)}
+          />
+          
+          {/* Solar System */}
+          <SolarSystem rotationSpeed={rotationSpeed} />
+          
+          {/* Post-processing effects */}
+          <EffectComposer>
+            <Bloom 
+              intensity={1.5}
+              luminanceThreshold={0.2}
+              luminanceSmoothing={0.9}
+              mipmapBlur
+            />
+          </EffectComposer>
+          
+          {/* Interactive controls */}
+          <OrbitControls
+            enableDamping
+            dampingFactor={0.08}
+            rotateSpeed={0.3}
+            zoomSpeed={0.8}
+            panSpeed={0.5}
+            minDistance={10}
+            maxDistance={300}
+          />
         </Suspense>
       </Canvas>
     </div>
