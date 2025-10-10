@@ -530,45 +530,6 @@ export const printMedia: Category = {
 };
 
 // ============================================================================
-// VII. LIMITED EDITIONS
-// ============================================================================
-
-export const limitedEditions: Category = {
-  id: 'limited-editions',
-  name: 'Limited Editions',
-  slug: 'limited-editions',
-  tagline: 'Objects crafted in small runs for collectors and initiates.',
-  subcategories: [
-    {
-      id: 'vault-editions',
-      name: 'Vault Editions',
-      slug: 'vault-editions',
-      description: 'Numbered pieces in brass, stone, or leather.',
-      products: [
-        {
-          id: 'solis-vault',
-          name: 'Solis Vault Edition',
-          slug: 'solis-vault',
-          description: 'Limited to 100. Swiss manufacture. Each numbered and sealed.',
-          price: 58000,
-          images: ['/src/assets/hero-watch.jpg'],
-          category: 'limited-editions',
-          subcategory: 'vault-editions',
-          collection: 'vault',
-          inStock: true,
-          specs: {
-            'Movement': 'Swiss In-House',
-            'Case': '42mm Platinum',
-            'Edition': 'Limited 100 pieces',
-            'Certificate': 'Numbered & Certified'
-          }
-        }
-      ]
-    }
-  ]
-};
-
-// ============================================================================
 // CATALOG EXPORT
 // ============================================================================
 
@@ -578,8 +539,7 @@ export const catalog: Category[] = [
   leatherGoods,
   apparel,
   homeRitual,
-  printMedia,
-  limitedEditions
+  printMedia
 ];
 
 // Helper functions

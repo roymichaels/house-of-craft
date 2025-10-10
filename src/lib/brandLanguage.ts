@@ -29,8 +29,7 @@ export const BrandLanguage = {
     leather: "Leather Goods",
     apparel: "Apparel",
     home: "Home & Ritual",
-    print: "Print & Media",
-    limited: "Limited Editions"
+    print: "Print & Media"
   },
   
   // Collection Types
