@@ -52,11 +52,18 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       whileTap={{ scale: 0.98 }}
       className={cn(
         "group relative overflow-hidden rounded-2xl",
-        "bg-card/20 backdrop-blur-sm border border-border/20",
-        "hover:border-primary/40 hover:bg-card/40",
+        "bg-black/80 backdrop-blur-xl border border-ancient-gold/10",
+        "hover:border-ancient-gold/40 hover:bg-black/90",
         "transition-all duration-500",
-        "aspect-[16/6] p-8 md:p-10"
+        "aspect-[16/6] p-8 md:p-10",
+        "opacity-85 hover:opacity-100",
+        "shadow-[0_4px_40px_rgba(0,0,0,0.4)]",
+        "hover:shadow-[0_8px_60px_rgba(196,166,97,0.1)]",
+        "hover:-translate-y-1"
       )}
+      style={{
+        maskImage: 'radial-gradient(ellipse 100% 100% at 50% 50%, rgba(0,0,0,1) 80%, rgba(0,0,0,0.6) 100%)'
+      }}
     >
       {/* Background Image */}
       <div className="absolute inset-0 opacity-70 group-hover:opacity-80 transition-opacity duration-700">
@@ -81,8 +88,8 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
 
           {/* Name */}
           <h3 className="font-ancient text-ancient-gold text-3xl md:text-4xl lg:text-5xl
-                         drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]
-                         group-hover:drop-shadow-[0_0_25px_rgba(196,166,97,0.6)]
+                         drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
+                         group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.8)]
                          transition-all duration-300">
             {category.name}
           </h3>

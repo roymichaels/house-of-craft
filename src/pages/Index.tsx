@@ -75,9 +75,12 @@ const Index = () => {
       <VoiceOfHouse />
       
       {/* Persistent 3D Background */}
-      <div className="fixed inset-0 z-0">
+      <div className="fixed inset-0 -z-10">
         <HeroScene {...config} />
       </div>
+
+      {/* Depth vignette for framing */}
+      <div className="scene-vignette" />
 
       {/* Content overlays */}
       <div className="relative z-10">

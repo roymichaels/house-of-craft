@@ -282,4 +282,19 @@ body {
 a, button {
   cursor: pointer;
 }
+
+/* Depth-based vignette for 3D scene framing */
+.scene-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  mix-blend-mode: multiply;
+}
 }

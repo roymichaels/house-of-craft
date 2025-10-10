@@ -100,38 +100,46 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       }
     } else if (introComplete.current) {
       // Other sections (15-100%): Continue smooth cinematic movement
-      // Map scroll progress to smooth camera transitions
       const sectionProgress = Math.max(0, (scrollProgress - 0.15) / 0.85); // Normalize 15-100% to 0-1
-      const lerpSpeed = 0.015; // Slightly faster for smoother transitions
       
-      // Smooth position transition with added scroll-based movement
-      const scrollOffset = sectionProgress * 1.5; // Gentle forward movement
+      // Dynamic camera path based on continuous scroll
+      const scrollOffset = sectionProgress * 2.5; // Continuous forward movement
+      const verticalDrift = Math.sin(sectionProgress * Math.PI) * 0.5; // Gentle vertical arc
+      
       const targetPos = new Vector3(
-        targetPosition.current.x,
-        targetPosition.current.y + (scrollOffset * 0.3),
+        targetPosition.current.x + (Math.sin(sectionProgress * Math.PI * 0.5) * 0.3), // Subtle horizontal drift
+        targetPosition.current.y + verticalDrift,
         targetPosition.current.z - scrollOffset
       );
       
-      camera.position.lerp(targetPos, lerpSpeed);
+      camera.position.lerp(targetPos, 0.02); // Slower lerp for smoother motion
       
-      // Smooth lookAt transition
+      // Dynamic lookAt with slight lead
       const currentLookAt = new Vector3();
       camera.getWorldDirection(currentLookAt);
       currentLookAt.add(camera.position);
-      currentLookAt.lerp(targetLookAt.current, lerpSpeed);
+      currentLookAt.lerp(
+        new Vector3(
+          targetLookAt.current.x,
+          targetLookAt.current.y - (sectionProgress * 0.5),
+          targetLookAt.current.z
+        ),
+        0.015
+      );
       camera.lookAt(currentLookAt);
       
-      // FOV transition with scroll influence
+      // Progressive FOV breathing effect
       if (camera instanceof PerspectiveCamera) {
-        const scrollFovShift = sectionProgress * 3; // Subtle FOV change throughout scroll
-        const targetFovValue = targetFov.current + scrollFovShift;
-        camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.03);
+        const fovBreathing = Math.sin(sectionProgress * Math.PI * 2) * 1.5; // Subtle breathing
+        const scrollFovShift = sectionProgress * 4;
+        const targetFovValue = targetFov.current + scrollFovShift + fovBreathing;
+        camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.025);
         camera.updateProjectionMatrix();
       }
 
-      // Camera roll (z-axis rotation) for cinematic effect
+      // Cinematic roll throughout scroll
       const targetRollRad = (targetRoll.current * Math.PI) / 180;
-      const scrollRoll = sectionProgress * 0.02; // Gentle roll throughout page
+      const scrollRoll = Math.sin(sectionProgress * Math.PI) * 0.03; // Wave-like roll
       camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad + scrollRoll, 0.02);
     }
     
