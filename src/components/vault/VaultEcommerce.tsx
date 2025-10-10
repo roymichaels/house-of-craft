@@ -82,7 +82,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
               {/* Category Title */}
               <h2 className="text-2xl md:text-3xl font-ancient text-ancient-gold mb-2 
                              drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]">
-                {category.name.toUpperCase()}
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
               </h2>
 
               {/* Category Tagline */}
