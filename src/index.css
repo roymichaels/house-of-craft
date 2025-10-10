@@ -9,9 +9,11 @@ All colors MUST be HSL.
 /* Ancient Font - Brand Wordmark */
 @font-face {
   font-family: 'Ancient';
-  src: url('/fonts/ancient.woff2') format('woff2'),
-       url('/fonts/ancient.woff') format('woff');
-  font-weight: normal;
+  src: local('Ancient Medium'), local('Ancient-Medium'),
+       url('/fonts/Ancient-Medium.woff2') format('woff2'),
+       url('/fonts/Ancient-Medium.woff') format('woff'),
+       url('/fonts/Ancient_Medium.ttf') format('truetype');
+  font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
