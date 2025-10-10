@@ -83,7 +83,6 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000814);
-  scene.fog = new THREE.Fog(0x000814, 180, 250);
   
   // ============================================================================
   // CAMERA
