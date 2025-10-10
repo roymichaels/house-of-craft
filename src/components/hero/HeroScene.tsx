@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { OrbitControls, PerspectiveCamera, Stars } from "@react-three/drei";
 import SolarSystem from "./SolarSystem";
 import * as THREE from "three";
 
@@ -15,10 +14,6 @@ interface HeroSceneProps {
 
 const HeroScene = ({
   rotationSpeed,
-  lightColor,
-  accentColor,
-  cameraFov,
-  cameraPosition,
 }: HeroSceneProps) => {
   return (
     <div className="absolute inset-0 z-0">
@@ -30,9 +25,8 @@ const HeroScene = ({
           powerPreference: "high-performance",
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.2,
-          outputColorSpace: THREE.SRGBColorSpace,
         }}
-        shadows="soft"
+        shadows
         className="w-full h-full"
       >
         <color attach="background" args={['#000814']} />
@@ -64,18 +58,19 @@ const HeroScene = ({
             color={new THREE.Color(0.2, 0.4, 1.0)}
           />
           
+          {/* Starfield background */}
+          <Stars 
+            radius={200} 
+            depth={50} 
+            count={1500} 
+            factor={4} 
+            saturation={0} 
+            fade 
+            speed={0.3}
+          />
+          
           {/* Solar System */}
           <SolarSystem rotationSpeed={rotationSpeed} />
-          
-          {/* Post-processing effects */}
-          <EffectComposer>
-            <Bloom 
-              intensity={1.5}
-              luminanceThreshold={0.2}
-              luminanceSmoothing={0.9}
-              mipmapBlur
-            />
-          </EffectComposer>
           
           {/* Interactive controls */}
           <OrbitControls
