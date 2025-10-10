@@ -1,5 +1,9 @@
+import { motion } from "framer-motion";
+import { useModalStore } from "@/stores/modalStore";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { openModal } = useModalStore();
 
   const footerLinks = {
     Order: [
@@ -23,7 +27,73 @@ const Footer = () => {
   };
 
   return (
-    <footer className="border-t border-border/50 bg-card">
+    <>
+      {/* Take the Oath CTA */}
+      <section className="border-t border-border/50 bg-gradient-to-b from-background to-card">
+        <div className="container mx-auto px-6 py-20">
+          <div className="max-w-3xl mx-auto text-center space-y-6">
+            {/* Latin inscription */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-order text-primary/60 text-xs tracking-[0.3em]"
+            >
+              TEMPUS DOMINI SOLIS
+            </motion.p>
+            
+            {/* Main heading */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-5xl font-ancient text-ancient-gold
+                         drop-shadow-[0_0_30px_rgba(196,166,97,0.3)]"
+            >
+              Join The Order
+            </motion.h2>
+            
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-base text-muted-foreground max-w-xl mx-auto"
+            >
+              The Inner Sanctum awaits those who command themselves.
+              Brotherhood, mentorship, and exclusive instruments for men of discipline.
+            </motion.p>
+            
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <button
+                onClick={() => openModal('email-capture')}
+                className="group relative px-10 py-4 
+                           border-2 border-primary/40 
+                           font-ancient text-primary tracking-wider
+                           hover:border-primary hover:bg-primary/10
+                           transition-all duration-500
+                           hover:shadow-[0_0_40px_rgba(196,166,97,0.3)]"
+              >
+                <span className="relative z-10">TAKE THE OATH</span>
+                
+                {/* Subtle glow on hover */}
+                <span className="absolute inset-0 bg-primary/5 opacity-0 
+                                 group-hover:opacity-100 transition-opacity duration-500" />
+              </button>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-border/50 bg-card">
       <div className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
@@ -91,6 +161,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

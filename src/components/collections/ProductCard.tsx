@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface Product {
   id: number;
@@ -18,46 +16,64 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-sm bg-card"
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
+      className="group relative overflow-hidden rounded-sm bg-card border border-border/50
+                 hover:border-primary/30 transition-all duration-700
+                 hover:shadow-[0_0_40px_rgba(196,166,97,0.15)]"
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
+      {/* Dark vignette overlay on image */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/60 
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 
+                      pointer-events-none" />
+      
+      {/* Golden glow on hover */}
+      <div className="absolute inset-0 bg-gradient-radial from-primary/20 via-transparent to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10
+                      pointer-events-none" />
+
       {/* Image Container */}
-      <div className="relative aspect-[3/4] overflow-hidden grain">
-        <img
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <motion.img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          loading="lazy"
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-500" />
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className="text-xl font-serif">{product.name}</h3>
-          <ArrowUpRight className="h-5 w-5 text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-        </div>
+      <div className="relative p-6 space-y-3">
+        <h3 className="text-xl font-ancient tracking-wide text-foreground 
+                       group-hover:text-primary transition-colors duration-300">
+          {product.name}
+        </h3>
         
-        <p className="text-sm text-muted-foreground mb-4 text-balance">
+        <p className="text-sm text-muted-foreground line-clamp-2">
           {product.description}
         </p>
 
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-primary font-medium">{product.price}</span>
-          <Button
-            variant="outline"
-            size="sm"
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        {/* Price & CTA Row */}
+        <div className="flex items-center justify-between pt-2">
+          <span className="text-sm font-medium text-foreground/70">
+            {product.price}
+          </span>
+          
+          {/* Ritual CTA Button */}
+          <motion.button
+            className="px-4 py-2 text-xs font-medium tracking-wider
+                       border border-primary/30 text-primary
+                       hover:bg-primary/10 hover:border-primary
+                       transition-all duration-300
+                       opacity-0 group-hover:opacity-100"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            View Details
-          </Button>
+            ACQUIRE
+          </motion.button>
         </div>
       </div>
-
-      {/* Hover Border */}
-      <div className="absolute inset-0 border-2 border-primary/0 group-hover:border-primary/20 transition-colors duration-500 pointer-events-none rounded-sm" />
     </motion.div>
   );
 };

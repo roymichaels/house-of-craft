@@ -16,12 +16,12 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const isHomepage = location.pathname === "/";
 
   const navItems = [
-    { name: "Instruments", scrollTo: "mindcraft", type: "scroll" as const },
-    { name: "Objects", scrollTo: "objects", type: "scroll" as const },
-    { name: "Doctrine", scrollTo: "doctrine", type: "scroll" as const },
-    { name: "Inner Chamber", scrollTo: "circle", type: "scroll" as const },
-    { name: "Archives", modal: "collections" as ModalType, type: "modal" as const },
-    { name: "Stories", modal: "stories" as ModalType, type: "modal" as const },
+    { name: "Hall of Discipline", scrollTo: "mindcraft", type: "scroll" as const },
+    { name: "Vault of Instruments", scrollTo: "objects", type: "scroll" as const },
+    { name: "Library of Light", scrollTo: "doctrine", type: "scroll" as const },
+    { name: "Inner Sanctum", scrollTo: "circle", type: "scroll" as const },
+    { name: "The Vault", modal: "collections" as ModalType, type: "modal" as const },
+    { name: "The Doctrine", modal: "stories" as ModalType, type: "modal" as const },
     { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];
 

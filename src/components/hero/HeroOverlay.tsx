@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import HeroLogo from "./HeroLogo";
 import { useTitleReveal } from "@/hooks/useTitleReveal";
+import { useModalStore } from "@/stores/modalStore";
 
 interface HeroOverlayProps {
   title: string;
@@ -25,6 +26,7 @@ const HeroOverlay = ({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
+  const { openModal } = useModalStore();
   
   // Title reveal hook for scroll-triggered entrance
   const { titleOpacity, titleY, titleScale } = useTitleReveal();
@@ -71,6 +73,53 @@ const HeroOverlay = ({
         <p className="text-sm md:text-base tracking-wider max-w-3xl mx-auto text-balance">
           {subtitle}
         </p>
+      </motion.div>
+
+      {/* The Summoning CTA - appears at 7-9s */}
+      <motion.div
+        className="absolute bottom-[15vh] md:bottom-[20vh] left-0 right-0 z-30 flex flex-col items-center gap-6 px-6"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 7, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
+      >
+        {/* Sacred Sigil Button */}
+        <button
+          onClick={() => openModal('collections')}
+          className="group relative w-24 h-24 rounded-full 
+                     border-2 border-primary/40 backdrop-blur-sm
+                     hover:border-primary/80 transition-all duration-700
+                     hover:shadow-[0_0_40px_rgba(196,166,97,0.4)]
+                     focus:outline-none focus:ring-2 focus:ring-primary/50"
+        >
+          {/* Rotating outer ring */}
+          <span className="absolute inset-0 rounded-full border border-primary/20 
+                           animate-[spin_20s_linear_infinite]" />
+          
+          {/* Inner sigil */}
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="font-ancient text-primary text-2xl">☉</span>
+          </span>
+          
+          {/* Hover glow */}
+          <span className="absolute inset-0 rounded-full bg-primary/5 
+                           opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </button>
+        
+        {/* CTA Text */}
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 8, duration: 1 }}
+        >
+          <p className="font-ancient text-primary text-base tracking-[0.2em] mb-1">
+            ENTER THE ORDER
+          </p>
+          <p className="text-xs text-muted-foreground/60 tracking-wider">
+            The Vault of Instruments Awaits
+          </p>
+        </motion.div>
       </motion.div>
 
       {/* Main Title - Scroll-triggered reveal (only after 60% scroll) */}
