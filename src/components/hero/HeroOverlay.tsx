@@ -59,6 +59,78 @@ const HeroOverlay = ({
 
   return (
     <>
+      {/* Tagline - appears at 5-7s in lower third */}
+      <motion.div
+        className="absolute bottom-[25vh] md:bottom-[30vh] left-0 right-0 z-20 text-center px-6"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 0.6, y: 0 }}
+        transition={{ delay: 5, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
+      >
+        <p className="text-sm md:text-base tracking-wider max-w-3xl mx-auto text-balance">
+          {subtitle}
+        </p>
+      </motion.div>
+
+      {/* The Summoning CTA - Ceremonial Button - appears at 7-9s */}
+      <motion.div
+        className="absolute bottom-[8vh] md:bottom-[12vh] left-0 right-0 z-30 flex flex-col items-center gap-4 px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 7, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
+      >
+        {/* Golden Ceremonial Entry Button */}
+        <div className="relative group">
+          {/* Initial pulse ring (appears once at 8s) */}
+          <motion.div
+            className="absolute inset-0 rounded border-2 border-primary/60 pointer-events-none"
+            initial={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1.5, opacity: 0 }}
+            transition={{ delay: 8, duration: 1.5, ease: "easeOut" }}
+          />
+
+          <motion.button
+            onClick={() => openModal('collections')}
+            className="
+              relative px-12 py-4 rounded
+              bg-primary text-primary-foreground
+              font-ancient text-sm md:text-base tracking-[0.2em] font-bold
+              shadow-[0_0_20px_hsl(var(--primary)/0.4)]
+              hover:shadow-[0_0_40px_hsl(var(--primary)/0.7)]
+              hover:brightness-110
+              transition-all duration-500 ease-out
+              focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2
+              focus:ring-offset-background
+              
+              before:absolute before:inset-0 before:rounded
+              before:border-2 before:border-primary/30
+              before:scale-100 before:opacity-0
+              hover:before:scale-110 hover:before:opacity-100
+              before:transition-all before:duration-700
+              before:pointer-events-none
+            "
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 7.5, duration: 0.6, ease: "easeOut" }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            ENTER THE ORDER
+          </motion.button>
+        </div>
+        
+        {/* Subtitle */}
+        <motion.p 
+          className="text-xs md:text-sm text-muted-foreground/60 tracking-wider italic"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 8, duration: 1 }}
+        >
+          The Vault of Instruments Awaits
+        </motion.p>
+      </motion.div>
+
       {/* Main Title - Scroll-triggered reveal (only after 60% scroll) */}
       {showTitle.get() && (
         <motion.div

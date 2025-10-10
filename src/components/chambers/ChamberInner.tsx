@@ -1,8 +1,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { Text3D } from "../3d/ui/Text3D";
-import { InfoPanel3D } from "../3d/ui/InfoPanel3D";
+import { SolarHalo } from "../3d/effects/SolarHalo";
 
 interface ChamberInnerProps {
   lightColor: string;
@@ -27,25 +26,10 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
 
   return (
     <group>
-      {/* Section Header */}
-      <Text3D 
-        content="THE INNER CIRCLE"
-        position={[0, 3, 0]}
-        fontSize={0.4}
-        color="#C4A661"
-        entranceDelay={0.5}
-      />
+      {/* Pulsing Solar Halo */}
+      <SolarHalo radius={4.0} lightColor={lightColor} intensity={1.2} />
       
-      <InfoPanel3D
-        content="Reserved for those who have proven themselves worthy."
-        position={[0, 2, 0.2]}
-        width={5}
-        height={0.6}
-        fontSize={0.12}
-        entranceDelay={1}
-      />
-      
-      {/* Floor sigil - visible from below during doctrine */}
+      {/* Floor sigil */}
       <mesh
         ref={sigilRef}
         rotation={[-Math.PI / 2, 0, 0]}
@@ -84,6 +68,9 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
         intensity={2}
         distance={5}
       />
+      
+      {/* Ambient sanctum glow */}
+      <ambientLight intensity={0.3} color={lightColor} />
     </group>
   );
 };
