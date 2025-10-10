@@ -11,19 +11,19 @@ const Doctrine = () => {
 
   const writings = [
     {
-      title: "On Mastery",
-      excerpt: "Luxury begins in the mind. It's not what you own, but how you hold it.",
-      category: "Philosophy",
+      title: "The Solar Imperative",
+      excerpt: "In light, we find clarity. In clarity, we command. The sun does not question—it illuminates, reveals, and demands truth from all who stand beneath it.",
+      category: "Manifesto",
     },
     {
-      title: "On Time",
-      excerpt: "A chronometer is not worn to count seconds, but to remind you that they are yours.",
-      category: "Essays",
+      title: "Time as Discipline",
+      excerpt: "Every hour is a covenant with yourself. The modern world begs for distraction—mastery answers with precision, presence, and unwavering intent.",
+      category: "Essay",
     },
     {
-      title: "On Influence",
-      excerpt: "The world bends to the man who moves with intent.",
-      category: "Manifestos",
+      title: "Objects of Intent",
+      excerpt: "Possessions are not mere artifacts. They are symbols of philosophy—each chosen instrument a testament to your command over the material realm.",
+      category: "Doctrine",
     },
   ];
 
@@ -37,11 +37,21 @@ const Doctrine = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-20"
         >
-          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 0.6, y: 0 } : { opacity: 0 }}
+            transition={{ delay: 0.2, duration: 1 }}
+            className="font-order text-primary/60 text-xs tracking-[0.3em] mb-4"
+          >
+            ORDO AB LUX
+          </motion.p>
+          <h2 className="font-ancient text-6xl md:text-8xl text-ancient-gold mb-6 tracking-wider 
+                         drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
             The Doctrine
           </h2>
-          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
-            Writings, aphorisms, and manifestos on mastery, perception, and command.
+          <p className="text-foreground/60 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed 
+                        font-ancient-tulip italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
+            Wisdom for men who command themselves
           </p>
         </motion.div>
 
@@ -98,7 +108,7 @@ const Doctrine = () => {
             onClick={() => openModal('stories')}
             className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300"
           >
-            Explore the Doctrine
+            Study the Doctrine
             <GoldenIcon icon={ArrowRight} size="md" glow="medium" />
           </button>
         </motion.div>

@@ -3,7 +3,6 @@ import { useScroll } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import HeroScene from "@/components/hero/HeroScene";
-import Mindcraft from "@/components/sections/Mindcraft";
 import Objects from "@/components/sections/Objects";
 import Doctrine from "@/components/sections/Doctrine";
 import Circle from "@/components/sections/Circle";
@@ -24,7 +23,6 @@ const Index = () => {
   const { mode, setMode, setScrollProgress } = useSceneStore();
   const { scrollYProgress } = useScroll();
   
-  const mindcraftRef = useRef<HTMLElement>(null);
   const objectsRef = useRef<HTMLElement>(null);
   const doctrineRef = useRef<HTMLElement>(null);
   const circleRef = useRef<HTMLElement>(null);
@@ -52,11 +50,9 @@ const Index = () => {
       setScrollProgress(progress);
 
       // Determine which section is active based on scroll position
-      if (progress < 0.15) {
+      if (progress < 0.20) {
         setMode('hero');
-      } else if (progress < 0.35) {
-        setMode('mindcraft');
-      } else if (progress < 0.55) {
+      } else if (progress < 0.50) {
         setMode('objects');
       } else if (progress < 0.75) {
         setMode('doctrine');
@@ -87,9 +83,6 @@ const Index = () => {
         <Navigation />
         <section id="hero" className="min-h-screen">
           <HeroSection />
-        </section>
-        <section ref={mindcraftRef} id="mindcraft" className="min-h-[80vh] flex items-center">
-          <Mindcraft />
         </section>
         <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center">
           <Objects />

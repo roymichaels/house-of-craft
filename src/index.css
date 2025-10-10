@@ -66,7 +66,7 @@ All colors MUST be HSL.
     --radius: 0.375rem;
     
     /* APOLLON brand tokens */
-    --ancient-gold: 43 74% 66%;
+    --ancient-gold: 43 70% 56%; /* Warmer, richer gold #D4AF37 */
     --ancient-silver: 0 0% 75%;
     --ancient-patina: 40 25% 45%;
     --gold: 43 74% 66%;

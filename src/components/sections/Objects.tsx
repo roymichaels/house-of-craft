@@ -39,13 +39,13 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       className={cn(
         "group relative overflow-hidden rounded-2xl",
         "aspect-square",
-        "bg-black/80 backdrop-blur-xl border border-ancient-gold/10",
-        "hover:border-ancient-gold/40 hover:bg-black/90",
+        "bg-black/15 backdrop-blur-xl border border-ancient-gold/20",
+        "hover:border-ancient-gold/60 hover:bg-black/25",
         "transition-all duration-500",
         "p-6 md:p-8",
-        "opacity-85 hover:opacity-100",
+        "opacity-90 hover:opacity-100",
         "shadow-[0_4px_40px_rgba(0,0,0,0.4)]",
-        "hover:shadow-[0_8px_60px_rgba(196,166,97,0.1)]",
+        "hover:shadow-[0_8px_60px_rgba(212,175,55,0.2)]",
         "hover:-translate-y-1"
       )}
       style={{
@@ -66,10 +66,10 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       <div className="relative z-10 flex flex-col h-full justify-center items-center text-center">
         <div className="space-y-3 md:space-y-4">
           {/* Name */}
-          <h3 className="font-ancient text-ancient-gold text-2xl md:text-3xl
-                         leading-tight
+          <h3 className="font-ancient text-ancient-gold text-3xl md:text-4xl
+                         leading-tight tracking-wide
                          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
-                         group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.8)]
+                         group-hover:drop-shadow-[0_0_40px_rgba(212,175,55,0.9)]
                          transition-all duration-300">
             {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
           </h3>
@@ -105,12 +105,12 @@ const Objects = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16 md:mb-20"
         >
-          <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-6
-                         drop-shadow-[0_0_30px_rgba(196,166,97,0.3)]">
-            SELECTED OBJECTS
+          <h2 className="text-6xl md:text-8xl font-ancient text-ancient-gold mb-6
+                         drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]">
+            INSTRUMENTS OF MASTERY
           </h2>
-          <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto">
-            Chosen for precision, presence, and permanence
+          <p className="text-base md:text-lg text-foreground/60 max-w-2xl mx-auto font-ancient-tulip italic">
+            Objects forged for men who command themselves
           </p>
         </motion.div>
 

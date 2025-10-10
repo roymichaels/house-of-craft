@@ -11,24 +11,19 @@ const Circle = () => {
 
   const benefits = [
     {
-      icon: Lock,
-      title: "Private Access",
-      description: "First rights to relics and collaborations.",
+      icon: Crown,
+      title: "Vault Access",
+      description: "First access to rare instruments, limited editions, and bespoke offerings never available to the public.",
     },
     {
       icon: Users,
-      title: "Inner Circle",
-      description: "Council of craftsmen, strategists, and creators.",
+      title: "The Brotherhood",
+      description: "Fellowship with men who value discipline, mastery, and the relentless pursuit of excellence.",
     },
     {
-      icon: Zap,
-      title: "Bespoke Services",
-      description: "Commissions of objects and ideas.",
-    },
-    {
-      icon: Crown,
-      title: "Legacy Projects",
-      description: "Partnerships that shape the future canon of APOLLON.",
+      icon: Lock,
+      title: "Council of Masters",
+      description: "Quarterly sessions with craftsmen, philosophers, and architects of thought—conversations that sharpen command.",
     },
   ];
 
@@ -48,11 +43,13 @@ const Circle = () => {
             <div className="w-12 h-[2px] bg-ancient-gold" />
           </div>
           
-          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
+          <h2 className="font-ancient text-6xl md:text-8xl text-ancient-gold mb-6 tracking-wider 
+                         drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
             The Inner Sanctum
           </h2>
-          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
-            Private access to APOLLON — for those who lead, create, and command through light.
+          <p className="text-foreground/60 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed 
+                        font-ancient-tulip italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
+            Entry is granted only to those who command themselves
           </p>
         </motion.div>
 
@@ -104,7 +101,7 @@ const Circle = () => {
             onClick={() => openModal('concierge')}
             className="inline-flex items-center gap-3 px-12 py-5 bg-ancient-gold text-background font-ancient text-lg tracking-widest hover:bg-ancient-gold/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-ancient-gold/20"
           >
-            Request Entry
+            Take the Oath
           </button>
         </motion.div>
 

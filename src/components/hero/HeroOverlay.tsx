@@ -72,17 +72,16 @@ const HeroOverlay = ({
         </p>
       </motion.div>
 
-      {/* The Summoning CTA - Ceremonial Button - appears at 7-9s */}
+      {/* The Summoning CTAs - Ceremonial Buttons - appears at 7-9s */}
       <motion.div
-        className="absolute bottom-[8vh] md:bottom-[12vh] left-0 right-0 z-30 flex flex-col items-center gap-4 px-6"
+        className="absolute bottom-[8vh] md:bottom-[12vh] left-0 right-0 z-30 flex flex-col items-center gap-6 px-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 7, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
-        {/* Golden Ceremonial Entry Button */}
+        {/* Primary CTA - Explore the Instruments */}
         <div className="relative group">
-          {/* Initial pulse ring (appears once at 8s) */}
           <motion.div
             className="absolute inset-0 rounded border-2 border-primary/60 pointer-events-none"
             initial={{ scale: 1, opacity: 1 }}
@@ -90,10 +89,10 @@ const HeroOverlay = ({
             transition={{ delay: 8, duration: 1.5, ease: "easeOut" }}
           />
 
-          <motion.button
-            onClick={() => openModal('collections')}
+          <motion.a
+            href="#objects"
             className="
-              relative px-12 py-4 rounded
+              relative px-12 py-4 rounded block
               bg-primary text-primary-foreground
               font-ancient text-sm md:text-base tracking-[0.2em] font-bold
               shadow-[0_0_20px_hsl(var(--primary)/0.4)]
@@ -116,19 +115,21 @@ const HeroOverlay = ({
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >
-            ENTER THE ORDER
-          </motion.button>
+            EXPLORE THE INSTRUMENTS
+          </motion.a>
         </div>
         
-        {/* Subtitle */}
-        <motion.p 
-          className="text-xs md:text-sm font-ancient-tulip text-muted-foreground/60 tracking-wider italic"
+        {/* Secondary CTA - Study the Doctrine */}
+        <motion.a
+          href="#doctrine"
+          className="text-xs md:text-sm font-ancient-tulip text-muted-foreground/70 tracking-wider
+                     hover:text-primary transition-colors duration-300 underline decoration-dotted"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 8, duration: 1 }}
         >
-          The Vault of Instruments Awaits
-        </motion.p>
+          Study the Doctrine
+        </motion.a>
       </motion.div>
 
       {/* Main Title - Scroll-triggered reveal (only after 60% scroll) */}
