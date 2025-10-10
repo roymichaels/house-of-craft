@@ -7,9 +7,8 @@ interface SunProps {
   glowIntensity?: number;
 }
 
-const Sun = ({ radius, glowIntensity = 1.5 }: SunProps) => {
+const Sun = ({ radius }: SunProps) => {
   const sunRef = useRef<THREE.Mesh>(null);
-  const flareGroupRef = useRef<THREE.Group>(null);
 
   // APOCALYPTIC FIREBALL surface shader
   const sunMaterial = useMemo(() => {
@@ -143,11 +142,6 @@ const Sun = ({ radius, glowIntensity = 1.5 }: SunProps) => {
       sunRef.current.rotation.y += 0.002;
       sunRef.current.rotation.x += 0.0003;
     }
-
-    // Rotate flares
-    if (flareGroupRef.current) {
-      flareGroupRef.current.rotation.y = time * 0.2;
-    }
   });
 
   return (
@@ -158,38 +152,6 @@ const Sun = ({ radius, glowIntensity = 1.5 }: SunProps) => {
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
-      {/* Minimal solar flares */}
-      <group ref={flareGroupRef}>
-        {[...Array(8)].map((_, i) => {
-          const angle = (i / 8) * Math.PI * 2;
-          const distance = radius * 1.15;
-          const x = Math.cos(angle) * distance;
-          const y = (Math.random() - 0.5) * radius * 0.3;
-          const z = Math.sin(angle) * distance;
-          const size = radius * 0.08;
-
-          return (
-            <mesh key={i} position={[x, y, z]}>
-              <sphereGeometry args={[size, 8, 8]} />
-              <meshBasicMaterial
-                color={new THREE.Color(1.0, 0.5, 0.1)}
-                transparent
-                opacity={0.3}
-                blending={THREE.AdditiveBlending}
-              />
-            </mesh>
-          );
-        })}
-      </group>
-
-      {/* Minimal lighting */}
-      <pointLight
-        position={[0, 0, 0]}
-        intensity={glowIntensity * 2.0}
-        distance={200}
-        decay={2}
-        color="#FF7722"
-      />
     </group>
   );
 };
