@@ -124,6 +124,13 @@ export default {
       },
       transitionTimingFunction: {
         spring: 'var(--spring)',
+        'spring-bouncy': 'var(--spring-bouncy)',
+      },
+      transitionDuration: {
+        instant: 'var(--duration-instant)',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
     },
   },

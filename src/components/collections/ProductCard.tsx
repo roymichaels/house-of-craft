@@ -16,61 +16,92 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-sm bg-card border border-border/50
-                 hover:border-primary/30 transition-all duration-700
-                 hover:shadow-[0_0_40px_rgba(196,166,97,0.15)]"
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
+                 border border-border/30 hover:border-primary/40
+                 shadow-lg hover:shadow-2xl hover:shadow-primary/10
+                 transition-all duration-300"
+      whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
     >
-      {/* Dark vignette overlay on image */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/60 
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60 
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 
                       pointer-events-none" />
       
-      {/* Golden glow on hover */}
-      <div className="absolute inset-0 bg-gradient-radial from-primary/20 via-transparent to-transparent
-                      opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10
-                      pointer-events-none" />
+      {/* Golden glow */}
+      <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent
+                      opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10
+                      pointer-events-none rounded-2xl" />
 
       {/* Image Container */}
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10">
         <motion.img
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover"
+          initial={{ scale: 1 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30,
+          }}
         />
       </div>
 
       {/* Content */}
-      <div className="relative p-6 space-y-3">
-        <h3 className="text-xl font-ancient tracking-wide text-foreground 
-                       group-hover:text-primary transition-colors duration-300">
+      <div className="relative p-5 space-y-3 z-20">
+        {/* Category Badge */}
+        <div className="inline-block px-2.5 py-1 bg-primary/10 border border-primary/20 rounded-full">
+          <span className="text-xs font-medium text-ancient-gold tracking-wider">
+            {product.category.toUpperCase()}
+          </span>
+        </div>
+
+        <h3 className="text-lg font-ancient tracking-wide text-foreground 
+                       group-hover:text-ancient-gold transition-colors duration-200">
           {product.name}
         </h3>
         
-        <p className="text-sm text-muted-foreground line-clamp-2">
+        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {product.description}
         </p>
 
         {/* Price & CTA Row */}
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-sm font-medium text-foreground/70">
-            {product.price}
-          </span>
+        <div className="flex items-center justify-between pt-3">
+          {/* Floating price pill */}
+          <motion.div
+            className="px-3 py-1.5 bg-background/80 backdrop-blur-sm border border-border/50 rounded-full"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <span className="text-sm font-semibold text-foreground">
+              {product.price}
+            </span>
+          </motion.div>
           
-          {/* Modern CTA Button */}
+          {/* CTA Button */}
           <motion.button
-            className="px-4 py-2 text-xs font-medium tracking-wider
-                       border border-primary/30 text-primary
-                       hover:bg-primary/10 hover:border-primary
-                       transition-all duration-300
+            className="px-4 py-2 text-xs font-medium tracking-wider rounded-full
+                       bg-primary/10 border border-primary/30 text-ancient-gold
+                       hover:bg-primary/20 hover:border-primary/50
+                       transition-all duration-200
                        opacity-0 group-hover:opacity-100"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 25,
+            }}
           >
-            VIEW DETAILS
+            VIEW
           </motion.button>
         </div>
       </div>
