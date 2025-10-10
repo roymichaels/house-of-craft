@@ -63,27 +63,29 @@ const Planet = ({
   return (
     <group ref={groupRef}>
       {/* Planet */}
-      <mesh ref={planetRef}>
-        <sphereGeometry args={[radius, 32, 32]} />
+      <mesh ref={planetRef} castShadow receiveShadow>
+        <sphereGeometry args={[radius, 64, 64]} />
         <meshStandardMaterial
           color={color}
           emissive={emissive || "#000000"}
-          emissiveIntensity={emissive ? 0.3 : 0}
-          roughness={0.8}
-          metalness={0.2}
+          emissiveIntensity={emissive ? 0.15 : 0}
+          roughness={0.7}
+          metalness={0.3}
+          envMapIntensity={1.2}
         />
       </mesh>
 
       {/* Saturn's rings */}
       {rings && (
-        <mesh rotation={[Math.PI / 2.5, 0, 0]}>
+        <mesh rotation={[Math.PI / 2.5, 0, 0]} castShadow receiveShadow>
           <ringGeometry args={[radius * 1.5, radius * 2.2, 64]} />
           <meshStandardMaterial
-            color="#C4A87E"
+            color="#D4B896"
             transparent
-            opacity={0.8}
+            opacity={0.7}
             side={THREE.DoubleSide}
-            roughness={0.9}
+            roughness={0.8}
+            metalness={0.1}
           />
         </mesh>
       )}
@@ -95,9 +97,15 @@ const Planet = ({
           ref={(el) => {
             if (el) moonRefs.current[index] = el;
           }}
+          castShadow
+          receiveShadow
         >
-          <sphereGeometry args={[moon.radius, 16, 16]} />
-          <meshStandardMaterial color={moon.color} roughness={1} />
+          <sphereGeometry args={[moon.radius, 32, 32]} />
+          <meshStandardMaterial
+            color={moon.color}
+            roughness={0.9}
+            metalness={0.1}
+          />
         </mesh>
       ))}
     </group>
