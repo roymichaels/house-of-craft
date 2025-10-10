@@ -14,11 +14,15 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -30 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="p-12"
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+      className="p-6 md:p-12"
     >
       {/* Category Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
         {categories.map((category, index) => {
           const productCount = category.subcategories.reduce(
             (acc, sub) => acc + sub.products.length,
@@ -29,49 +33,60 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
             <motion.button
               key={category.id}
               onClick={() => onSelectCategory(category.id)}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: [0.16, 1, 0.3, 1],
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                delay: index * 0.08,
               }}
-              className="group relative p-8 text-left border border-primary/10 rounded-sm
-                         hover:border-primary/30 bg-card/50 backdrop-blur-sm
-                         transition-all duration-500 hover:shadow-[0_0_30px_rgba(196,166,97,0.1)]"
-              whileHover={{ y: -8 }}
+              className="group relative p-6 md:p-8 text-left 
+                         bg-card/40 backdrop-blur-sm rounded-2xl
+                         border border-border/30 hover:border-primary/40
+                         shadow-lg hover:shadow-2xl hover:shadow-primary/10
+                         transition-all duration-300"
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               {/* Golden glow on hover */}
               <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent
-                              opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-sm
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl
                               pointer-events-none" />
 
               {/* Content */}
-              <div className="relative z-10">
+              <div className="relative z-10 space-y-4">
                 {/* Category Name */}
-                <h3 className="text-2xl font-ancient text-ancient-gold mb-3 
+                <h3 className="text-2xl md:text-3xl font-ancient text-ancient-gold 
                                group-hover:drop-shadow-[0_0_15px_rgba(196,166,97,0.5)]
                                transition-all duration-300">
                   {category.name}
                 </h3>
 
                 {/* Tagline */}
-                <p className="text-sm text-foreground/70 mb-4 leading-relaxed">
+                <p className="text-sm text-foreground/70 leading-relaxed min-h-[3rem]">
                   {category.tagline}
                 </p>
 
-                {/* Product Count */}
+                {/* Footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-primary/10">
-                  <span className="text-xs text-muted-foreground/60 tracking-wider">
-                    {productCount} {productCount === 1 ? 'ITEM' : 'ITEMS'}
-                  </span>
+                  {/* Product Count Badge */}
+                  <div className="px-3 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
+                    <span className="text-xs font-medium text-ancient-gold tracking-wider">
+                      {productCount} {productCount === 1 ? 'ITEM' : 'ITEMS'}
+                    </span>
+                  </div>
                   
                   {/* Arrow */}
                   <motion.span
-                    className="text-primary opacity-0 group-hover:opacity-100"
+                    className="text-ancient-gold text-lg opacity-0 group-hover:opacity-100"
                     initial={{ x: -10 }}
                     whileHover={{ x: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                    }}
                   >
                     →
                   </motion.span>
