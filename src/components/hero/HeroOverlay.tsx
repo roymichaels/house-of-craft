@@ -119,7 +119,7 @@ const HeroOverlay = ({
           </motion.a>
         </div>
         
-        {/* Secondary CTA - Study the Doctrine */}
+        {/* Secondary CTA - Explore the Philosophy */}
         <motion.a
           href="#doctrine"
           className="text-xs md:text-sm font-ancient-tulip text-muted-foreground/70 tracking-wider
@@ -128,7 +128,7 @@ const HeroOverlay = ({
           animate={{ opacity: 1 }}
           transition={{ delay: 8, duration: 1 }}
         >
-          Study the Doctrine
+          Explore the Philosophy
         </motion.a>
       </motion.div>
 

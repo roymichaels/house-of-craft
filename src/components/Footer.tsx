@@ -26,11 +26,14 @@ const Footer = () => {
                 Philosophy
               </a>
               <a href="#objects" className="text-muted-foreground hover:text-primary transition-colors">
-                Instruments
+                Collections
               </a>
-              <a href="#circle" className="text-muted-foreground hover:text-primary transition-colors">
-                Sanctum
-              </a>
+              <button 
+                onClick={() => openModal('sanctum')}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                The Chamber
+              </button>
             </div>
             
             {/* Social Links */}

@@ -7,17 +7,17 @@ import { GoldenIcon } from "@/components/ui/GoldenIcon";
 const benefits = [
   {
     icon: Crown,
-    title: "Vault Access",
+    title: "First Access",
     description: "First access to rare instruments before public release. Reserved collections curated for masters only.",
   },
   {
     icon: Users,
-    title: "The Brotherhood",
+    title: "The Guild",
     description: "Direct counsel with men who command their domains. Private gatherings of the initiated.",
   },
   {
     icon: Zap,
-    title: "Council of Masters",
+    title: "Master's Council",
     description: "Invitation to sealed chambers where strategy, philosophy, and mastery converge.",
   },
 ];
@@ -78,10 +78,10 @@ const SanctumModal = () => {
                     <GoldenIcon icon={Crown} size="xl" glow="strong" />
                   </div>
                   <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4 tracking-wider drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
-                    The Inner Sanctum
+                    The Chamber
                   </h2>
                   <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto font-ancient-tulip italic leading-relaxed">
-                    Entry is granted only to those who command themselves
+                    Private access for those who lead, create, and command through light
                   </p>
                 </motion.div>
               </div>
@@ -124,10 +124,10 @@ const SanctumModal = () => {
                     }}
                     className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_40px_rgba(212,175,55,0.4)]"
                   >
-                    Request Entry
+                    Request Access
                   </button>
                   <p className="text-muted-foreground/60 text-sm mt-6 italic">
-                    Not all who apply are accepted
+                    Membership is selective
                   </p>
                 </motion.div>
               </div>

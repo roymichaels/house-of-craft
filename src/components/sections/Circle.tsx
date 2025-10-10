@@ -29,11 +29,11 @@ const Circle = () => {
 
           <h2 className="font-ancient text-6xl md:text-8xl text-ancient-gold mb-6 tracking-wider 
                          drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
-            The Inner Sanctum
+            The Chamber
           </h2>
           <p className="text-foreground/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed 
                         font-ancient-tulip italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)] mb-12">
-            Entry is granted only to those who command themselves
+            Private access for those who lead, create, and command through light
           </p>
 
           <motion.div
@@ -45,7 +45,7 @@ const Circle = () => {
               onClick={() => openModal('sanctum')}
               className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_40px_rgba(212,175,55,0.4)]"
             >
-              Take the Oath
+              Join The Chamber
             </button>
           </motion.div>
         </motion.div>

@@ -23,15 +23,15 @@ const Doctrine = () => {
             transition={{ delay: 0.2, duration: 1 }}
             className="font-ancient text-primary/60 text-xs tracking-[0.3em] mb-4"
           >
-            ORDO AB LUX
+            LUX EST DISCIPLINA
           </motion.p>
           <h2 className="font-ancient text-6xl md:text-8xl text-ancient-gold mb-6 tracking-wider 
                          drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
-            The Doctrine
+            Philosophy & Mission
           </h2>
           <p className="text-foreground/60 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed 
                         font-ancient-tulip italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)] mb-12">
-            Wisdom for men who command themselves
+            The principles that guide creation, command, and conduct
           </p>
 
           <motion.div
@@ -44,7 +44,7 @@ const Doctrine = () => {
               className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300 shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_40px_rgba(212,175,55,0.4)]"
             >
               <GoldenIcon icon={BookOpen} size="md" glow="medium" />
-              Study the Doctrine
+              Explore the Philosophy
             </button>
           </motion.div>
         </motion.div>

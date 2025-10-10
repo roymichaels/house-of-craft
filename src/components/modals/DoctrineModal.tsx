@@ -12,7 +12,7 @@ const essays = [
   {
     id: "solar-imperative",
     title: "The Solar Imperative",
-    category: "Manifesto",
+    category: "Mission",
     excerpt: "In light, we find clarity. In clarity, we command. The sun does not question—it illuminates, reveals, and demands truth from all who stand beneath it.",
     content: `The sun rises without permission. It does not negotiate with the horizon, nor does it ask if the world is ready for its light. It simply is—uncompromising, inevitable, absolute.
 
@@ -31,7 +31,7 @@ Every morning is a declaration: Will you rise like the sun, or will you remain i
   {
     id: "time-discipline",
     title: "Time as Discipline",
-    category: "Essay",
+    category: "Principle",
     excerpt: "Every hour is a covenant with yourself. The modern world begs for distraction—mastery answers with precision, presence, and unwavering intent.",
     content: `Time is the most democratic of all resources—every man receives exactly 24 hours per day. Yet observe how radically different the outcomes. Some men build empires; others merely survive. The difference is not in the hours given, but in the discipline applied.
 
@@ -52,7 +52,7 @@ The question is not whether you have time. The question is whether you have the 
   {
     id: "objects-intent",
     title: "Objects of Intent",
-    category: "Doctrine",
+    category: "Philosophy",
     excerpt: "Possessions are not mere artifacts. They are symbols of philosophy—each chosen instrument a testament to your command over the material realm.",
     content: `Every object in your possession is either elevating you or degrading you. There is no neutral ground in the material realm.
 
@@ -131,13 +131,13 @@ const DoctrineModal = () => {
                     transition={{ delay: 0.2 }}
                   >
                     <p className="font-ancient text-primary/60 text-xs tracking-[0.3em] mb-4">
-                      ORDO AB LUX
+                      LUX EST DISCIPLINA
                     </p>
                     <h2 className="text-4xl md:text-6xl font-ancient text-ancient-gold mb-4 tracking-wider drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]">
-                      The Doctrine
+                      Philosophy & Mission
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-ancient-tulip italic">
-                      Wisdom for men who command themselves
+                      The principles that guide creation, command, and conduct
                     </p>
                   </motion.div>
                 </div>
@@ -150,7 +150,7 @@ const DoctrineModal = () => {
                         value="manifestos"
                         className="data-[state=active]:bg-ancient-gold/10 data-[state=active]:text-ancient-gold font-ancient tracking-wider"
                       >
-                        Manifestos
+                        Mission
                       </TabsTrigger>
                       <TabsTrigger 
                         value="philosophy"

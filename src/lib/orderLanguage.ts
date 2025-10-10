@@ -2,33 +2,33 @@ export const OrderLanguage = {
   chambers: {
     hero: "The Solar Atrium",
     mindcraft: "Hall of Discipline", 
-    objects: "Vault of Sacred Instruments",
-    doctrine: "Library of Light",
-    circle: "The Inner Sanctum"
+    objects: "Collections of Mastery",
+    doctrine: "Philosophy & Mission",
+    circle: "The Chamber"
   },
   
   actions: {
     enter: "Enter The Order",
     examine: "Study the Instrument",
-    study: "Study the Doctrine",
+    study: "Explore the Philosophy",
     acquire: "Claim Your Relic",
-    swear: "Take the Oath",
-    access: "Inner Sanctum Access"
+    swear: "Join The Chamber",
+    access: "Request Access"
   },
   
   virtues: {
     hero: "Command Through Clarity",
     mindcraft: "Light as Discipline",
     objects: "Form Follows Reason",
-    doctrine: "Order From Light",
-    circle: "Time Belongs to the Sun"
+    doctrine: "The principles that guide creation, command, and conduct",
+    circle: "Private access for those who lead, create, and command through light"
   },
   
   latin: {
     hero: "Lux Est Disciplina", // Light is discipline
     mindcraft: "Claritas Ante Actum", // Clarity before action
     objects: "Forma Sequitur Rationem", // Form follows reason
-    doctrine: "Ordo Ab Lux", // Order from light
+    doctrine: "Lux Est Disciplina", // Light is discipline
     circle: "Tempus Domini Solis" // Time belongs to the sun
   },
   
