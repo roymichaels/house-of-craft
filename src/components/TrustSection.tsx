@@ -1,6 +1,7 @@
 import { Shield, Package, RotateCcw, BadgeCheck } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const features = [
   {
@@ -45,8 +46,8 @@ const TrustSection = () => {
                 ease: "easeOut"
               }}
             >
-              <div className="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-primary/10">
-                <feature.icon className="h-6 w-6 text-primary" />
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-ancient-gold/10 border border-ancient-gold/20">
+                <GoldenIcon icon={feature.icon} size="lg" glow="medium" />
               </div>
               <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
               <p className="text-sm text-muted-foreground text-balance">{feature.description}</p>

@@ -2,6 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 import watchesImage from "@/assets/collection-watches.jpg";
 import tailoringImage from "@/assets/collection-tailoring.jpg";
 import leatherImage from "@/assets/collection-leather.jpg";
@@ -75,7 +76,12 @@ const FeaturedCollections = () => {
             <div className="absolute inset-0 flex flex-col justify-end p-8">
               <h3 className="text-2xl md:text-3xl font-serif mb-2 flex items-center gap-2 group-hover:gap-3 transition-all">
                 {collection.title}
-                <ArrowUpRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <GoldenIcon 
+                  icon={ArrowUpRight} 
+                  size="md" 
+                  glow="medium" 
+                  className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" 
+                />
               </h3>
               <p className="text-muted-foreground text-balance">{collection.description}</p>
             </div>

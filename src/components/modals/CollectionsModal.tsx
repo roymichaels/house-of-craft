@@ -7,6 +7,7 @@ import type { Category } from "@/data/catalog";
 import CategoryTabs from "@/components/vault/CategoryTabs";
 import VaultEcommerce from "@/components/vault/VaultEcommerce";
 import { BrandLanguage } from "@/lib/brandLanguage";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 type ViewState = 'categories' | 'category-detail';
 
@@ -87,10 +88,10 @@ const CollectionsModal = () => {
                 <button
                   onClick={closeModal}
                   className="absolute top-6 right-6 p-2 rounded-full bg-background/80 
-                             hover:bg-primary/20 transition-colors z-10"
+                             hover:bg-ancient-gold/20 transition-all group z-10"
                   aria-label="Close modal"
                 >
-                  <X className="h-5 w-5" />
+                  <GoldenIcon icon={X} size="md" glow="medium" className="hover:rotate-90 duration-500" />
                 </button>
 
                 {/* Back Button (contextual) */}
@@ -98,11 +99,11 @@ const CollectionsModal = () => {
                   <button
                     onClick={handleBackToCategories}
                     className="absolute top-6 left-6 p-2 rounded-full bg-background/80 
-                               hover:bg-primary/20 transition-colors z-10 flex items-center gap-2"
+                               hover:bg-ancient-gold/20 transition-all group z-10 flex items-center gap-2"
                     aria-label="Go back"
                   >
-                    <ChevronLeft className="h-5 w-5" />
-                    <span className="text-sm">Back</span>
+                    <GoldenIcon icon={ChevronLeft} size="md" glow="subtle" className="group-hover:-translate-x-1 duration-300" />
+                    <span className="text-sm text-ancient-gold">Back</span>
                   </button>
                 )}
 

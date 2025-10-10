@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Brain, Clock, Target, Sparkles } from "lucide-react";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const Mindcraft = () => {
   const ref = useRef(null);
@@ -62,7 +63,7 @@ const Mindcraft = () => {
               className="group relative"
             >
               <div className="relative p-8 border border-white/10 bg-black/25 backdrop-blur-md hover:border-ancient-gold/50 transition-all duration-500 hover:bg-black/35">
-                <instrument.icon className="w-12 h-12 text-ancient-gold mb-6 group-hover:scale-110 transition-transform duration-300" />
+                <GoldenIcon icon={instrument.icon} size="xl" glow="medium" className="mb-6" />
                 <h3 className="font-ancient text-2xl text-foreground mb-4 tracking-wide [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
                   {instrument.title}
                 </h3>

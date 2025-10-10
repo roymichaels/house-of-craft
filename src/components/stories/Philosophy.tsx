@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Clock, Award, Heart } from "lucide-react";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const values = [
   {
@@ -53,8 +54,8 @@ const Philosophy = () => {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full border-2 border-primary/30 bg-primary/5 mb-6">
-                <value.icon className="h-8 w-8 text-primary" />
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full border-2 border-ancient-gold/30 bg-ancient-gold/5 mb-6">
+                <GoldenIcon icon={value.icon} size="xl" glow="medium" />
               </div>
               <h3 className="text-2xl font-serif mb-4">{value.title}</h3>
               <p className="text-muted-foreground text-balance">

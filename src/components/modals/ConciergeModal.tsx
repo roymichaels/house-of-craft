@@ -7,6 +7,7 @@ import ServiceCard from "@/components/concierge/ServiceCard";
 import ContactForm from "@/components/concierge/ContactForm";
 import OathRitual from "@/components/concierge/OathRitual";
 import EmailCaptureForm from "@/components/concierge/EmailCaptureForm";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const services = [
   {
@@ -78,10 +79,10 @@ const ConciergeModal = () => {
                 {/* Close Button */}
                 <button
                   onClick={closeModal}
-                  className="absolute top-6 right-6 p-2 rounded-full bg-background/80 hover:bg-primary/20 transition-colors z-10"
+                  className="absolute top-6 right-6 p-2 rounded-full bg-background/80 hover:bg-ancient-gold/20 transition-all group z-10"
                   aria-label="Close modal"
                 >
-                  <X className="h-5 w-5" />
+                  <GoldenIcon icon={X} size="md" glow="medium" className="hover:rotate-90 duration-500" />
                 </button>
 
                 {/* Conditional Content: Email Capture, Oath Ritual, or Standard Concierge */}

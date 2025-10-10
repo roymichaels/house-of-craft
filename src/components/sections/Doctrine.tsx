@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FileText, ArrowRight } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const Doctrine = () => {
   const ref = useRef(null);
@@ -59,7 +60,7 @@ const Doctrine = () => {
               className="group relative border-l-2 border-ancient-gold/30 pl-8 py-6 hover:border-ancient-gold transition-all duration-500"
             >
               <div className="flex items-start gap-4">
-                <FileText className="w-6 h-6 text-ancient-gold/70 mt-1 group-hover:text-ancient-gold transition-colors" />
+                <GoldenIcon icon={FileText} size="lg" glow="subtle" className="mt-1" />
                 <div className="flex-1">
                   <div className="text-ancient-gold/60 text-xs font-ancient tracking-widest mb-2">
                     {writing.category}
@@ -75,7 +76,7 @@ const Doctrine = () => {
                     className="inline-flex items-center text-ancient-gold text-sm font-medium group-hover:translate-x-2 transition-transform duration-300"
                   >
                     Read Full Essay
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <GoldenIcon icon={ArrowRight} size="sm" glow="subtle" className="ml-2" />
                   </button>
                 </div>
               </div>
@@ -98,7 +99,7 @@ const Doctrine = () => {
             className="inline-flex items-center gap-3 px-8 py-4 border-2 border-ancient-gold text-ancient-gold font-ancient tracking-widest hover:bg-ancient-gold hover:text-background transition-all duration-300"
           >
             Explore the Doctrine
-            <ArrowRight className="w-5 h-5" />
+            <GoldenIcon icon={ArrowRight} size="md" glow="medium" />
           </button>
         </motion.div>
       </div>

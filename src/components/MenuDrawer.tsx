@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/stores/modalStore";
 import type { ModalType } from "@/stores/modalStore";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -69,10 +70,10 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-8 right-8 text-ancient-gold/60 hover:text-ancient-gold transition-colors"
+              className="absolute top-8 right-8 group"
               aria-label="Close menu"
             >
-              <X className="h-8 w-8" />
+              <GoldenIcon icon={X} size="lg" glow="medium" className="hover:rotate-90 duration-500" />
             </button>
 
             {/* Menu Items */}
@@ -116,7 +117,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                   className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10"
                   onClick={onClose}
                 >
-                  <User className="h-5 w-5" />
+                  <GoldenIcon icon={User} size="md" glow="subtle" />
                   Sign In
                 </Button>
               </motion.div>

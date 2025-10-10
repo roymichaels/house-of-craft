@@ -4,6 +4,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { useEffect } from "react";
 import Timeline from "@/components/stories/Timeline";
 import Philosophy from "@/components/stories/Philosophy";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const StoriesModal = () => {
   const { activeModal, closeModal } = useModalStore();
@@ -45,10 +46,10 @@ const StoriesModal = () => {
                 {/* Close Button */}
                 <button
                   onClick={closeModal}
-                  className="absolute top-6 right-6 p-2 rounded-full bg-background/80 hover:bg-primary/20 transition-colors z-10"
+                  className="absolute top-6 right-6 p-2 rounded-full bg-background/80 hover:bg-ancient-gold/20 transition-all group z-10"
                   aria-label="Close modal"
                 >
-                  <X className="h-5 w-5" />
+                  <GoldenIcon icon={X} size="md" glow="medium" className="hover:rotate-90 duration-500" />
                 </button>
 
                 {/* Header */}

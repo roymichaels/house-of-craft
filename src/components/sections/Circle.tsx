@@ -2,6 +2,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { Lock, Users, Zap, Crown } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
+import { GoldenIcon } from "@/components/ui/GoldenIcon";
 
 const Circle = () => {
   const ref = useRef(null);
@@ -43,7 +44,7 @@ const Circle = () => {
         >
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="w-12 h-[2px] bg-ancient-gold" />
-            <Lock className="w-8 h-8 text-ancient-gold" />
+            <GoldenIcon icon={Lock} size="lg" glow="strong" />
             <div className="w-12 h-[2px] bg-ancient-gold" />
           </div>
           
@@ -69,7 +70,7 @@ const Circle = () => {
               }}
               className="group relative p-8 border border-white/10 bg-black/25 backdrop-blur-md hover:border-ancient-gold/50 transition-all duration-500"
             >
-              <benefit.icon className="w-10 h-10 text-ancient-gold mb-4 group-hover:scale-110 transition-transform duration-300" />
+              <GoldenIcon icon={benefit.icon} size="xl" glow="medium" className="mb-4" />
               <h3 className="font-ancient text-2xl text-foreground mb-3 tracking-wide [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
                 {benefit.title}
               </h3>
