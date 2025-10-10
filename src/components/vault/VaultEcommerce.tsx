@@ -1,37 +1,38 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
-import { VaultOrder, Relic } from '@/data/vaultOrders';
+import type { Category, Product } from '@/data/catalog';
 import ProductCard from '@/components/collections/ProductCard';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { BrandLanguage } from '@/lib/brandLanguage';
 
 interface VaultEcommerceProps {
-  order: VaultOrder;
+  category: Category;
 }
 
-interface ExtendedRelic extends Relic {
-  instrumentName: string;
+interface ExtendedProduct extends Product {
+  subcategoryName: string;
 }
 
-const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
-  const [activeCategory, setActiveCategory] = useState<string>('all');
+const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
+  const [activeSubcategory, setActiveSubcategory] = useState<string>('all');
 
-  // Aggregate all relics with their instrument names
-  const allRelics: ExtendedRelic[] = useMemo(() => {
-    return order.instruments.flatMap(instrument =>
-      instrument.relics.map(relic => ({
-        ...relic,
-        instrumentName: instrument.name,
+  // Aggregate all products with their subcategory names
+  const allProducts: ExtendedProduct[] = useMemo(() => {
+    return category.subcategories.flatMap(subcategory =>
+      subcategory.products.map(product => ({
+        ...product,
+        subcategoryName: subcategory.name,
       }))
     );
-  }, [order]);
+  }, [category]);
 
-  // Filter relics based on active category
-  const displayedRelics = useMemo(() => {
-    if (activeCategory === 'all') return allRelics;
-    return allRelics.filter(relic => 
-      relic.instrumentName === order.instruments.find(i => i.id === activeCategory)?.name
+  // Filter products based on active subcategory
+  const displayedProducts = useMemo(() => {
+    if (activeSubcategory === 'all') return allProducts;
+    return allProducts.filter(product => 
+      product.subcategoryName === category.subcategories.find(s => s.id === activeSubcategory)?.name
     );
-  }, [activeCategory, allRelics, order.instruments]);
+  }, [activeSubcategory, allProducts, category.subcategories]);
 
   return (
     <AnimatePresence mode="wait">
@@ -50,50 +51,50 @@ const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
               {/* Sidebar Header */}
               <div className="pb-4 border-b border-primary/10">
                 <h3 className="text-sm font-ancient text-primary/60 tracking-widest mb-2">
-                  CATEGORIES
+                  {BrandLanguage.micro.filterBy.toUpperCase()}
                 </h3>
               </div>
 
-              {/* ALL Category */}
+              {/* ALL Subcategory */}
               <button
-                onClick={() => setActiveCategory('all')}
+                onClick={() => setActiveSubcategory('all')}
                 className={`
                   w-full text-left px-4 py-3 rounded-sm transition-all duration-300
-                  ${activeCategory === 'all'
+                  ${activeSubcategory === 'all'
                     ? 'bg-primary/10 text-primary border-l-2 border-primary'
                     : 'text-muted-foreground hover:text-foreground hover:bg-card'
                   }
                 `}
               >
                 <span className="text-sm font-medium tracking-wide">
-                  ALL
+                  {BrandLanguage.micro.allItems.toUpperCase()}
                 </span>
                 <span className="text-xs text-muted-foreground/60 block mt-1">
-                  {allRelics.length} items
+                  {allProducts.length} {allProducts.length === 1 ? BrandLanguage.micro.item : BrandLanguage.micro.items}
                 </span>
               </button>
 
-              {/* Instrument Categories */}
+              {/* Subcategory Filters */}
               <div className="space-y-2">
-                {order.instruments.map((instrument) => {
-                  const relicCount = instrument.relics.length;
+                {category.subcategories.map((subcategory) => {
+                  const productCount = subcategory.products.length;
                   return (
                     <button
-                      key={instrument.id}
-                      onClick={() => setActiveCategory(instrument.id)}
+                      key={subcategory.id}
+                      onClick={() => setActiveSubcategory(subcategory.id)}
                       className={`
                         w-full text-left px-4 py-3 rounded-sm transition-all duration-300
-                        ${activeCategory === instrument.id
+                        ${activeSubcategory === subcategory.id
                           ? 'bg-primary/10 text-primary border-l-2 border-primary'
                           : 'text-muted-foreground hover:text-foreground hover:bg-card'
                         }
                       `}
                     >
                       <span className="text-sm font-medium tracking-wide">
-                        {instrument.name}
+                        {subcategory.name.toUpperCase()}
                       </span>
                       <span className="text-xs text-muted-foreground/60 block mt-1">
-                        {relicCount} {relicCount === 1 ? 'item' : 'items'}
+                        {productCount} {productCount === 1 ? BrandLanguage.micro.item : BrandLanguage.micro.items}
                       </span>
                     </button>
                   );
@@ -115,18 +116,18 @@ const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
             >
               {/* Latin Inscription */}
               <p className="font-order text-primary/60 text-xs tracking-[0.3em] mb-4">
-                {order.latinInscription}
+                {BrandLanguage.latin[category.id as keyof typeof BrandLanguage.latin] || BrandLanguage.latin.vault}
               </p>
 
-              {/* Order Title */}
+              {/* Category Title */}
               <h2 className="text-4xl md:text-5xl font-ancient text-ancient-gold mb-4 
                              drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]">
-                {order.title.toUpperCase()}
+                {category.name.toUpperCase()}
               </h2>
 
-              {/* Order Essence */}
+              {/* Category Tagline */}
               <p className="text-base text-foreground/80 max-w-2xl mx-auto">
-                {order.essence}
+                {category.tagline}
               </p>
 
               {/* Divider */}
@@ -140,17 +141,17 @@ const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
             {/* Product Grid */}
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeCategory}
+                key={activeSubcategory}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.4 }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
               >
-                {displayedRelics.length > 0 ? (
-                  displayedRelics.map((relic, index) => (
+                {displayedProducts.length > 0 ? (
+                  displayedProducts.map((product, index) => (
                     <motion.div
-                      key={relic.id}
+                      key={product.id}
                       initial={{ opacity: 0, y: 50 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
@@ -162,11 +163,11 @@ const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
                       <ProductCard
                         product={{
                           id: index,
-                          name: relic.name,
-                          category: relic.instrumentName,
-                          description: relic.philosophicalEssence || relic.description,
-                          price: relic.price,
-                          image: relic.image,
+                          name: product.name,
+                          category: product.subcategoryName,
+                          description: product.description,
+                          price: product.price.toString(),
+                          image: product.images[0],
                         }}
                       />
                     </motion.div>
@@ -178,7 +179,7 @@ const VaultEcommerce = ({ order }: VaultEcommerceProps) => {
                     className="col-span-full text-center py-20"
                   >
                     <p className="text-muted-foreground/60 text-lg mb-2">
-                      No relics available
+                      No products available
                     </p>
                     <p className="text-sm text-muted-foreground/40 italic">
                       This collection is being carefully curated

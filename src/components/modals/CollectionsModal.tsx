@@ -2,25 +2,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
 import { useState, useEffect } from "react";
-import { vaultOrders } from "@/data/vaultOrders";
-import VaultOrderTabs from "@/components/vault/VaultOrderTabs";
+import { catalog } from "@/data/catalog";
+import type { Category } from "@/data/catalog";
+import CategoryTabs from "@/components/vault/CategoryTabs";
 import VaultEcommerce from "@/components/vault/VaultEcommerce";
+import { BrandLanguage } from "@/lib/brandLanguage";
 
-type ViewState = 'orders' | 'ecommerce';
+type ViewState = 'categories' | 'category-detail';
 
 const CollectionsModal = () => {
   const { activeModal, closeModal } = useModalStore();
   const isOpen = activeModal === 'collections';
 
   // State management
-  const [viewState, setViewState] = useState<ViewState>('orders');
-  const [activeOrder, setActiveOrder] = useState<string | null>(null);
+  const [viewState, setViewState] = useState<ViewState>('categories');
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
-      setViewState('orders');
-      setActiveOrder(null);
+      setViewState('categories');
+      setActiveCategory(null);
     }
   }, [isOpen]);
 
@@ -30,9 +32,9 @@ const CollectionsModal = () => {
       if (!isOpen) return;
       
       if (e.key === 'Escape') {
-        if (viewState === 'ecommerce') {
-          setViewState('orders');
-          setActiveOrder(null);
+        if (viewState === 'category-detail') {
+          setViewState('categories');
+          setActiveCategory(null);
         } else {
           closeModal();
         }
@@ -43,18 +45,18 @@ const CollectionsModal = () => {
   }, [isOpen, viewState, closeModal]);
 
   // Navigation handlers
-  const handleOrderSelect = (orderId: string) => {
-    setActiveOrder(orderId);
-    setViewState('ecommerce');
+  const handleCategorySelect = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setViewState('category-detail');
   };
 
-  const handleBackToOrders = () => {
-    setActiveOrder(null);
-    setViewState('orders');
+  const handleBackToCategories = () => {
+    setActiveCategory(null);
+    setViewState('categories');
   };
 
   // Get current data
-  const currentOrder = vaultOrders.find(o => o.id === activeOrder);
+  const currentCategory = catalog.find(c => c.id === activeCategory);
 
   return (
     <AnimatePresence>
@@ -92,9 +94,9 @@ const CollectionsModal = () => {
                 </button>
 
                 {/* Back Button (contextual) */}
-                {viewState === 'ecommerce' && (
+                {viewState === 'category-detail' && (
                   <button
-                    onClick={handleBackToOrders}
+                    onClick={handleBackToCategories}
                     className="absolute top-6 left-6 p-2 rounded-full bg-background/80 
                                hover:bg-primary/20 transition-colors z-10 flex items-center gap-2"
                     aria-label="Go back"
@@ -118,31 +120,31 @@ const CollectionsModal = () => {
                   >
                     {/* Latin inscription */}
                     <p className="font-order text-primary/60 text-xs tracking-[0.3em] mb-3">
-                      {viewState === 'orders' 
-                        ? 'FORMA SEQUITUR RATIONEM'
-                        : currentOrder?.latinInscription || 'FORMA SEQUITUR RATIONEM'
+                      {viewState === 'categories' 
+                        ? BrandLanguage.latin.vault
+                        : BrandLanguage.latin[activeCategory as keyof typeof BrandLanguage.latin] || BrandLanguage.latin.vault
                       }
                     </p>
                     
                     {/* Main title */}
                     <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-6 
                                    drop-shadow-[0_0_30px_rgba(196,166,97,0.3)]">
-                      {viewState === 'orders' ? 'THE VAULT' : currentOrder?.title.toUpperCase()}
+                      {viewState === 'categories' ? 'COLLECTIONS' : currentCategory?.name.toUpperCase()}
                     </h2>
                     
                     {/* Subtitle */}
                     <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-2 leading-relaxed">
-                      {viewState === 'orders'
-                        ? 'Objects forged by Light and Discipline'
-                        : currentOrder?.essence
+                      {viewState === 'categories'
+                        ? BrandLanguage.voice.tagline
+                        : currentCategory?.tagline
                       }
                     </p>
                     
                     {/* Secondary copy */}
                     <p className="text-sm text-muted-foreground/60 max-w-xl mx-auto italic">
-                      {viewState === 'orders'
-                        ? 'Each relic is an oath in form — made for men who command their world with intent.'
-                        : `Choose your instrument of ${currentOrder?.emotionalTrigger.toLowerCase()}.`
+                      {viewState === 'categories'
+                        ? 'Choose your category to explore our curated selection.'
+                        : 'Discover pieces forged for presence and mastery.'
                       }
                     </p>
                   </motion.div>
@@ -150,16 +152,16 @@ const CollectionsModal = () => {
 
                 {/* Content Area - State-Based Rendering */}
                 <AnimatePresence mode="wait">
-                  {viewState === 'orders' && (
-                    <VaultOrderTabs
-                      orders={vaultOrders}
-                      activeOrder={activeOrder}
-                      onSelectOrder={handleOrderSelect}
+                  {viewState === 'categories' && (
+                    <CategoryTabs
+                      categories={catalog}
+                      activeCategory={activeCategory}
+                      onSelectCategory={handleCategorySelect}
                     />
                   )}
 
-                  {viewState === 'ecommerce' && currentOrder && (
-                    <VaultEcommerce order={currentOrder} />
+                  {viewState === 'category-detail' && currentCategory && (
+                    <VaultEcommerce category={currentCategory} />
                   )}
                 </AnimatePresence>
               </div>

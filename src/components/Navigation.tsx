@@ -41,7 +41,7 @@ const Navigation = () => {
                 Apollon
               </h2>
               <p className="imperial-caps text-[8px] sm:text-[9px] tracking-widest text-ancient-silver/60 m-0 leading-none">
-                The Order of Light
+                Objects of Mastery
               </p>
             </div>
           </div>

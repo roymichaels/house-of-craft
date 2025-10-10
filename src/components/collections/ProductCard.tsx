@@ -60,7 +60,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             {product.price}
           </span>
           
-          {/* Ritual CTA Button */}
+          {/* Modern CTA Button */}
           <motion.button
             className="px-4 py-2 text-xs font-medium tracking-wider
                        border border-primary/30 text-primary
@@ -70,7 +70,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            ACQUIRE
+            VIEW DETAILS
           </motion.button>
         </div>
       </div>

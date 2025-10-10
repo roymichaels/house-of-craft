@@ -7,13 +7,13 @@ const HeroSection = () => {
   // Default values while loading or if query fails
   const config = heroScene || {
     title: "APOLLON",
-    subtitle: "Where Light Becomes Order. A sanctuary for those who master time, mind, and presence.",
+    subtitle: "Built to last decades. Forged for men who value time, not trends.",
     rotation_speed: 0.3,
     light_color: "#C4A661",
     accent_color: "#7A6A4F",
     camera_fov: 45,
     camera_position: { x: 0, y: 0, z: 5 },
-    cta_text: "Enter The Order",
+    cta_text: "Explore Collections",
     cta_link: "#mindcraft",
     show_real_time: false,
     show_balance_wheel: true,
