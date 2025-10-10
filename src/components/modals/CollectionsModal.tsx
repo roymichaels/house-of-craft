@@ -141,46 +141,42 @@ const CollectionsModal = () => {
               {/* Scrollable Content */}
               <div className="h-[90vh] overflow-y-auto momentum-scroll"
                    onClick={(e) => e.target === e.currentTarget && closeModal()}>
-                {/* Header */}
-                <div className="relative text-center pt-20 pb-8 px-6">
-                  {/* Golden aura backdrop */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] 
-                                  bg-primary/5 blur-[120px] pointer-events-none" />
-                  
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                    className="relative z-10"
-                  >
-                    {/* Latin inscription */}
-                    <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-3">
-                      Arcanum Sapientis
-                    </p>
+                {/* Header - Only show when viewing categories */}
+                {viewState === 'categories' && (
+                  <div className="relative text-center pt-20 pb-8 px-6">
+                    {/* Golden aura backdrop */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] 
+                                    bg-primary/5 blur-[120px] pointer-events-none" />
                     
-                    {/* Main title */}
-                    <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-4 
-                                   drop-shadow-[0_0_30px_rgba(196,166,97,0.4)] tracking-wider">
-                      {viewState === 'categories' ? 'COLLECTIO' : currentCategory?.name.toUpperCase()}
-                    </h2>
-                    
-                    {/* Subtitle */}
-                    <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-2 leading-relaxed">
-                      {viewState === 'categories'
-                        ? BrandLanguage.voice.tagline
-                        : currentCategory?.tagline
-                      }
-                    </p>
-                    
-                    {/* Secondary copy */}
-                    <p className="text-sm text-muted-foreground/50 max-w-xl mx-auto italic">
-                      {viewState === 'categories'
-                        ? 'Choose your category to explore our curated selection.'
-                        : 'Discover pieces forged for presence and mastery.'
-                      }
-                    </p>
-                  </motion.div>
-                </div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                      className="relative z-10"
+                    >
+                      {/* Latin inscription */}
+                      <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-3">
+                        Arcanum Sapientis
+                      </p>
+                      
+                      {/* Main title */}
+                      <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-4 
+                                     drop-shadow-[0_0_30px_rgba(196,166,97,0.4)] tracking-wider">
+                        COLLECTIO
+                      </h2>
+                      
+                      {/* Subtitle */}
+                      <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-2 leading-relaxed">
+                        {BrandLanguage.voice.tagline}
+                      </p>
+                      
+                      {/* Secondary copy */}
+                      <p className="text-sm text-muted-foreground/50 max-w-xl mx-auto italic">
+                        Choose your category to explore our curated selection.
+                      </p>
+                    </motion.div>
+                  </div>
+                )}
 
                 {/* Content Area - State-Based Rendering */}
                 <AnimatePresence mode="wait">

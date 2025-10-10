@@ -69,10 +69,10 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
         }}
         className="min-h-[600px]"
       >
-        {/* Sticky Header with Blur */}
-        <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-primary/10 pb-4">
-          <div className="px-6 pt-6 pb-0">
-            {/* Hero Section */}
+        {/* Sticky Header with Category Info and Tabs */}
+        <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-primary/10">
+          <div className="px-6 pt-20 pb-6">
+            {/* Category Hero Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
