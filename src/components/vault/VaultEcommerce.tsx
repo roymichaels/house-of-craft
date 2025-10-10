@@ -69,29 +69,24 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
         }}
         className="min-h-[600px]"
       >
-        {/* Sticky Header with Category Info and Tabs */}
-        <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-xl border-b border-primary/10">
-          <div className="px-6 pt-20 pb-6">
+        {/* Compact Scrollable Header */}
+        <div className="relative z-10 bg-background/95 backdrop-blur-xl border-b border-primary/10">
+          <div className="px-6 pt-16 pb-3">
             {/* Category Hero Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.4 }}
-              className="mb-6 text-center"
+              className="mb-3 text-center"
             >
-              {/* Latin Inscription */}
-              <p className="font-order text-primary/60 text-xs tracking-[0.3em] mb-2">
-                {BrandLanguage.latin[category.id as keyof typeof BrandLanguage.latin] || BrandLanguage.latin.vault}
-              </p>
-
               {/* Category Title */}
-              <h2 className="text-4xl md:text-5xl font-ancient text-ancient-gold mb-2 
+              <h2 className="text-2xl md:text-3xl font-ancient text-ancient-gold mb-2 
                              drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]">
                 {category.name.toUpperCase()}
               </h2>
 
               {/* Category Tagline */}
-              <p className="text-sm text-foreground/70 max-w-2xl mx-auto">
+              <p className="text-xs text-foreground/60 max-w-2xl mx-auto">
                 {category.tagline}
               </p>
             </motion.div>
@@ -101,7 +96,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
-              className="flex justify-center pb-2"
+              className="flex justify-center pb-1"
             >
               <SegmentedControl
                 options={segmentedOptions}

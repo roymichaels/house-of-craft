@@ -112,6 +112,14 @@ const ObjectModal = () => {
                 <p className="text-muted-foreground text-lg leading-relaxed">
                   {objectData.description}
                 </p>
+                
+                {objectData.price && (
+                  <div className="pt-4">
+                    <p className="text-2xl font-ancient text-ancient-gold">
+                      {objectData.price}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {objectData.story && (

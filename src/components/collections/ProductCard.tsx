@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ShoppingBag, Check } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { useModalStore } from "@/stores/modalStore";
 import { toast } from "sonner";
 
 interface Product {
@@ -19,7 +20,23 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem, getItemQuantity } = useCartStore();
+  const { openModal } = useModalStore();
   const inCart = getItemQuantity(product.id) > 0;
+
+  const displayPrice = typeof product.price === 'number' 
+    ? `$${product.price.toLocaleString()}` 
+    : product.price;
+
+  const handleCardClick = () => {
+    openModal('object', {
+      title: product.name,
+      category: product.category,
+      description: product.description,
+      image: product.image,
+      story: `${product.name} - ${product.description}`,
+      price: displayPrice
+    });
+  };
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,16 +57,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
     toast.success(`${product.name} added to cart`);
   };
 
-  const displayPrice = typeof product.price === 'number' 
-    ? `$${product.price.toLocaleString()}` 
-    : product.price;
-
   return (
     <motion.div
+      onClick={handleCardClick}
       className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
                  border border-border/30 hover:border-primary/40
                  shadow-lg hover:shadow-2xl hover:shadow-primary/10
-                 transition-all duration-300"
+                 transition-all duration-300 cursor-pointer"
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       transition={{
