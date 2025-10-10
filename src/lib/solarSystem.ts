@@ -46,7 +46,9 @@ export function initSolarSystem(container: HTMLElement) {
   // Scene Setup
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000814);
-  scene.fog = new THREE.Fog(0x000814, 180, 250);
+  scene.fog = new THREE.Fog(0x000814, 500, 800); // Push fog much further out
+  
+  console.log('✅ Solar System: Scene created');
 
   // Camera - Start zoomed in near the sun
   camera = new THREE.PerspectiveCamera(
@@ -56,6 +58,9 @@ export function initSolarSystem(container: HTMLElement) {
     1000
   );
   camera.position.set(0, 15, 40);
+  camera.lookAt(0, 0, 0); // Ensure camera is looking at sun
+  
+  console.log('✅ Camera positioned at:', camera.position);
 
   // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -78,9 +83,11 @@ export function initSolarSystem(container: HTMLElement) {
   controls.minDistance = 10;
   controls.maxDistance = 300;
 
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
+  // Lighting - Increase ambient light significantly
+  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 1.5);
   scene.add(ambientLight);
+  
+  console.log('✅ Lighting added');
 
   const pointLight = new THREE.PointLight(new THREE.Color(1.0, 1.0, 1.0), 10.0, 1000, 0.5);
   pointLight.position.set(0, 0, 0);
@@ -97,7 +104,7 @@ export function initSolarSystem(container: HTMLElement) {
   const starPositions = new Float32Array(starCount * 3);
   
   for (let i = 0; i < starCount * 3; i += 3) {
-    const radius = 400 + Math.random() * 200;
+    const radius = 100 + Math.random() * 100; // Much closer: 100-200 instead of 400-600
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     
@@ -109,23 +116,27 @@ export function initSolarSystem(container: HTMLElement) {
   starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
   const starsMaterial = new THREE.PointsMaterial({
     color: 0xffffff,
-    size: 0.8,
+    size: 1.2, // Make stars bigger
     transparent: true,
     opacity: 0.9,
     sizeAttenuation: true
   });
   const stars = new THREE.Points(starsGeometry, starsMaterial);
   scene.add(stars);
+  
+  console.log('✅ Starfield added with', starCount, 'stars');
 
-  // Sun with emissive material
+  // Sun with emissive material - Make it MUCH brighter
   const sunMaterial = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(1.2, 1.1, 0.9),
-    emissive: new THREE.Color(1.5, 1.2, 0.8),
-    emissiveIntensity: 1.8,
-    toneMapped: false,
+    color: new THREE.Color(1.5, 1.3, 1.0),
+    emissive: new THREE.Color(2.0, 1.5, 0.9),
+    emissiveIntensity: 3.0, // Increased from 1.8 to 3.0
+    toneMapped: true, // Changed from false to true
   });
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(5, 64, 64), sunMaterial);
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(8, 64, 64), sunMaterial); // Larger: 8 instead of 5
   scene.add(sun);
+  
+  console.log('✅ Sun created with radius 8');
 
   // Procedural lens flare
   const lensflare = new Lensflare();
@@ -150,18 +161,27 @@ export function initSolarSystem(container: HTMLElement) {
 
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.5, // strength
-    0.4, // radius
-    0.85 // threshold
+    2.0, // strength - increased from 1.5
+    0.6, // radius - increased from 0.4
+    0.3 // threshold - lowered from 0.85 to 0.3 so more objects bloom
   );
   composer.addPass(bloomPass);
+  
+  console.log('✅ Bloom pass configured with lower threshold');
 
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
 
   // Animation loop
+  let frameCount = 0;
   function animate() {
     animationId = requestAnimationFrame(animate);
+    
+    // Debug log every 60 frames (once per second at 60fps)
+    if (frameCount === 0) {
+      console.log('🎬 Animation running, planets:', planets.length, 'asteroids:', asteroidBelts.length);
+    }
+    frameCount = (frameCount + 1) % 60;
     
     // Rotate sun
     sun.rotation.y += 0.001;
@@ -239,6 +259,8 @@ function createPlanets() {
       dist: data.dist,
       angle: angle,
     });
+    
+    console.log(`✅ ${data.name} created at distance ${data.dist}`);
 
     // Add orbital path ring
     const ringGeometry = new THREE.RingGeometry(data.dist - 0.05, data.dist + 0.05, 128);
