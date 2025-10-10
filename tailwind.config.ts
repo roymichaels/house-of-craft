@@ -73,6 +73,7 @@ export default {
       },
       fontFamily: {
         ancient: ['Ancient', 'serif'],
+        'ancient-tulip': ['Ancient-Tulip', 'serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['IBM Plex Mono', 'Menlo', 'monospace'],

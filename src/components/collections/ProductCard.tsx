@@ -81,17 +81,17 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Product Details */}
       <div className="space-y-1">
         {/* Title */}
-        <h3 className="text-sm font-medium text-foreground line-clamp-1">
+        <h3 className="text-sm font-ancient-tulip text-foreground line-clamp-1">
           {product.name}
         </h3>
         
         {/* Subtitle/Description */}
-        <p className="text-xs text-muted-foreground line-clamp-1">
+        <p className="text-xs font-ancient-tulip text-muted-foreground line-clamp-1">
           {product.description}
         </p>
 
         {/* Price */}
-        <p className="text-sm font-semibold text-foreground pt-1">
+        <p className="text-sm font-ancient-tulip font-semibold text-foreground pt-1">
           {displayPrice}
         </p>
       </div>

@@ -21,6 +21,17 @@ All colors MUST be HSL.
   font-display: swap;
 }
 
+/* Ancient Tulip Font - Product Text */
+@font-face {
+  font-family: 'Ancient-Tulip';
+  src: local('Ancient-Tulip'), local('AncientTulipRegular'),
+       url('/fonts/AncientTulipRegular.woff2') format('woff2'),
+       url('/fonts/AncientTulipRegular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 27 10% 5%;
