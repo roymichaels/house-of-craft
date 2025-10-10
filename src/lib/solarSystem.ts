@@ -145,8 +145,8 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(0x0a0a15, 0.08);
   scene.add(ambientLight);
 
-  // Main sun light - realistic color temperature and intensity
-  const sunLight = new THREE.PointLight(0xfff4e0, 25.0, 800, 2);
+  // Main sun light - warm apocalyptic fireball color
+  const sunLight = new THREE.PointLight(0xFF9933, 28.0, 800, 2);  // Intense warm orange
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -180,17 +180,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   const sunGroup = new THREE.Group();
   
-  // Photorealistic solar shader - Based on actual sun observations
+  // Apocalyptic fireball shader - Intense warm colors
   const solarShader = {
     uniforms: {
       time: { value: 0 },
-      // Realistic solar color palette from NASA imagery
-      colorCore: { value: new THREE.Color(0xFFFAF0) },      // White-yellow core
-      colorPhotosphere: { value: new THREE.Color(0xFFF4E0) }, // Main surface
-      colorGranule: { value: new THREE.Color(0xFFDD99) },   // Granulation cells
-      colorCool: { value: new THREE.Color(0xFF9944) },      // Cooler regions
-      colorDark: { value: new THREE.Color(0xCC4400) },      // Sunspots/dark areas
-      colorChromosphere: { value: new THREE.Color(0xFF6622) } // Outer atmosphere
+      // Apocalyptic fireball color palette - warm and intense
+      colorCore: { value: new THREE.Color(0xFFDD44) },      // Intense yellow-orange core
+      colorPhotosphere: { value: new THREE.Color(0xFF9933) }, // Hot orange surface
+      colorGranule: { value: new THREE.Color(0xFF7722) },   // Deep orange cells
+      colorCool: { value: new THREE.Color(0xFF5511) },      // Burnt orange regions
+      colorDark: { value: new THREE.Color(0xDD2200) },      // Deep red-orange dark areas
+      colorChromosphere: { value: new THREE.Color(0xFF3300) } // Blazing red atmosphere
     },
     vertexShader: `
       uniform float time;
@@ -399,10 +399,10 @@ export function initSolarSystem(container: HTMLElement) {
     `
   };
   
-  // Inner core - intense white-yellow light
+  // Inner core - intense fiery orange-yellow light
   const coreGeometry = new THREE.SphereGeometry(3.5, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(2.5, 2.2, 2.0),
+    color: new THREE.Color(3.5, 1.8, 0.5),  // Intense orange-yellow fireball
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
@@ -418,13 +418,13 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Corona - realistic solar atmosphere (chromosphere + corona)
+  // Corona - blazing apocalyptic atmosphere
   const coronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
   const coronaMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      coronaColor: { value: new THREE.Color(0xff8844) },
-      chromosphereColor: { value: new THREE.Color(0xff6633) }
+      coronaColor: { value: new THREE.Color(0xFF6600) },        // Deep fiery orange
+      chromosphereColor: { value: new THREE.Color(0xFF3300) }   // Blazing red-orange
     },
     vertexShader: `
       varying vec3 vNormal;
