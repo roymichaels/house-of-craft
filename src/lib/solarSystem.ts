@@ -715,12 +715,42 @@ function createStarfield() {
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-    const material = new THREE.PointsMaterial({
-      size: 0.8,
-      sizeAttenuation: true,
-      vertexColors: true,
+    // Custom shader material for smooth circular stars
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        opacity: { value: layer.opacity * 0.7 }
+      },
+      vertexShader: `
+        attribute float size;
+        attribute vec3 color;
+        varying vec3 vColor;
+
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * 100.0 / -mvPosition.z;
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform float opacity;
+        varying vec3 vColor;
+
+        void main() {
+          // Create smooth circular star
+          vec2 center = gl_PointCoord - vec2(0.5);
+          float dist = length(center);
+
+          // Smooth edge falloff for anti-aliasing
+          float alpha = 1.0 - smoothstep(0.4, 0.5, dist);
+
+          // Add subtle glow
+          float glow = exp(-dist * 4.0) * 0.3;
+
+          gl_FragColor = vec4(vColor * (1.0 + glow), alpha * opacity);
+        }
+      `,
       transparent: true,
-      opacity: layer.opacity * 0.7,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
@@ -816,12 +846,39 @@ function createSpaceDust() {
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-  const material = new THREE.PointsMaterial({
-    size: 0.6,
-    sizeAttenuation: true,
-    vertexColors: true,
+  // Custom shader material for smooth circular dust particles
+  const material = new THREE.ShaderMaterial({
+    uniforms: {
+      opacity: { value: 0.12 }
+    },
+    vertexShader: `
+      attribute float size;
+      attribute vec3 color;
+      varying vec3 vColor;
+
+      void main() {
+        vColor = color;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size * 80.0 / -mvPosition.z;
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `,
+    fragmentShader: `
+      uniform float opacity;
+      varying vec3 vColor;
+
+      void main() {
+        // Create smooth circular dust particle
+        vec2 center = gl_PointCoord - vec2(0.5);
+        float dist = length(center);
+
+        // Very soft edge for dust
+        float alpha = 1.0 - smoothstep(0.35, 0.5, dist);
+
+        gl_FragColor = vec4(vColor, alpha * opacity);
+      }
+    `,
     transparent: true,
-    opacity: 0.12,
     blending: THREE.AdditiveBlending,
     depthWrite: false
   });
