@@ -3,21 +3,8 @@ import { useRef } from "react";
 import { useModalStore } from "@/stores/modalStore";
 import { categoryShowcase, type CategoryShowcase } from "@/data/categoryShowcase";
 import { catalog } from "@/data/catalog";
-import { GoldenIcon } from "@/components/ui/GoldenIcon";
-import { Watch, Crown, Wallet, Shirt, BookOpen, PenTool, Sparkles } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Icon mapping
-const iconMap: Record<string, LucideIcon> = {
-  'Watch': Watch,
-  'Crown': Crown,
-  'Wallet': Wallet,
-  'Shirt': Shirt,
-  'BookOpen': BookOpen,
-  'PenTool': PenTool,
-  'Sparkles': Sparkles,
-};
 
 // Calculate actual product counts from catalog
 const getCategoryProductCount = (categoryId: string): number => {
@@ -34,7 +21,6 @@ interface CategoryCardProps {
 
 const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
   const { openModalWithCategory } = useModalStore();
-  const IconComponent = category.icon ? iconMap[category.icon] : Watch;
   const productCount = getCategoryProductCount(category.id);
 
   return (
@@ -52,10 +38,11 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       whileTap={{ scale: 0.98 }}
       className={cn(
         "group relative overflow-hidden rounded-2xl",
+        "aspect-square",
         "bg-black/80 backdrop-blur-xl border border-ancient-gold/10",
         "hover:border-ancient-gold/40 hover:bg-black/90",
         "transition-all duration-500",
-        "p-8 md:p-10",
+        "p-6 md:p-8",
         "opacity-85 hover:opacity-100",
         "shadow-[0_4px_40px_rgba(0,0,0,0.4)]",
         "hover:shadow-[0_8px_60px_rgba(196,166,97,0.1)]",
@@ -78,16 +65,9 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full justify-between">
         <div className="space-y-3 md:space-y-4">
-          {/* Icon */}
-          <GoldenIcon
-            icon={IconComponent}
-            size="2xl"
-            glow="medium"
-            className="group-hover:drop-shadow-[0_0_25px_rgba(196,166,97,0.7)]"
-          />
-
           {/* Name */}
-          <h3 className="font-ancient text-ancient-gold text-3xl md:text-4xl lg:text-5xl
+          <h3 className="font-ancient text-ancient-gold text-2xl md:text-3xl
+                         leading-tight
                          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
                          group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.8)]
                          transition-all duration-300">
@@ -95,7 +75,7 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
           </h3>
 
           {/* Tagline */}
-          <p className="text-base md:text-lg text-foreground/60 italic">
+          <p className="text-sm md:text-base text-foreground/60 italic leading-snug">
             {category.tagline}
           </p>
         </div>
