@@ -76,8 +76,8 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
-  // Enhanced fog for atmospheric depth - exponential falloff
-  scene.fog = new THREE.FogExp2(0x0a0510, 0.0025);
+  // Lighter fog for better visibility - exponential falloff
+  scene.fog = new THREE.FogExp2(0x0a0510, 0.0015);
   
   // ============================================================================
   // CAMERA
@@ -103,7 +103,7 @@ export function initSolarSystem(container: HTMLElement) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.85;  // Darker exposure to emphasize lava ball darkness
+  renderer.toneMappingExposure = 1.2;  // Brighter exposure for better planet visibility
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   
@@ -114,12 +114,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // Very minimal bloom - subtle glow only
+  // Extremely minimal bloom - barely visible glow
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.25,  // strength - very low for minimal glow
-    0.3,   // radius - tight, minimal spread
-    0.9    // threshold - very high, only brightest parts glow
+    0.12,  // strength - extremely low for minimal glow
+    0.2,   // radius - very tight, minimal spread
+    0.95   // threshold - extremely high, only brightest parts glow
   );
   composer.addPass(bloomPass);
 
@@ -139,14 +139,14 @@ export function initSolarSystem(container: HTMLElement) {
   controls.maxDistance = 200;
   
   // ============================================================================
-  // LIGHTING - Brighter space to see planets
+  // LIGHTING - Much brighter space for clear planet visibility
   // ============================================================================
-  // Increased ambient for visible planets
-  const ambientLight = new THREE.AmbientLight(0x4a4a5a, 0.35);  // Much brighter ambient
+  // Significantly increased ambient for visible planets
+  const ambientLight = new THREE.AmbientLight(0x6a6a7a, 0.65);  // Much brighter ambient
   scene.add(ambientLight);
 
   // Main sun light - warm molten lava color with reduced intensity
-  const sunLight = new THREE.PointLight(0xDD5500, 18.0, 800, 2);  // Dark warm orange, lower intensity
+  const sunLight = new THREE.PointLight(0xCC4400, 12.0, 800, 2);  // Darker warm orange, lower intensity
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -155,15 +155,24 @@ export function initSolarSystem(container: HTMLElement) {
   sunLight.shadow.camera.far = 500;
   scene.add(sunLight);
 
-  // Stronger rim light for planet visibility
-  const rimLight = new THREE.DirectionalLight(0x6a7a9a, 0.4);  // Brighter rim light
+  // Much stronger rim light for planet visibility
+  const rimLight = new THREE.DirectionalLight(0x7a8aaa, 0.8);  // Much brighter rim light
   rimLight.position.set(-100, 50, -100);
   scene.add(rimLight);
 
-  // Stronger fill light for illuminating planets
-  const fillLight = new THREE.PointLight(0x5a5a7a, 1.5, 400, 2);  // Much brighter fill
+  // Much stronger fill light for illuminating planets
+  const fillLight = new THREE.PointLight(0x6a6a8a, 2.5, 500, 2);  // Much brighter fill with longer range
   fillLight.position.set(80, 40, -80);
   scene.add(fillLight);
+
+  // Additional fill lights from multiple angles for even illumination
+  const fillLight2 = new THREE.PointLight(0x5a5a7a, 2.0, 450, 2);
+  fillLight2.position.set(-80, 40, 80);
+  scene.add(fillLight2);
+
+  const topLight = new THREE.PointLight(0x6a7a8a, 1.5, 400, 2);
+  topLight.position.set(0, 100, 0);
+  scene.add(topLight);
   
   // ============================================================================
   // STARFIELD
@@ -180,17 +189,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   const sunGroup = new THREE.Group();
   
-  // Apocalyptic lava ball shader - Dark molten surface with fiery cracks
+  // Molten lava ball shader - Dark charcoal surface with bright fiery cracks
   const solarShader = {
     uniforms: {
       time: { value: 0 },
-      // Apocalyptic lava ball color palette - dark with fiery cracks
-      colorCore: { value: new THREE.Color(0xFF8800) },      // Hot orange-red core
-      colorPhotosphere: { value: new THREE.Color(0xDD4400) }, // Dark burnt orange
-      colorGranule: { value: new THREE.Color(0xCC3300) },   // Dark red-orange cells
-      colorCool: { value: new THREE.Color(0x661100) },      // Very dark brown-red
-      colorDark: { value: new THREE.Color(0x220000) },      // Almost black, deep charcoal
-      colorChromosphere: { value: new THREE.Color(0x991100) } // Dark crimson atmosphere
+      // Molten lava ball color palette - predominantly black with fiery cracks
+      colorCore: { value: new THREE.Color(0xFF6600) },      // Bright orange core cracks
+      colorPhotosphere: { value: new THREE.Color(0xCC3300) }, // Dark red-orange
+      colorGranule: { value: new THREE.Color(0x992200) },   // Dark red cells
+      colorCool: { value: new THREE.Color(0x331100) },      // Very dark brown-red
+      colorDark: { value: new THREE.Color(0x0a0000) },      // Almost pure black, deep charcoal
+      colorChromosphere: { value: new THREE.Color(0x661100) } // Very dark crimson atmosphere
     },
     vertexShader: `
       uniform float time;
@@ -363,35 +372,36 @@ export function initSolarSystem(container: HTMLElement) {
         // Large-scale convection patterns (supergranulation)
         float superGranulation = snoise(vPosition * 0.8 + time * 0.01) * 0.5 + 0.5;
 
-        // Sunspots - cooler, darker regions
+        // Massive dark regions - cooled lava crust
         float sunspots = turbulence(vPosition * 1.5 + time * 0.005);
-        float darkSpots = smoothstep(0.75, 0.85, sunspots);
+        float darkSpots = smoothstep(0.4, 0.9, sunspots);  // Much more black area
 
-        // Solar flares and active regions
+        // Solar flares and active regions - bright cracks
         float activity = snoise(vPosition * 2.0 + time * 0.03) * 0.5 + 0.5;
-        float brightRegions = smoothstep(0.7, 0.9, activity);
+        float brightRegions = smoothstep(0.8, 0.95, activity);  // Fewer, more intense bright areas
 
-        // Combine surface features
-        float surfaceDetail = granulation * 0.6 + superGranulation * 0.4;
+        // Combine surface features - darker base
+        float surfaceDetail = granulation * 0.4 + superGranulation * 0.3;
 
-        // Build realistic solar surface color
-        vec3 baseColor = mix(colorGranule, colorPhotosphere, surfaceDetail);
+        // Build molten lava surface - start very dark
+        vec3 baseColor = mix(colorDark, colorCool, surfaceDetail * 0.5);
 
-        // Add sunspots (dark, cool regions)
-        baseColor = mix(baseColor, colorDark, darkSpots * 0.8);
+        // Add extensive dark cooled regions
+        baseColor = mix(baseColor, colorDark, darkSpots * 0.95);
 
-        // Add bright active regions
-        baseColor = mix(baseColor, colorCore, brightRegions * 0.4);
+        // Add bright lava cracks sparingly
+        baseColor = mix(baseColor, colorGranule, brightRegions * 0.5);
+        baseColor = mix(baseColor, colorCore, brightRegions * brightRegions * 0.3);  // Only hottest spots are bright
 
-        // Apply limb darkening for 3D realism
-        baseColor = mix(baseColor * 0.5, baseColor, limbDarkening);
+        // Apply limb darkening for 3D realism - make edges even darker
+        baseColor = mix(baseColor * 0.2, baseColor, limbDarkening);
 
-        // Chromospheric edge glow (visible at limb)
-        float edgeGlow = pow(1.0 - viewDot, 3.0);
-        baseColor = mix(baseColor, colorChromosphere, edgeGlow * 0.4);
+        // Minimal edge glow
+        float edgeGlow = pow(1.0 - viewDot, 3.5);
+        baseColor = mix(baseColor, colorChromosphere, edgeGlow * 0.2);
 
-        // Subtle variations in brightness (realistic photosphere)
-        float brightness = 0.95 + turbulence(vPosition * 4.0 + time * 0.02) * 0.05;
+        // Reduce overall brightness significantly
+        float brightness = 0.7 + turbulence(vPosition * 4.0 + time * 0.02) * 0.15;
         baseColor *= brightness;
 
         gl_FragColor = vec4(baseColor, 1.0);
@@ -399,10 +409,10 @@ export function initSolarSystem(container: HTMLElement) {
     `
   };
   
-  // Inner core - molten lava core with reduced intensity
+  // Inner core - molten lava core with minimal intensity
   const coreGeometry = new THREE.SphereGeometry(3.5, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(2.0, 0.8, 0.2),  // Darker molten orange
+    color: new THREE.Color(1.2, 0.4, 0.1),  // Much darker molten orange
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
@@ -418,13 +428,13 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Corona - dark crimson atmosphere with reduced glow
+  // Corona - very dark crimson atmosphere with minimal glow
   const coronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
   const coronaMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      coronaColor: { value: new THREE.Color(0x883300) },        // Dark burnt orange
-      chromosphereColor: { value: new THREE.Color(0x661100) }   // Dark red-brown
+      coronaColor: { value: new THREE.Color(0x552200) },        // Very dark burnt orange
+      chromosphereColor: { value: new THREE.Color(0x330a00) }   // Very dark red-brown
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -452,9 +462,9 @@ export function initSolarSystem(container: HTMLElement) {
         // Layer atmospheric colors - chromosphere closer, corona farther
         vec3 atmosphereColor = mix(chromosphereColor, coronaColor, fresnel * 0.6);
 
-        float intensity = fresnel * 0.2 * activity;  // Reduced glow
+        float intensity = fresnel * 0.1 * activity;  // Minimal glow
 
-        gl_FragColor = vec4(atmosphereColor * intensity, intensity * 0.2);
+        gl_FragColor = vec4(atmosphereColor * intensity, intensity * 0.15);
       }
     `,
     transparent: true,
