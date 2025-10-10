@@ -34,7 +34,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
+    --background: 0 0% 8%;
     --foreground: 40 15% 93%;
     --obsidian-smoke: 0 0% 4%;
 
@@ -123,7 +123,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 0%;
+    --background: 0 0% 8%;
     --foreground: 40 15% 93%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -147,7 +147,7 @@ All colors MUST be HSL.
 
   body {
     @apply text-foreground;
-    background: transparent;
+    background: #000814;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
