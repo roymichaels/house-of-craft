@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, Circle, Search } from "lucide-react";
+import { X, ChevronLeft, Circle, Search, XCircle } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
 import { useState, useEffect } from "react";
 import { catalog } from "@/data/catalog";
@@ -141,24 +141,37 @@ const CollectionsModal = () => {
                       <span className="hidden md:inline text-xs md:text-sm font-medium text-ancient-gold">Back</span>
                     </motion.button>
 
-                    {/* Search Bar */}
+                    {/* Search Bar - Desktop & Mobile */}
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="relative hidden md:block"
+                      className="relative flex-1 max-w-md"
                     >
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                       <input
                         type="text"
                         placeholder="Search products..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-64 pl-9 pr-4 py-2 rounded-full
+                        className="w-full pl-9 pr-10 py-2 rounded-full
                                    bg-background/60 backdrop-blur-sm
                                    border border-primary/20 focus:border-primary/40
                                    text-sm text-foreground placeholder:text-muted-foreground
                                    focus:outline-none transition-all"
                       />
+                      {searchQuery && (
+                        <motion.button
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          onClick={() => setSearchQuery('')}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 
+                                     text-muted-foreground hover:text-foreground transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <XCircle className="w-4 h-4" />
+                        </motion.button>
+                      )}
                     </motion.div>
                   </div>
                 )}

@@ -164,10 +164,39 @@ const VaultEcommerce = ({ category, searchQuery = '' }: VaultEcommerceProps) => 
 
               <div className="text-xs text-muted-foreground">
                 {displayedProducts.length} {displayedProducts.length === 1 ? 'item' : 'items'}
+                {searchQuery && (
+                  <span className="ml-1">
+                    matching "{searchQuery}"
+                  </span>
+                )}
               </div>
             </motion.div>
           </div>
         </div>
+
+        {/* Search Results Info */}
+        {searchQuery && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="px-6 py-3 bg-primary/5 border-b border-primary/10"
+          >
+            <p className="text-sm text-foreground">
+              {displayedProducts.length > 0 ? (
+                <>
+                  Found <span className="font-medium text-primary">{displayedProducts.length}</span>{' '}
+                  {displayedProducts.length === 1 ? 'product' : 'products'} matching{' '}
+                  <span className="font-medium">"{searchQuery}"</span>
+                </>
+              ) : (
+                <>
+                  No products found for{' '}
+                  <span className="font-medium">"{searchQuery}"</span>
+                </>
+              )}
+            </p>
+          </motion.div>
+        )}
 
         {/* Main Content Area */}
         <div className="px-6 py-8">
@@ -235,10 +264,10 @@ const VaultEcommerce = ({ category, searchQuery = '' }: VaultEcommerceProps) => 
                   className="col-span-full text-center py-20"
                 >
                   <p className="text-muted-foreground/60 text-lg mb-2">
-                    No products available
+                    {searchQuery ? `No products found for "${searchQuery}"` : 'No products available'}
                   </p>
                   <p className="text-sm text-muted-foreground/40 italic">
-                    This collection is being carefully curated
+                    {searchQuery ? 'Try adjusting your search terms' : 'This collection is being carefully curated'}
                   </p>
                 </motion.div>
               )}
