@@ -39,6 +39,9 @@ const HeroSection = () => {
         />
       </div>
 
+      {/* CSS Vignette - Depth enhancement without post-processing */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] pointer-events-none z-10" />
+
       {/* 3D Scene Layer */}
       {!isLoading && (
         <Suspense fallback={null}>

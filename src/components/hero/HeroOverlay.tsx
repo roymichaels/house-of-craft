@@ -33,6 +33,9 @@ const HeroOverlay = ({
 
   // Scroll-driven animations for fade out
   const fadeOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
+  
+  // Only show title after 60% scroll (0.6) to prevent initial interference
+  const showTitle = useTransform(scrollYProgress, (value) => value > 0.6);
 
   // Mouse parallax effect
   useEffect(() => {
@@ -72,35 +75,37 @@ const HeroOverlay = ({
         </p>
       </motion.div>
 
-      {/* Main Title - Scroll-triggered reveal */}
-      <motion.div
-        ref={containerRef}
-        className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center justify-center min-h-screen pointer-events-none"
-        style={
-          prefersReducedMotion
-            ? {}
-            : { 
-                opacity: titleOpacity, 
-                y: titleY, 
-                scale: titleScale 
-              }
-        }
-      >
-        <motion.h1
-          className="text-5xl md:text-7xl lg:text-8xl font-serif tracking-tight text-balance"
+      {/* Main Title - Scroll-triggered reveal (only after 60% scroll) */}
+      {showTitle.get() && (
+        <motion.div
+          ref={containerRef}
+          className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center justify-center min-h-screen pointer-events-none"
           style={
             prefersReducedMotion
-              ? { opacity: 0.85 }
-              : {
-                  opacity: 0.85,
-                  x: mousePosition.x * 0.5,
-                  y: mousePosition.y * 0.5,
+              ? {}
+              : { 
+                  opacity: titleOpacity, 
+                  y: titleY, 
+                  scale: titleScale 
                 }
           }
         >
-          {title}
-        </motion.h1>
-      </motion.div>
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-serif tracking-tight text-balance"
+            style={
+              prefersReducedMotion
+                ? { opacity: 0.85 }
+                : {
+                    opacity: 0.85,
+                    x: mousePosition.x * 0.5,
+                    y: mousePosition.y * 0.5,
+                  }
+            }
+          >
+            {title}
+          </motion.h1>
+        </motion.div>
+      )}
 
       {/* CTA - appears later */}
       <motion.div

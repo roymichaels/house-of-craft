@@ -64,8 +64,8 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
         penumbra={0.8}
       />
       
-      {/* Fill light - soft ambient */}
-      <ambientLight intensity={0.3} />
+      {/* Fill light - soft ambient (increased for fog compensation) */}
+      <ambientLight intensity={0.35} />
       
       {/* Rim light - accent separation */}
       <directionalLight
@@ -90,8 +90,16 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
         distance={1}
       />
 
-      {/* Subtle fog for depth */}
-      <fog attach="fog" args={["#1A1816", 8, 15]} />
+      {/* Rim lighting behind watch for silhouette glow */}
+      <pointLight
+        position={[0, 0, -2]}
+        color={lightColor}
+        intensity={0.4}
+        distance={5}
+      />
+
+      {/* Native Three.js fog for atmospheric depth */}
+      <fog attach="fog" args={["#0C0C0C", 5, 15]} />
     </>
   );
 };

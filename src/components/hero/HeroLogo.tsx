@@ -10,7 +10,7 @@ const HeroLogo = ({ logoText, show }: HeroLogoProps) => {
 
   return (
     <motion.div
-      className="absolute top-8 left-12 md:left-16 z-20 flex flex-col gap-1 group cursor-pointer"
+      className="absolute top-8 left-[8%] md:left-[10%] z-20 flex flex-col gap-1 group cursor-pointer"
       initial={{ opacity: 0, y: -30, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: 3, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
@@ -31,7 +31,7 @@ const HeroLogo = ({ logoText, show }: HeroLogoProps) => {
         transition={{ duration: 1.2, ease: "easeInOut", repeat: Infinity, repeatDelay: 0.5 }}
       />
       
-      <h2 className="font-ancient text-xl md:text-2xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.7)] transition-all duration-300">
+      <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.7)] transition-all duration-300">
         {logoText}
       </h2>
       <p className="font-sans text-[9px] tracking-widest text-ancient-silver/60 uppercase">

@@ -63,6 +63,8 @@ const HeroScene = ({
             fade 
             speed={0.3}
           />
+          
+          {/* Native fog for depth (managed in SceneLighting) */}
         </Suspense>
       </Canvas>
     </div>
