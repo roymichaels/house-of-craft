@@ -63,14 +63,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
                  border border-border/30 hover:border-primary/40
                  shadow-lg hover:shadow-2xl hover:shadow-primary/10
-                 transition-all duration-300 cursor-pointer aspect-square"
-      whileHover={{ y: -4 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      }}
+                 transition-all duration-300 cursor-pointer flex flex-col"
     >
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60 
@@ -82,84 +75,37 @@ const ProductCard = ({ product }: ProductCardProps) => {
                       opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10
                       pointer-events-none rounded-2xl" />
 
-      {/* Image Container */}
+      {/* Image Container - Fixed aspect ratio */}
       <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10">
-        <motion.img
+        <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover"
-          initial={{ scale: 1 }}
-          whileHover={{ scale: 1.05 }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-          }}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        
+        {/* Golden glow overlay */}
+        <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent
+                        opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-      {/* Content */}
-      <div className="relative p-5 space-y-3 z-20">
-        {/* Category Badge */}
-        <div className="inline-block px-2.5 py-1 bg-primary/10 border border-primary/20 rounded-full">
-          <span className="text-xs font-medium text-ancient-gold tracking-wider">
-            {product.category.toUpperCase()}
-          </span>
-        </div>
-
-        <h3 className="text-lg font-ancient tracking-wide text-foreground 
-                       group-hover:text-ancient-gold transition-colors duration-200">
+      {/* Content Area - Text below image */}
+      <div className="relative p-4 space-y-2 flex-1 flex flex-col bg-card/80">
+        {/* Product Name */}
+        <h3 className="text-base md:text-lg font-ancient tracking-wide text-foreground 
+                       group-hover:text-ancient-gold transition-colors duration-200 line-clamp-1">
           {product.name}
         </h3>
         
-        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+        {/* Short Description */}
+        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 leading-relaxed flex-1">
           {product.description}
         </p>
 
-        {/* Price & CTA Row */}
-        <div className="flex items-center justify-between pt-3">
-          {/* Floating price pill */}
-          <motion.div
-            className="px-3 py-1.5 bg-background/80 backdrop-blur-sm border border-border/50 rounded-full"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <span className="text-sm font-semibold text-foreground">
-              {displayPrice}
-            </span>
-          </motion.div>
-          
-          {/* Add to Cart Button */}
-          <motion.button
-            onClick={handleAddToCart}
-            className={`px-4 py-2 text-xs font-medium tracking-wider rounded-full
-                       transition-all duration-200 flex items-center gap-1.5
-                       opacity-0 group-hover:opacity-100
-                       ${inCart 
-                         ? 'bg-primary/20 border border-primary/50 text-ancient-gold' 
-                         : 'bg-primary/10 border border-primary/30 text-ancient-gold hover:bg-primary/20 hover:border-primary/50'
-                       }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 25,
-            }}
-          >
-            {inCart ? (
-              <>
-                <Check size={14} />
-                IN CART
-              </>
-            ) : (
-              <>
-                <ShoppingBag size={14} />
-                ADD
-              </>
-            )}
-          </motion.button>
+        {/* Price */}
+        <div className="pt-2">
+          <span className="text-sm md:text-base font-semibold text-foreground">
+            {displayPrice}
+          </span>
         </div>
       </div>
     </motion.div>
