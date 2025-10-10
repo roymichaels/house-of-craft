@@ -486,65 +486,128 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   // PLANET MATERIAL CREATOR - Realistic Procedural Textures
   // ============================================================================
+
+  // Enhanced noise functions for better detail
+  const shaderHelpers = `
+    float hash(vec3 p) {
+      return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+    }
+
+    float noise(vec3 p) {
+      vec3 i = floor(p);
+      vec3 f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(
+        mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
+            mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+        mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+            mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+    }
+
+    // Fractal Brownian Motion for multi-scale detail
+    float fbm(vec3 p) {
+      float value = 0.0;
+      float amplitude = 0.5;
+      float frequency = 1.0;
+      for(int i = 0; i < 5; i++) {
+        value += amplitude * noise(p * frequency);
+        frequency *= 2.0;
+        amplitude *= 0.5;
+      }
+      return value;
+    }
+
+    // Improved lighting with Fresnel effect
+    vec3 getLighting(vec3 normal, vec3 viewDir, vec3 color, float roughness) {
+      vec3 lightDir = normalize(vec3(1.0, 0.3, 1.0));
+
+      // Diffuse
+      float diff = max(dot(normal, lightDir), 0.0);
+
+      // Specular
+      vec3 halfDir = normalize(lightDir + viewDir);
+      float spec = pow(max(dot(normal, halfDir), 0.0), 32.0 / roughness);
+
+      // Fresnel rim lighting
+      float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 3.0);
+
+      // Ambient occlusion
+      float ao = 0.3 + 0.7 * noise(normal * 10.0);
+
+      vec3 ambient = color * 0.15 * ao;
+      vec3 diffuse = color * diff * 0.8;
+      vec3 specular = vec3(1.0) * spec * 0.3 * (1.0 - roughness);
+      vec3 rim = color * fresnel * 0.4;
+
+      return ambient + diffuse + specular + rim;
+    }
+  `;
+
   function createPlanetMaterial(planetData: any) {
     const baseColor = new THREE.Color(planetData.color);
 
     // Create procedural shader based on planet type
     if (planetData.name === 'Mercury') {
-      // Rocky, cratered surface
+      // Rocky, cratered surface with detailed terrain
       return new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          baseColor: { value: new THREE.Color(0x8C7853) },
-          craterColor: { value: new THREE.Color(0x5a4a3a) }
+          baseColor: { value: new THREE.Color(0x9C8563) },
+          craterColor: { value: new THREE.Color(0x6a5a4a) },
+          brightSpots: { value: new THREE.Color(0xB5A080) }
         },
         vertexShader: `
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
+          varying vec3 vWorldPosition;
           void main() {
             vUv = uv;
             vNormal = normalize(normalMatrix * normal);
             vPosition = position;
+            vec4 worldPos = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPos.xyz;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `,
-        fragmentShader: `
+        fragmentShader: shaderHelpers + `
           uniform vec3 baseColor;
           uniform vec3 craterColor;
+          uniform vec3 brightSpots;
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
-
-          float hash(vec3 p) {
-            return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-          }
-
-          float noise(vec3 p) {
-            vec3 i = floor(p);
-            vec3 f = fract(p);
-            f = f * f * (3.0 - 2.0 * f);
-            return mix(
-              mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
-                  mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
-              mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
-                  mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
-          }
+          varying vec3 vWorldPosition;
 
           void main() {
-            // Cratered rocky surface
-            float craters = noise(vPosition * 15.0) * noise(vPosition * 8.0);
-            float surface = noise(vPosition * 25.0) * 0.3;
+            // Multi-scale crater details using FBM
+            float craters = fbm(vPosition * 8.0);
+            float smallCraters = noise(vPosition * 35.0) * 0.4;
+            float microDetail = noise(vPosition * 80.0) * 0.2;
 
-            vec3 color = mix(baseColor, craterColor, craters * 0.7);
-            color += surface * 0.2;
+            // Height variation for normal perturbation
+            float height = craters + smallCraters * 0.5 + microDetail * 0.3;
 
-            // Lighting
-            vec3 lightDir = normalize(vec3(1.0, 0.5, 1.0));
-            float diff = max(dot(vNormal, lightDir), 0.0);
-            color *= (0.6 + diff * 0.8);
+            // Perturb normal for surface detail
+            vec3 perturbedNormal = normalize(vNormal + vec3(
+              noise(vPosition * 20.0) - 0.5,
+              noise(vPosition * 20.0 + vec3(100.0)) - 0.5,
+              noise(vPosition * 20.0 + vec3(200.0)) - 0.5
+            ) * 0.3);
 
-            gl_FragColor = vec4(color, 1.0);
+            // Color mixing based on terrain
+            vec3 color = mix(craterColor, baseColor, craters);
+            color = mix(color, brightSpots, pow(height, 3.0) * 0.3);
+
+            // Add dark spots for impact sites
+            float darkSpots = step(0.85, noise(vPosition * 12.0));
+            color = mix(color, craterColor * 0.7, darkSpots * 0.5);
+
+            // Advanced lighting
+            vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+            vec3 finalColor = getLighting(perturbedNormal, viewDir, color, 0.9);
+
+            gl_FragColor = vec4(finalColor, 1.0);
           }
         `,
         toneMapped: false
@@ -611,77 +674,120 @@ export function initSolarSystem(container: HTMLElement) {
         toneMapped: false
       });
     } else if (planetData.name === 'Earth') {
-      // Oceans, continents, clouds
+      // Realistic Earth with oceans, continents, ice caps, and clouds
       return new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          oceanColor: { value: new THREE.Color(0x1a4d7a) },
-          landColor: { value: new THREE.Color(0x2a6a3a) },
+          deepOcean: { value: new THREE.Color(0x0a3d62) },
+          shallowOcean: { value: new THREE.Color(0x1e6fa8) },
+          beach: { value: new THREE.Color(0xc2b280) },
+          grass: { value: new THREE.Color(0x2d5a1e) },
+          forest: { value: new THREE.Color(0x1a4d2e) },
+          mountain: { value: new THREE.Color(0x8b7355) },
+          snow: { value: new THREE.Color(0xf0f8ff) },
           cloudColor: { value: new THREE.Color(0xffffff) }
         },
         vertexShader: `
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
+          varying vec3 vWorldPosition;
           void main() {
             vUv = uv;
             vNormal = normalize(normalMatrix * normal);
             vPosition = position;
+            vec4 worldPos = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPos.xyz;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `,
-        fragmentShader: `
+        fragmentShader: shaderHelpers + `
           uniform float time;
-          uniform vec3 oceanColor;
-          uniform vec3 landColor;
+          uniform vec3 deepOcean;
+          uniform vec3 shallowOcean;
+          uniform vec3 beach;
+          uniform vec3 grass;
+          uniform vec3 forest;
+          uniform vec3 mountain;
+          uniform vec3 snow;
           uniform vec3 cloudColor;
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
-
-          float hash(vec3 p) {
-            return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-          }
-
-          float noise(vec3 p) {
-            vec3 i = floor(p);
-            vec3 f = fract(p);
-            f = f * f * (3.0 - 2.0 * f);
-            return mix(
-              mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
-                  mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
-              mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
-                  mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
-          }
+          varying vec3 vWorldPosition;
 
           void main() {
-            // Continents vs oceans
-            float land = noise(vPosition * 4.0);
-            float detail = noise(vPosition * 12.0) * 0.3;
-            float landMask = step(0.45, land + detail);
+            // Continents using FBM for realistic landmasses
+            float continents = fbm(vPosition * 3.5);
+            float coastalDetail = fbm(vPosition * 8.0) * 0.3;
+            float landMask = smoothstep(0.42, 0.48, continents + coastalDetail * 0.5);
 
-            vec3 surface = mix(oceanColor, landColor, landMask);
+            // Elevation using multiple noise octaves
+            float elevation = fbm(vPosition * 6.0) * landMask;
+            float mountains = pow(fbm(vPosition * 12.0), 2.0) * landMask;
 
-            // Moving clouds
-            vec3 cloudPos = vPosition + vec3(time * 0.03, 0.0, 0.0);
-            float clouds = noise(cloudPos * 8.0) * noise(cloudPos * 16.0);
-            float cloudMask = smoothstep(0.5, 0.7, clouds);
+            // Terrain color based on elevation
+            vec3 terrainColor = deepOcean;
 
-            vec3 color = mix(surface, cloudColor, cloudMask * 0.7);
+            if (landMask < 0.1) {
+              // Deep ocean
+              terrainColor = mix(deepOcean, shallowOcean, landMask * 10.0);
+            } else if (landMask < 0.3) {
+              // Shallow coastal waters
+              terrainColor = mix(shallowOcean, beach, (landMask - 0.1) * 5.0);
+            } else {
+              // Land elevation
+              float totalElevation = elevation + mountains;
 
-            // Lighting
+              if (totalElevation < 0.3) {
+                terrainColor = mix(beach, grass, totalElevation / 0.3);
+              } else if (totalElevation < 0.5) {
+                terrainColor = mix(grass, forest, (totalElevation - 0.3) / 0.2);
+              } else if (totalElevation < 0.7) {
+                terrainColor = mix(forest, mountain, (totalElevation - 0.5) / 0.2);
+              } else {
+                terrainColor = mix(mountain, snow, (totalElevation - 0.7) / 0.3);
+              }
+            }
+
+            // Polar ice caps
+            float latitude = abs(vPosition.y);
+            if (latitude > 0.85) {
+              float iceBlend = smoothstep(0.85, 0.95, latitude);
+              terrainColor = mix(terrainColor, snow, iceBlend);
+            }
+
+            // Animated cloud layer
+            vec3 cloudPos = vPosition + vec3(time * 0.02, time * 0.005, 0.0);
+            float cloudPattern = fbm(cloudPos * 5.0);
+            float clouds = fbm(cloudPos * 10.0);
+            float cloudMask = smoothstep(0.45, 0.65, cloudPattern * clouds);
+
+            // Cloud shadows on surface
+            float cloudShadow = 1.0 - cloudMask * 0.2;
+            terrainColor *= cloudShadow;
+
+            // Mix in clouds
+            vec3 color = mix(terrainColor, cloudColor, cloudMask * 0.75);
+
+            // Advanced lighting
+            vec3 viewDir = normalize(cameraPosition - vWorldPosition);
             vec3 lightDir = normalize(vec3(1.0, 0.3, 1.0));
-            float diff = max(dot(vNormal, lightDir), 0.0);
 
-            // Ocean specular
-            vec3 viewDir = normalize(cameraPosition - vPosition);
-            vec3 reflectDir = reflect(-lightDir, vNormal);
-            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0) * (1.0 - landMask);
+            // Ocean specular highlights
+            if (landMask < 0.3) {
+              vec3 reflectDir = reflect(-lightDir, vNormal);
+              float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
+              color += vec3(1.0) * spec * 0.6 * (1.0 - cloudMask);
+            }
 
-            color *= (0.5 + diff * 0.8);
-            color += vec3(1.0, 1.0, 1.0) * spec * 0.5;
+            vec3 finalColor = getLighting(vNormal, viewDir, color, 0.7);
 
-            gl_FragColor = vec4(color, 1.0);
+            // Atmospheric glow
+            float atmosphere = pow(1.0 - dot(viewDir, vNormal), 3.0);
+            finalColor += vec3(0.3, 0.5, 0.8) * atmosphere * 0.3;
+
+            gl_FragColor = vec4(finalColor, 1.0);
           }
         `,
         toneMapped: false
@@ -755,74 +861,106 @@ export function initSolarSystem(container: HTMLElement) {
         toneMapped: false
       });
     } else if (planetData.name === 'Jupiter') {
-      // Gas giant with bands
+      // Realistic gas giant with detailed atmospheric bands
       return new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
-          bandColor1: { value: new THREE.Color(0xE8C060) },
-          bandColor2: { value: new THREE.Color(0xC88B3A) },
-          bandColor3: { value: new THREE.Color(0xA06828) },
-          redSpot: { value: new THREE.Color(0xD84A38) }
+          lightBand: { value: new THREE.Color(0xF5D899) },
+          mediumBand: { value: new THREE.Color(0xD4A574) },
+          darkBand: { value: new THREE.Color(0xB8875A) },
+          veryDarkBand: { value: new THREE.Color(0x9A6E48) },
+          redSpot: { value: new THREE.Color(0xCE5347) },
+          stormColor: { value: new THREE.Color(0xE8B88A) }
         },
         vertexShader: `
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
+          varying vec3 vWorldPosition;
           void main() {
             vUv = uv;
             vNormal = normalize(normalMatrix * normal);
             vPosition = position;
+            vec4 worldPos = modelMatrix * vec4(position, 1.0);
+            vWorldPosition = worldPos.xyz;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
           }
         `,
-        fragmentShader: `
+        fragmentShader: shaderHelpers + `
           uniform float time;
-          uniform vec3 bandColor1;
-          uniform vec3 bandColor2;
-          uniform vec3 bandColor3;
+          uniform vec3 lightBand;
+          uniform vec3 mediumBand;
+          uniform vec3 darkBand;
+          uniform vec3 veryDarkBand;
           uniform vec3 redSpot;
+          uniform vec3 stormColor;
           varying vec2 vUv;
           varying vec3 vNormal;
           varying vec3 vPosition;
-
-          float hash(vec3 p) {
-            return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-          }
-
-          float noise(vec3 p) {
-            vec3 i = floor(p);
-            vec3 f = fract(p);
-            f = f * f * (3.0 - 2.0 * f);
-            return mix(
-              mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
-                  mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
-              mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
-                  mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
-          }
+          varying vec3 vWorldPosition;
 
           void main() {
-            // Horizontal bands with turbulence
-            vec3 pos = vPosition + vec3(time * 0.01, 0.0, 0.0);
-            float bands = sin(vPosition.y * 18.0 + noise(pos * 6.0) * 2.0) * 0.5 + 0.5;
-            float turbulence = noise(pos * 10.0) * 0.3;
+            // Animated position for atmospheric flow
+            vec3 flowPos = vPosition + vec3(time * 0.015, 0.0, 0.0);
 
-            vec3 color = mix(bandColor2, bandColor1, bands);
-            color = mix(color, bandColor3, turbulence);
+            // Multiple band frequencies for realism
+            float mainBands = sin(vPosition.y * 20.0 + fbm(flowPos * 4.0) * 3.0);
+            float subBands = sin(vPosition.y * 45.0 + noise(flowPos * 8.0) * 1.5);
+            float microBands = sin(vPosition.y * 90.0 + noise(flowPos * 15.0));
 
-            // Great Red Spot
-            vec2 spotCenter = vec2(0.3, -0.2);
-            float dist = length(vPosition.xz - spotCenter);
-            if (dist < 0.25) {
-              float spotMix = smoothstep(0.25, 0.15, dist);
-              color = mix(color, redSpot, spotMix * 0.8);
+            // Combine band patterns
+            float bandPattern = (mainBands * 0.6 + subBands * 0.3 + microBands * 0.1);
+            bandPattern = bandPattern * 0.5 + 0.5;
+
+            // Turbulent flow patterns
+            float turbulence = fbm(flowPos * 6.0);
+            float vortices = fbm(flowPos * 12.0);
+
+            // Color bands based on pattern
+            vec3 color;
+            if (bandPattern < 0.25) {
+              color = mix(veryDarkBand, darkBand, bandPattern / 0.25);
+            } else if (bandPattern < 0.5) {
+              color = mix(darkBand, mediumBand, (bandPattern - 0.25) / 0.25);
+            } else if (bandPattern < 0.75) {
+              color = mix(mediumBand, lightBand, (bandPattern - 0.5) / 0.25);
+            } else {
+              color = mix(lightBand, stormColor, (bandPattern - 0.75) / 0.25);
             }
 
-            // Lighting
-            vec3 lightDir = normalize(vec3(1.0, 0.2, 1.0));
-            float diff = max(dot(vNormal, lightDir), 0.0);
-            color *= (0.7 + diff * 0.6);
+            // Add turbulent details
+            color = mix(color, stormColor, turbulence * 0.2);
+            color = mix(color, darkBand, vortices * 0.15);
 
-            gl_FragColor = vec4(color, 1.0);
+            // Great Red Spot with swirling detail
+            vec2 spotCenter = vec2(0.25, -0.15);
+            float spotDist = length(vPosition.xz - spotCenter);
+            if (spotDist < 0.3) {
+              float spotSwirl = fbm(vec3(vPosition.xz * 15.0 + time * 0.02, time * 0.1));
+              float spotMask = smoothstep(0.3, 0.1, spotDist);
+              vec3 spotWithSwirl = mix(redSpot, redSpot * 0.7, spotSwirl);
+              color = mix(color, spotWithSwirl, spotMask * 0.9);
+
+              // Spot border
+              float border = smoothstep(0.28, 0.3, spotDist) - smoothstep(0.1, 0.12, spotDist);
+              color = mix(color, stormColor, border * 0.5);
+            }
+
+            // Smaller storm systems
+            float storms = fbm(flowPos * 18.0);
+            if (storms > 0.7) {
+              color = mix(color, vec3(1.0, 0.95, 0.85), (storms - 0.7) * 0.8);
+            }
+
+            // Advanced lighting
+            vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+            vec3 finalColor = getLighting(vNormal, viewDir, color, 0.3);
+
+            // Atmospheric haze
+            float atmosphere = pow(1.0 - dot(viewDir, vNormal), 2.5);
+            finalColor += lightBand * atmosphere * 0.2;
+
+            gl_FragColor = vec4(finalColor, 1.0);
           }
         `,
         toneMapped: false
@@ -1095,26 +1233,114 @@ export function initSolarSystem(container: HTMLElement) {
       rotationSpeed: planetData.rotation
     };
     
-    // Add rings for Saturn
+    // Add rings for Saturn with detailed bands
     if (planetData.hasRings) {
       const ringGeometry = new THREE.RingGeometry(
         planetData.radius * 1.5,
         planetData.radius * 2.5,
-        64
+        128
       );
-      const ringMaterial = new THREE.MeshStandardMaterial({
-        color: 0xFFE4B5,
+
+      // UV coordinates for ring texture
+      const pos = ringGeometry.attributes.position;
+      const v3 = new THREE.Vector3();
+      const uvs = [];
+
+      for (let i = 0; i < pos.count; i++) {
+        v3.fromBufferAttribute(pos, i);
+        const distance = v3.length();
+        uvs.push(distance, 0);
+      }
+
+      ringGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+
+      const ringMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 },
+          innerRadius: { value: planetData.radius * 1.5 },
+          outerRadius: { value: planetData.radius * 2.5 }
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          varying vec3 vNormal;
+          void main() {
+            vUv = uv;
+            vPosition = position;
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: shaderHelpers + `
+          uniform float innerRadius;
+          uniform float outerRadius;
+          varying vec2 vUv;
+          varying vec3 vPosition;
+          varying vec3 vNormal;
+
+          void main() {
+            // Distance from center
+            float dist = length(vPosition.xy);
+            float normalizedDist = (dist - innerRadius) / (outerRadius - innerRadius);
+
+            // Ring bands with varying density
+            float bands = 0.0;
+            bands += sin(normalizedDist * 120.0) * 0.4;
+            bands += sin(normalizedDist * 250.0) * 0.3;
+            bands += sin(normalizedDist * 500.0) * 0.2;
+            bands += noise(vec3(normalizedDist * 80.0, 0.0, 0.0)) * 0.3;
+
+            // Color gradients across rings
+            vec3 lightRing = vec3(0.95, 0.90, 0.75);
+            vec3 mediumRing = vec3(0.88, 0.80, 0.65);
+            vec3 darkRing = vec3(0.75, 0.65, 0.50);
+            vec3 darkGap = vec3(0.3, 0.25, 0.20);
+
+            // Cassini Division and other gaps
+            float cassiniDiv = smoothstep(0.70, 0.72, normalizedDist) - smoothstep(0.72, 0.74, normalizedDist);
+            float enckGap = smoothstep(0.55, 0.56, normalizedDist) - smoothstep(0.56, 0.57, normalizedDist);
+
+            vec3 color;
+            if (normalizedDist < 0.33) {
+              color = mix(mediumRing, lightRing, bands * 0.5 + 0.5);
+            } else if (normalizedDist < 0.66) {
+              color = mix(mediumRing, darkRing, bands * 0.5 + 0.5);
+            } else {
+              color = mix(darkRing, lightRing, bands * 0.5 + 0.5);
+            }
+
+            // Apply gaps
+            color = mix(color, darkGap, cassiniDiv * 0.9);
+            color = mix(color, darkGap, enckGap * 0.7);
+
+            // Transparency variation for particle distribution
+            float particleDensity = fbm(vec3(normalizedDist * 100.0, 0.0, 0.0));
+            float alpha = 0.85 - particleDensity * 0.3;
+
+            // Fade at edges
+            alpha *= smoothstep(0.0, 0.05, normalizedDist);
+            alpha *= smoothstep(1.0, 0.95, normalizedDist);
+
+            // Lighting
+            vec3 lightDir = normalize(vec3(1.0, 0.3, 1.0));
+            float diff = max(dot(vNormal, lightDir), 0.0);
+            color *= (0.5 + diff * 0.7);
+
+            gl_FragColor = vec4(color, alpha);
+          }
+        `,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.9,
-        roughness: 0.5,
-        emissive: new THREE.Color(0xFFE4B5),
-        emissiveIntensity: 0.5,
+        depthWrite: false,
         toneMapped: false
       });
+
       const rings = new THREE.Mesh(ringGeometry, ringMaterial);
       rings.rotation.x = Math.PI / 2;
       planet.add(rings);
+
+      // Store ring material for time updates
+      (bodyData as any).ringMaterial = ringMaterial;
     }
     
     // Add moon for Earth
