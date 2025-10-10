@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      hero_scenes: {
+        Row: {
+          accent_color: string | null
+          camera_fov: number | null
+          camera_position: Json | null
+          created_at: string | null
+          cta_link: string | null
+          cta_text: string | null
+          hdri_url: string | null
+          id: string
+          is_active: boolean | null
+          light_color: string | null
+          model_url: string | null
+          rotation_speed: number | null
+          show_real_time: boolean | null
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          accent_color?: string | null
+          camera_fov?: number | null
+          camera_position?: Json | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          hdri_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          light_color?: string | null
+          model_url?: string | null
+          rotation_speed?: number | null
+          show_real_time?: boolean | null
+          subtitle?: string | null
+          title?: string
+        }
+        Update: {
+          accent_color?: string | null
+          camera_fov?: number | null
+          camera_position?: Json | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          hdri_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          light_color?: string | null
+          model_url?: string | null
+          rotation_speed?: number | null
+          show_real_time?: boolean | null
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

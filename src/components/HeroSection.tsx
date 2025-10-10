@@ -1,47 +1,57 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Suspense } from "react";
 import heroImage from "@/assets/hero-watch.jpg";
+import HeroScene from "./hero/HeroScene";
+import HeroOverlay from "./hero/HeroOverlay";
+import { useHeroScene } from "@/hooks/useHeroScene";
 
 const HeroSection = () => {
+  const { data: heroScene, isLoading } = useHeroScene();
+
+  // Default values while loading or if query fails
+  const config = heroScene || {
+    title: "Time, Composed",
+    subtitle: "A curated maison for collectors who appreciate the art of living well. Timepieces, tailoring, and timeless objects, selected with uncompromising intent.",
+    rotation_speed: 0.3,
+    light_color: "#C7A869",
+    accent_color: "#7A6A4F",
+    camera_fov: 45,
+    camera_position: { x: 0, y: 0, z: 5 },
+    cta_text: "Enter The House",
+    cta_link: "/collections",
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden grain">
-      {/* Background Image */}
+      {/* Fallback Background Image */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
           alt="Luxury timepiece collection"
-          className="w-full h-full object-cover opacity-90"
+          className="w-full h-full object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 text-center">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif mb-6 animate-fade-in text-balance">
-          Time, Composed
-        </h1>
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up text-balance">
-          A curated maison for collectors who appreciate the art of living well. 
-          Timepieces, tailoring, and timeless objects, selected with uncompromising intent.
-        </p>
-        <Link to="/collections">
-          <Button
-            size="lg"
-            className="h-12 px-8 text-base gap-2 transition-all duration-300 hover:gap-4"
-          >
-            Enter The House
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
+      {/* 3D Scene Layer */}
+      {!isLoading && (
+        <Suspense fallback={null}>
+          <HeroScene
+            rotationSpeed={config.rotation_speed}
+            lightColor={config.light_color}
+            accentColor={config.accent_color}
+            cameraFov={config.camera_fov}
+            cameraPosition={config.camera_position}
+          />
+        </Suspense>
+      )}
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex items-start justify-center p-2">
-          <div className="w-1 h-3 bg-primary rounded-full animate-pulse" />
-        </div>
-      </div>
+      {/* Text Overlay */}
+      <HeroOverlay
+        title={config.title}
+        subtitle={config.subtitle || ""}
+        ctaText={config.cta_text}
+        ctaLink={config.cta_link}
+      />
     </section>
   );
 };
