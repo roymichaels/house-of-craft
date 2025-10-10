@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useState } from 'react';
+import { ArrowUpDown, SlidersHorizontal } from 'lucide-react';
 import type { Category, Product } from '@/data/catalog';
 import ProductCard from '@/components/collections/ProductCard';
 import ProductCardSkeleton from '@/components/vault/ProductCardSkeleton';
@@ -8,15 +9,19 @@ import { BrandLanguage } from '@/lib/brandLanguage';
 
 interface VaultEcommerceProps {
   category: Category;
+  searchQuery?: string;
 }
 
 interface ExtendedProduct extends Product {
   subcategoryName: string;
 }
 
-const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
+type SortOption = 'featured' | 'price-low' | 'price-high' | 'name';
+
+const VaultEcommerce = ({ category, searchQuery = '' }: VaultEcommerceProps) => {
   const [activeSubcategory, setActiveSubcategory] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('featured');
 
   // Aggregate all products with their subcategory names
   const allProducts: ExtendedProduct[] = useMemo(() => {
@@ -28,13 +33,44 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
     );
   }, [category]);
 
-  // Filter products based on active subcategory
+  // Filter and sort products
   const displayedProducts = useMemo(() => {
-    if (activeSubcategory === 'all') return allProducts;
-    return allProducts.filter(product => 
-      product.subcategoryName === category.subcategories.find(s => s.id === activeSubcategory)?.name
-    );
-  }, [activeSubcategory, allProducts, category.subcategories]);
+    let filtered = allProducts;
+
+    // Filter by subcategory
+    if (activeSubcategory !== 'all') {
+      filtered = filtered.filter(product => 
+        product.subcategoryName === category.subcategories.find(s => s.id === activeSubcategory)?.name
+      );
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.subcategoryName.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort products
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return Number(a.price) - Number(b.price);
+        case 'price-high':
+          return Number(b.price) - Number(a.price);
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'featured':
+        default:
+          return 0;
+      }
+    });
+
+    return sorted;
+  }, [activeSubcategory, allProducts, category.subcategories, searchQuery, sortBy]);
 
   // Prepare segmented control options
   const segmentedOptions = useMemo(() => {
@@ -103,6 +139,32 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
                 activeOption={activeSubcategory}
                 onChange={handleSubcategoryChange}
               />
+            </motion.div>
+
+            {/* Sort & Filter Controls */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
+              className="flex items-center justify-center gap-2 pt-2"
+            >
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="px-3 py-1.5 rounded-full text-xs
+                           bg-background/60 backdrop-blur-sm
+                           border border-primary/20 hover:border-primary/40
+                           text-foreground focus:outline-none transition-all cursor-pointer"
+              >
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="name">Name: A-Z</option>
+              </select>
+
+              <div className="text-xs text-muted-foreground">
+                {displayedProducts.length} {displayedProducts.length === 1 ? 'item' : 'items'}
+              </div>
             </motion.div>
           </div>
         </div>

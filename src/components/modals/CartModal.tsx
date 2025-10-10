@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
+import { X, Minus, Plus, ShoppingBag, Trash2, Heart, Tag } from "lucide-react";
+import { useCartStore, CartItem } from "@/stores/cartStore";
 import { useModalStore } from "@/stores/modalStore";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
 import { toast } from "sonner";
@@ -24,6 +24,10 @@ const CartModal = () => {
   }, [isOpen]);
 
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [savedForLater, setSavedForLater] = useState<CartItem[]>([]);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoApplied, setPromoApplied] = useState(false);
+  const [discount, setDiscount] = useState(0);
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
@@ -52,8 +56,41 @@ const CartModal = () => {
     toast.success(`${productName} removed from cart`);
   };
 
+  const handleSaveForLater = (item: CartItem) => {
+    setSavedForLater([...savedForLater, item]);
+    removeItem(item.productId);
+    toast.success(`${item.name} saved for later`);
+  };
+
+  const handleMoveToCart = (item: CartItem) => {
+    addItem(item, item.quantity);
+    setSavedForLater(savedForLater.filter(i => i.productId !== item.productId));
+    toast.success(`${item.name} moved to cart`);
+  };
+
+  const handleApplyPromo = () => {
+    const validCodes: Record<string, number> = {
+      'APOLLON10': 0.10,
+      'WELCOME15': 0.15,
+      'LUXURY20': 0.20
+    };
+
+    const discountPercent = validCodes[promoCode.toUpperCase()];
+    if (discountPercent) {
+      setDiscount(discountPercent);
+      setPromoApplied(true);
+      toast.success(`Promo code applied! ${(discountPercent * 100)}% off`);
+    } else {
+      toast.error('Invalid promo code');
+    }
+  };
+
+  const addItem = useCartStore(state => state.addItem);
+
   const isEmpty = items.length === 0;
-  const total = getTotal();
+  const subtotal = getTotal();
+  const discountAmount = subtotal * discount;
+  const total = subtotal - discountAmount;
   const itemCount = getItemCount();
 
   return (
@@ -182,16 +219,27 @@ const CartModal = () => {
                             </p>
                           </div>
 
-                          {/* Quantity Controls */}
+                           {/* Quantity Controls & Actions */}
                           <div className="flex flex-col items-end justify-between">
-                            <motion.button
-                              onClick={() => handleRemoveItem(item.productId, item.name)}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              <GoldenIcon icon={Trash2} size={16} />
-                            </motion.button>
+                            <div className="flex gap-1">
+                              <motion.button
+                                onClick={() => handleSaveForLater(item)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                title="Save for later"
+                              >
+                                <GoldenIcon icon={Heart} size={16} />
+                              </motion.button>
+                              <motion.button
+                                onClick={() => handleRemoveItem(item.productId, item.name)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
+                                <GoldenIcon icon={Trash2} size={16} />
+                              </motion.button>
+                            </div>
 
                             <div className="flex items-center gap-2">
                               <motion.button
@@ -226,16 +274,97 @@ const CartModal = () => {
                         </motion.div>
                       ))}
                     </AnimatePresence>
+
+                    {/* Saved for Later Section */}
+                    {savedForLater.length > 0 && (
+                      <div className="mt-6 pt-4 border-t border-border/20">
+                        <h3 className="text-sm font-ancient text-muted-foreground mb-3 flex items-center gap-2">
+                          <Heart size={14} />
+                          Saved for Later ({savedForLater.length})
+                        </h3>
+                        <div className="space-y-2">
+                          {savedForLater.map((item) => (
+                            <motion.div
+                              key={item.productId}
+                              className="flex gap-3 p-2 rounded-lg bg-card/20 border border-border/20"
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, x: -100 }}
+                              layout
+                            >
+                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted/30 flex-shrink-0">
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-xs font-romania text-foreground truncate">{item.name}</h4>
+                                <p className="text-xs text-muted-foreground">${item.price.toLocaleString()}</p>
+                              </div>
+                              <motion.button
+                                onClick={() => handleMoveToCart(item)}
+                                className="text-xs text-primary hover:text-primary/80 self-center"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                Move to Cart
+                              </motion.button>
+                            </motion.div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Footer */}
                   <div className="border-t border-border/30 p-6 space-y-4 bg-background/50 backdrop-blur-sm">
-                    {/* Total */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-ancient text-foreground">Total</span>
-                      <span className="text-2xl font-ancient text-ancient-gold">
-                        ${total.toLocaleString()}
-                      </span>
+                    {/* Promo Code */}
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <input
+                          type="text"
+                          placeholder="Promo code"
+                          value={promoCode}
+                          onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                          disabled={promoApplied}
+                          className="w-full pl-9 pr-3 py-2 rounded-full
+                                     bg-background/60 backdrop-blur-sm
+                                     border border-border/30 focus:border-primary/40
+                                     text-sm text-foreground placeholder:text-muted-foreground
+                                     focus:outline-none transition-all disabled:opacity-50"
+                        />
+                      </div>
+                      <motion.button
+                        onClick={handleApplyPromo}
+                        disabled={promoApplied || !promoCode}
+                        className="px-4 py-2 rounded-full border border-border/30
+                                   text-foreground text-sm font-medium
+                                   hover:border-primary/40 hover:bg-primary/5
+                                   transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {promoApplied ? 'Applied' : 'Apply'}
+                      </motion.button>
+                    </div>
+
+                    {/* Price Breakdown */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Subtotal</span>
+                        <span className="text-foreground">${subtotal.toLocaleString()}</span>
+                      </div>
+                      {discount > 0 && (
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-green-600">Discount ({(discount * 100)}%)</span>
+                          <span className="text-green-600">-${discountAmount.toLocaleString()}</span>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between pt-2 border-t border-border/20">
+                        <span className="text-lg font-ancient text-foreground">Total</span>
+                        <span className="text-2xl font-ancient text-ancient-gold">
+                          ${total.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Actions */}

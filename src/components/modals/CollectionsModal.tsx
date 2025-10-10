@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, Circle } from "lucide-react";
+import { X, ChevronLeft, Circle, Search } from "lucide-react";
 import { useModalStore } from "@/stores/modalStore";
 import { useState, useEffect } from "react";
 import { catalog } from "@/data/catalog";
@@ -18,6 +18,7 @@ const CollectionsModal = () => {
   // State management
   const [viewState, setViewState] = useState<ViewState>('categories');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Handle initial category selection from VaultTeaser or reset state when modal closes
   useEffect(() => {
@@ -111,7 +112,7 @@ const CollectionsModal = () => {
                             border-y border-primary/20 overflow-hidden">
               {/* Top Navigation Bar */}
               <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 md:p-6">
-                {/* Decorative Icon / Back Button */}
+                {/* Left Side - Back Button or Search */}
                 {viewState === 'categories' ? (
                   <motion.div
                     initial={{ opacity: 0, rotate: -90 }}
@@ -121,23 +122,45 @@ const CollectionsModal = () => {
                     <GoldenIcon icon={Circle} size="lg" glow="strong" className="opacity-60" />
                   </motion.div>
                 ) : (
-                  <motion.button
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    onClick={handleBackToCategories}
-                    className="px-3 py-2 rounded-full
-                               bg-background/60 hover:bg-primary/10 backdrop-blur-sm
-                               border border-primary/20 hover:border-primary/40
-                               transition-all group flex items-center gap-2"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    aria-label="Go back"
-                  >
-                    <GoldenIcon icon={ChevronLeft} size="sm" glow="subtle" 
-                                className="group-hover:-translate-x-0.5 duration-300" />
-                    <span className="hidden md:inline text-xs md:text-sm font-medium text-ancient-gold">Back</span>
-                  </motion.button>
+                  <div className="flex items-center gap-2">
+                    <motion.button
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      onClick={handleBackToCategories}
+                      className="px-3 py-2 rounded-full
+                                 bg-background/60 hover:bg-primary/10 backdrop-blur-sm
+                                 border border-primary/20 hover:border-primary/40
+                                 transition-all group flex items-center gap-2"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      aria-label="Go back"
+                    >
+                      <GoldenIcon icon={ChevronLeft} size="sm" glow="subtle" 
+                                  className="group-hover:-translate-x-0.5 duration-300" />
+                      <span className="hidden md:inline text-xs md:text-sm font-medium text-ancient-gold">Back</span>
+                    </motion.button>
+
+                    {/* Search Bar */}
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="relative hidden md:block"
+                    >
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-64 pl-9 pr-4 py-2 rounded-full
+                                   bg-background/60 backdrop-blur-sm
+                                   border border-primary/20 focus:border-primary/40
+                                   text-sm text-foreground placeholder:text-muted-foreground
+                                   focus:outline-none transition-all"
+                      />
+                    </motion.div>
+                  </div>
                 )}
                 
                 {/* Close Button (Right) */}
@@ -208,7 +231,7 @@ const CollectionsModal = () => {
                   )}
 
                   {viewState === 'category-detail' && currentCategory && (
-                    <VaultEcommerce category={currentCategory} />
+                    <VaultEcommerce category={currentCategory} searchQuery={searchQuery} />
                   )}
                 </AnimatePresence>
               </div>

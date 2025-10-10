@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { ShoppingBag, Check } from "lucide-react";
+import { ShoppingBag, Heart, Package, Truck } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useModalStore } from "@/stores/modalStore";
+import { useWishlistStore } from "@/stores/wishlistStore";
 import { toast } from "sonner";
 
 interface Product {
@@ -22,8 +23,10 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addItem, getItemQuantity } = useCartStore();
+  const { toggleItem, isInWishlist } = useWishlistStore();
   const { openModal } = useModalStore();
   const inCart = getItemQuantity(product.id) > 0;
+  const inWishlist = isInWishlist(product.id);
 
   const displayPrice = typeof product.price === 'number' 
     ? `$${product.price.toLocaleString()}` 
@@ -67,6 +70,29 @@ const ProductCard = ({ product }: ProductCardProps) => {
     toast.success(`${product.name} added to cart`);
   };
 
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const price = typeof product.price === 'string' 
+      ? parseFloat(product.price.replace(/[^0-9.]/g, '')) || 0
+      : product.price;
+
+    toggleItem({
+      productId: product.id,
+      name: product.name,
+      price: price,
+      image: product.image,
+      category: product.category,
+      subcategory: product.subcategory || 'general'
+    });
+
+    toast.success(inWishlist ? 'Removed from wishlist' : 'Added to wishlist');
+  };
+
+  // Mock stock status (in a real app, this would come from product data)
+  const stockStatus = Math.random() > 0.2 ? 'in-stock' : 'low-stock';
+  const estimatedDelivery = '3-5 business days';
+
   return (
     <motion.div
       onClick={handleCardClick}
@@ -86,10 +112,34 @@ const ProductCard = ({ product }: ProductCardProps) => {
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        
+        {/* Wishlist Button */}
+        <motion.button
+          onClick={handleWishlistToggle}
+          className="absolute top-2 right-2 w-8 h-8 rounded-full 
+                     bg-background/80 backdrop-blur-sm border border-border/30
+                     flex items-center justify-center
+                     opacity-0 group-hover:opacity-100 transition-opacity"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Heart 
+            size={16} 
+            className={inWishlist ? "fill-primary text-primary" : "text-muted-foreground"} 
+          />
+        </motion.button>
+
+        {/* Stock Badge */}
+        {stockStatus === 'low-stock' && (
+          <div className="absolute top-2 left-2 px-2 py-1 rounded-md 
+                          bg-destructive/90 backdrop-blur-sm text-xs text-white font-medium">
+            Low Stock
+          </div>
+        )}
       </div>
 
       {/* Product Details */}
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {/* Title */}
         <h3 className="text-sm font-romania text-foreground line-clamp-1 tracking-wide">
           {product.name}
@@ -100,10 +150,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.description}
         </p>
 
-        {/* Price */}
-        <p className="text-sm font-sans font-semibold text-foreground pt-1">
-          {displayPrice}
-        </p>
+        {/* Price & Stock Info */}
+        <div className="flex items-center justify-between pt-0.5">
+          <p className="text-sm font-sans font-semibold text-foreground">
+            {displayPrice}
+          </p>
+          
+          {stockStatus === 'in-stock' && (
+            <div className="flex items-center gap-1 text-[10px] text-green-600">
+              <Package size={10} />
+              <span>In Stock</span>
+            </div>
+          )}
+        </div>
+
+        {/* Delivery Info */}
+        <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <Truck size={10} />
+          <span>{estimatedDelivery}</span>
+        </div>
       </div>
     </motion.div>
   );
