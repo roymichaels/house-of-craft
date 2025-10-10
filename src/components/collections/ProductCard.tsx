@@ -83,7 +83,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                       pointer-events-none rounded-2xl" />
 
       {/* Image Container */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10">
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-muted/30 to-muted/10">
         <motion.img
           src={product.image}
           alt={product.name}
