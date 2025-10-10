@@ -175,23 +175,36 @@ export function initSolarSystem(container: HTMLElement) {
       varying vec2 vUv;
       varying vec3 vNormal;
       varying vec3 vPosition;
-      
-      // Simple noise function
+
+      // Improved noise function
       float noise(vec3 p) {
         return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
       }
-      
+
+      // Fractal Brownian Motion for more organic patterns
+      float fbm(vec3 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        for(int i = 0; i < 4; i++) {
+          value += amplitude * noise(p);
+          p *= 2.0;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+
       void main() {
         vUv = uv;
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
-        
-        // Displacement for lava turbulence
+
+        // Enhanced displacement for more dramatic lava turbulence
         vec3 pos = position;
-        float displacement = noise(position * 2.0 + time * 0.1) * 0.15;
-        displacement += noise(position * 4.0 - time * 0.15) * 0.08;
+        float disp1 = fbm(position * 1.5 + time * 0.08);
+        float disp2 = fbm(position * 3.0 - time * 0.12);
+        float displacement = (disp1 * 0.3 + disp2 * 0.15) * 0.6;
         pos += normal * displacement;
-        
+
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
       }
     `,
@@ -204,41 +217,73 @@ export function initSolarSystem(container: HTMLElement) {
       varying vec2 vUv;
       varying vec3 vNormal;
       varying vec3 vPosition;
-      
+
       float noise(vec3 p) {
         return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
       }
-      
+
+      // Fractal Brownian Motion for complex patterns
+      float fbm(vec3 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * noise(p);
+          p *= 2.3;
+          amplitude *= 0.5;
+        }
+        return value;
+      }
+
       void main() {
-        // Fresnel effect
+        // Fresnel effect for edge glow
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 3.0);
-        
-        // Multi-layered noise for lava patterns
-        float noiseValue = noise(vPosition * 2.0 + time * 0.15);
-        noiseValue += noise(vPosition * 4.0 - time * 0.25) * 0.6;
-        noiseValue += noise(vPosition * 8.0 + time * 0.35) * 0.3;
-        noiseValue += noise(vPosition * 16.0 - time * 0.4) * 0.15;
-        noiseValue /= 2.05;
 
-        // Create more contrast
-        noiseValue = pow(noiseValue, 0.8);
+        // Create flowing lava patterns with multiple frequencies
+        vec3 flowDir1 = vPosition + vec3(time * 0.08, time * 0.05, 0.0);
+        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.1, time * 0.06);
 
-        // Color mixing with more distinct bands
+        float lava1 = fbm(flowDir1 * 1.8);
+        float lava2 = fbm(flowDir2 * 2.5);
+        float lava3 = noise(vPosition * 5.0 + time * 0.3);
+
+        // Combine patterns for turbulent lava effect
+        float noiseValue = lava1 * 0.5 + lava2 * 0.35 + lava3 * 0.15;
+
+        // Add swirling veins
+        float veins = abs(sin(lava1 * 10.0 + time * 0.5));
+        noiseValue = mix(noiseValue, veins, 0.2);
+
+        // Enhance contrast for more dramatic effect
+        noiseValue = pow(noiseValue, 0.7);
+        noiseValue = smoothstep(0.1, 0.9, noiseValue);
+
+        // Create dark spots (cooler lava crust)
+        float spots = fbm(vPosition * 3.0 + time * 0.02);
+        float darkSpots = step(0.7, spots);
+        noiseValue = mix(noiseValue * 0.3, noiseValue, darkSpots);
+
+        // Color mapping with more variation
         vec3 color;
-        if (noiseValue < 0.25) {
-          color = mix(colorDark, colorCool, noiseValue / 0.25);
-        } else if (noiseValue < 0.5) {
-          color = mix(colorCool, colorMid, (noiseValue - 0.25) / 0.25);
-        } else if (noiseValue < 0.75) {
-          color = mix(colorMid, colorHot, (noiseValue - 0.5) / 0.25);
+        if (noiseValue < 0.2) {
+          color = colorDark;
+        } else if (noiseValue < 0.4) {
+          color = mix(colorDark, colorCool, (noiseValue - 0.2) / 0.2);
+        } else if (noiseValue < 0.6) {
+          color = mix(colorCool, colorMid, (noiseValue - 0.4) / 0.2);
+        } else if (noiseValue < 0.8) {
+          color = mix(colorMid, colorHot, (noiseValue - 0.6) / 0.2);
         } else {
           color = colorHot;
         }
-        
-        // Add fresnel glow
-        color = mix(color, colorHot, fresnel * 0.6);
-        
+
+        // Add bright veins of flowing lava
+        float brightVeins = smoothstep(0.85, 0.95, noiseValue);
+        color = mix(color, colorHot * 1.3, brightVeins);
+
+        // Enhanced fresnel glow
+        color = mix(color, colorHot * 0.8, fresnel * 0.5);
+
         gl_FragColor = vec4(color, 1.0);
       }
     `
