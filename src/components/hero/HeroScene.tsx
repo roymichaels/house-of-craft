@@ -42,8 +42,8 @@ const HeroScene = ({
         className="w-full h-full"
       >
         <Suspense fallback={null}>
-          {/* Apollinean atmosphere - extended fog for unified temple */}
-          <fog attach="fog" args={['#000000', 10, 35]} />
+          {/* Apollinean atmosphere - extended fog for unified temple (dimmer) */}
+          <fog attach="fog" args={['#000000', 8, 30]} />
           
           <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />

@@ -96,7 +96,7 @@ const Objects = () => {
   const [timepieces, accessories, leatherGoods, apparel, homeRitual, printMedia] = categoryShowcase;
 
   return (
-    <section ref={sectionRef} className="w-full py-24 md:py-32 px-6 md:px-12">
+    <section ref={sectionRef} className="w-full pt-32 md:pt-40 pb-24 md:pb-32 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div

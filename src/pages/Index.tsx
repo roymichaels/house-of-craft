@@ -50,7 +50,7 @@ const Index = () => {
       setScrollProgress(progress);
 
       // Determine which section is active based on scroll position
-      if (progress < 0.20) {
+      if (progress < 0.25) {
         setMode('hero');
       } else if (progress < 0.50) {
         setMode('objects');
@@ -84,7 +84,7 @@ const Index = () => {
         <section id="hero" className="min-h-screen">
           <HeroSection />
         </section>
-        <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center">
+        <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center pt-20 md:pt-32">
           <Objects />
         </section>
         <section ref={doctrineRef} id="doctrine" className="min-h-screen flex items-center">

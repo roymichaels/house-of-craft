@@ -27,8 +27,8 @@ const HeroSection = () => {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* CSS Vignette - Depth enhancement */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)] pointer-events-none z-10" />
+      {/* CSS Vignette - Depth enhancement (darkened to dim orb) */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.75)_100%)] pointer-events-none z-10" />
 
       {/* Text Overlay */}
       <HeroOverlay

@@ -59,43 +59,64 @@ const HeroOverlay = ({
 
   return (
     <>
-      {/* Tagline - appears at 5-7s in lower third */}
+      {/* Tagline - appears at 4s in lower third */}
       <motion.div
-        className="absolute bottom-[25vh] md:bottom-[30vh] left-0 right-0 z-20 text-center px-6"
+        className="absolute bottom-[35vh] md:bottom-[42vh] left-0 right-0 z-20 text-center px-8"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 0.6, y: 0 }}
-        transition={{ delay: 5, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 4, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
-        <p className="text-sm md:text-base font-ancient-tulip tracking-wider max-w-3xl mx-auto text-balance">
+        <p className="text-sm md:text-base font-ancient-tulip tracking-wider max-w-lg md:max-w-3xl mx-auto text-balance">
           {subtitle}
         </p>
       </motion.div>
 
-      {/* The Summoning CTAs - Ceremonial Buttons - appears at 7-9s */}
+      {/* The Summoning CTAs - Ceremonial Buttons - appears at 5.5s */}
       <motion.div
-        className="absolute bottom-[8vh] md:bottom-[12vh] left-0 right-0 z-30 flex flex-col items-center gap-6 px-6"
+        className="absolute bottom-[15vh] md:bottom-[20vh] left-0 right-0 z-30 flex flex-col items-center gap-8 md:gap-12 px-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 7, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 5.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
         {/* Primary CTA - Explore the Instruments */}
         <div className="relative group">
+          {/* Initial pulse ring */}
           <motion.div
             className="absolute inset-0 rounded border-2 border-primary/60 pointer-events-none"
             initial={{ scale: 1, opacity: 1 }}
             animate={{ scale: 1.5, opacity: 0 }}
-            transition={{ delay: 8, duration: 1.5, ease: "easeOut" }}
+            transition={{ delay: 6.5, duration: 1.5, ease: "easeOut" }}
+          />
+
+          {/* Continuous breathing pulse */}
+          <motion.div
+            className="absolute inset-0 rounded pointer-events-none"
+            initial={{ scale: 1, opacity: 0 }}
+            animate={{ 
+              scale: [1, 1.05, 1],
+              opacity: [0, 0.3, 0]
+            }}
+            transition={{ 
+              delay: 6.5,
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 3,
+              ease: "easeInOut"
+            }}
+            style={{
+              border: '2px solid hsl(var(--primary))',
+            }}
           />
 
           <motion.a
             href="#objects"
             className="
-              relative px-12 py-4 rounded block
+              relative px-16 py-5 md:px-20 md:py-6 rounded block
               bg-primary text-primary-foreground
-              font-ancient text-sm md:text-base tracking-[0.2em] font-bold
-              shadow-[0_0_20px_hsl(var(--primary)/0.4)]
+              font-ancient text-base md:text-lg tracking-[0.2em] font-bold
+              shadow-[0_0_30px_hsl(var(--primary)/0.4)]
               hover:shadow-[0_0_40px_hsl(var(--primary)/0.7)]
               hover:brightness-110
               transition-all duration-500 ease-out
@@ -111,7 +132,7 @@ const HeroOverlay = ({
             "
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 7.5, duration: 0.6, ease: "easeOut" }}
+            transition={{ delay: 6, duration: 0.6, ease: "easeOut" }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -122,11 +143,11 @@ const HeroOverlay = ({
         {/* Secondary CTA - Explore the Philosophy */}
         <motion.a
           href="#doctrine"
-          className="text-xs md:text-sm font-ancient-tulip text-muted-foreground/70 tracking-wider
+          className="text-xs font-ancient-tulip text-muted-foreground/50 tracking-wider
                      hover:text-primary transition-colors duration-300 underline decoration-dotted"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 8, duration: 1 }}
+          transition={{ delay: 7, duration: 1 }}
         >
           Explore the Philosophy
         </motion.a>
