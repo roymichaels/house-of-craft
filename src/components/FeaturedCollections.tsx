@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import watchesImage from "@/assets/collection-watches.jpg";
 import tailoringImage from "@/assets/collection-tailoring.jpg";
 import leatherImage from "@/assets/collection-leather.jpg";
@@ -26,22 +27,36 @@ const collections = [
 ];
 
 const FeaturedCollections = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
+
   return (
-    <section className="py-24 md:py-32 container mx-auto px-6">
-      <div className="mb-16 text-center">
+    <div className="py-24 md:py-32 container mx-auto px-6 w-full" ref={ref}>
+      <motion.div 
+        className="mb-16 text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <h2 className="text-4xl md:text-5xl font-serif mb-4">Our Collections</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Each piece tells a story of precision, artistry, and timeless design
         </p>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {collections.map((collection, index) => (
-          <Link
+          <motion.a
             key={collection.title}
-            to={collection.path}
+            href={collection.path}
             className="group relative overflow-hidden rounded-sm aspect-[4/5] bg-card"
-            style={{ animationDelay: `${index * 100}ms` }}
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ 
+              duration: 0.8, 
+              delay: index * 0.15,
+              ease: [0.16, 1, 0.3, 1]
+            }}
           >
             {/* Image */}
             <div className="absolute inset-0 grain">
@@ -64,10 +79,10 @@ const FeaturedCollections = () => {
 
             {/* Hover Border Effect */}
             <div className="absolute inset-0 border-2 border-primary/0 group-hover:border-primary/20 transition-colors duration-500 pointer-events-none" />
-          </Link>
+          </motion.a>
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 

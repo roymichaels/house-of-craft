@@ -9,10 +9,18 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      <HeroSection />
-      <FeaturedCollections />
-      <TrustSection />
-      <Footer />
+      <section id="hero" className="min-h-screen">
+        <HeroSection />
+      </section>
+      <section id="collections" className="min-h-screen flex items-center">
+        <FeaturedCollections />
+      </section>
+      <section id="trust" className="min-h-screen flex items-center">
+        <TrustSection />
+      </section>
+      <section id="footer">
+        <Footer />
+      </section>
       <EmailCaptureModal />
     </div>
   );

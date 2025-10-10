@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
 import { X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -10,11 +9,21 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const navItems = [
-    { name: "Collections", path: "/collections" },
-    { name: "Stories", path: "/stories" },
-    { name: "The House", path: "/about" },
-    { name: "Concierge", path: "/concierge" },
+    { name: "Collections", scrollTo: "collections" },
+    { name: "Stories", scrollTo: "trust" },
+    { name: "The House", scrollTo: "footer" },
+    { name: "Concierge", scrollTo: "footer" },
   ];
+
+  const handleNavClick = (scrollTo: string) => {
+    onClose();
+    setTimeout(() => {
+      const element = document.getElementById(scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 300);
+  };
 
   return (
     <AnimatePresence>
@@ -51,7 +60,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             <nav className="flex flex-col items-center gap-8">
               {navItems.map((item, index) => (
                 <motion.div
-                  key={item.path}
+                  key={item.scrollTo}
                   initial={{ opacity: 0, x: -100 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
@@ -60,15 +69,14 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
-                  <Link
-                    to={item.path}
-                    onClick={onClose}
+                  <button
+                    onClick={() => handleNavClick(item.scrollTo)}
                     className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-ancient-gold/70 
                                transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
                                hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
                   >
                     {item.name}
-                  </Link>
+                  </button>
                 </motion.div>
               ))}
 
@@ -83,16 +91,15 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 }}
                 className="mt-8"
               >
-                <Link to="/auth" onClick={onClose}>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10"
-                  >
-                    <User className="h-5 w-5" />
-                    Sign In
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10"
+                  onClick={onClose}
+                >
+                  <User className="h-5 w-5" />
+                  Sign In
+                </Button>
               </motion.div>
             </nav>
           </motion.div>
