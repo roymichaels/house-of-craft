@@ -35,7 +35,7 @@ const Objects = () => {
   ];
 
   return (
-    <section ref={ref} className="w-full py-32 px-6 bg-card relative overflow-hidden">
+    <section ref={ref} className="w-full py-16 px-6 bg-card relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div

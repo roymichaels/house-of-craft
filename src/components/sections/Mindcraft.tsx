@@ -30,7 +30,7 @@ const Mindcraft = () => {
   ];
 
   return (
-    <section ref={ref} className="w-full py-32 px-6 bg-background relative overflow-hidden grain">
+    <section ref={ref} className="w-full py-16 px-6 bg-background relative overflow-hidden grain">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background opacity-50" />
       
