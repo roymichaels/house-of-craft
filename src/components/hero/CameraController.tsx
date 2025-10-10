@@ -75,18 +75,33 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       }
     } else if (introComplete.current) {
       // Scroll-based zoom and perspective shift for hero mode
-      if (mode === 'hero' && scrollProgress < 0.2) {
-        // Zoom in as user scrolls (0-20% scroll range)
-        const scrollZoom = scrollProgress * 5; // 0 to 1 over first 20% of scroll
-        const zoomAmount = scrollZoom * 2; // Zoom in by 2 units max
-        const perspectiveShift = scrollZoom * 0.5; // Slight upward tilt
+      if (mode === 'hero') {
+        // Smooth zoom throughout the entire hero section (0-15% scroll range)
+        const heroScrollProgress = Math.min(scrollProgress / 0.15, 1); // Normalize to 0-1
+        const zoomAmount = heroScrollProgress * 2.5; // Zoom in by 2.5 units max
+        const perspectiveShift = heroScrollProgress * 0.8; // Upward camera tilt
+        const fovShift = heroScrollProgress * 8; // FOV shift for dramatic effect
         
-        camera.position.z = position.z - zoomAmount;
-        camera.position.y = position.y + perspectiveShift;
+        // Smooth easing function for luxury feel
+        const easeInOutCubic = (t: number) => 
+          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         
-        // Adjust FOV for dramatic zoom effect
+        const easedProgress = easeInOutCubic(heroScrollProgress);
+        
+        // Apply smooth camera transformations
+        const targetPos = new Vector3(
+          targetPosition.current.x,
+          targetPosition.current.y + (perspectiveShift * easedProgress),
+          targetPosition.current.z - (zoomAmount * easedProgress)
+        );
+        
+        camera.position.lerp(targetPos, 0.1); // Smooth lerp for luxury feel
+        camera.lookAt(targetLookAt.current);
+        
+        // Adjust FOV for cinematic zoom effect
         if (camera instanceof PerspectiveCamera) {
-          camera.fov = MathUtils.lerp(50, 45, scrollZoom);
+          const targetFovValue = targetFov.current - (fovShift * easedProgress);
+          camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.08);
           camera.updateProjectionMatrix();
         }
       } else {
