@@ -25,10 +25,10 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           </motion.h1>
         </div>
 
-        {/* Bottom Docked Container */}
-        <div className="w-full pointer-events-auto">
+        {/* Bottom Docked Container - Fixed to Bottom */}
+        <div className="fixed bottom-0 left-0 right-0 w-full pointer-events-auto z-30">
           <motion.div
-            className="max-w-6xl mx-auto px-6 md:px-8 py-8 md:py-10 mb-8 md:mb-12
+            className="w-full px-6 md:px-8 py-8 md:py-10
                        bg-black/20 backdrop-blur-md
                        border-t border-ancient-gold/20
                        shadow-[0_-20px_60px_rgba(0,0,0,0.5)]"
