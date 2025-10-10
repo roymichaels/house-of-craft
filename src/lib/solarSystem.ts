@@ -66,10 +66,13 @@ const DWARF_PLANETS_DATA = [
 ];
 
 export function initSolarSystem(container: HTMLElement) {
+  console.log('🌌 Initializing Solar System...');
+  
   // Scene Setup
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000814);
-  scene.fog = new THREE.Fog(0x000814, 180, 250);
+  // Remove fog for now to debug visibility
+  // scene.fog = new THREE.Fog(0x000814, 300, 500);
 
   // Camera
   camera = new THREE.PerspectiveCamera(
@@ -78,7 +81,9 @@ export function initSolarSystem(container: HTMLElement) {
     0.1,
     1000
   );
-  camera.position.set(0, 50, 120);
+  camera.position.set(0, 20, 50);
+  camera.lookAt(0, 0, 0);
+  console.log('📷 Camera position:', camera.position);
 
   // Renderer
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -87,6 +92,7 @@ export function initSolarSystem(container: HTMLElement) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.8;
   container.appendChild(renderer.domElement);
+  console.log('🎨 Renderer initialized and appended to container');
 
   // Controls
   controls = new OrbitControls(camera, renderer.domElement);
@@ -96,13 +102,14 @@ export function initSolarSystem(container: HTMLElement) {
   controls.maxDistance = 300;
   controls.maxPolarAngle = Math.PI / 1.5;
 
-  // Lighting
-  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
+  // Lighting - Much brighter
+  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.4, 0.4, 0.4), 1.5);
   scene.add(ambientLight);
 
-  const pointLight = new THREE.PointLight(new THREE.Color(1.0, 1.0, 1.0), 10.0, 1000, 0.5);
+  const pointLight = new THREE.PointLight(new THREE.Color(1.0, 1.0, 1.0), 50.0, 1000, 2);
   pointLight.position.set(0, 0, 0);
   scene.add(pointLight);
+  console.log('💡 Lighting added');
 
   // Starfield - Two layered spheres
   createStarfieldSpheres();
@@ -110,13 +117,16 @@ export function initSolarSystem(container: HTMLElement) {
   // Distant point stars
   createDistantStars();
 
-  // Sun
-  const sunMaterial = new THREE.MeshBasicMaterial({
+  // Sun - Bigger and brighter (use MeshStandardMaterial for emissive)
+  const sunMaterial = new THREE.MeshStandardMaterial({
     color: new THREE.Color(1.5, 1.2, 0.8),
+    emissive: new THREE.Color(1.5, 1.2, 0.8),
+    emissiveIntensity: 2.0,
     toneMapped: false,
   });
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(5, 64, 64), sunMaterial);
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(8, 64, 64), sunMaterial);
   scene.add(sun);
+  console.log('☀️ Sun created');
 
   // Lens flare
   const lensflare = new Lensflare();
@@ -148,9 +158,9 @@ export function initSolarSystem(container: HTMLElement) {
 
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.5,  // strength
+    1.0,  // strength - increased
     0.6,  // radius
-    0.05  // threshold
+    0.01  // threshold - lowered for more glow
   );
   composer.addPass(bloomPass);
 
@@ -158,8 +168,20 @@ export function initSolarSystem(container: HTMLElement) {
   composer.addPass(outputPass);
 
   // Animation loop
+  let frameCount = 0;
+  let lastFpsLog = Date.now();
+  
   function animate() {
     animationId = requestAnimationFrame(animate);
+    
+    // FPS logging every second
+    frameCount++;
+    const now = Date.now();
+    if (now - lastFpsLog > 1000) {
+      console.log(`🎬 Animation running - FPS: ${frameCount}, Objects in scene: ${scene.children.length}`);
+      frameCount = 0;
+      lastFpsLog = now;
+    }
     
     // Rotate sun
     sun.rotation.y += 0.001;
@@ -196,7 +218,14 @@ export function initSolarSystem(container: HTMLElement) {
     });
     
     controls.update();
-    composer.render();
+    
+    // Use direct renderer as fallback if composer fails
+    try {
+      composer.render();
+    } catch (error) {
+      console.error('Composer error, using fallback:', error);
+      renderer.render(scene, camera);
+    }
   }
   
   animate();
@@ -218,8 +247,8 @@ export function initSolarSystem(container: HTMLElement) {
 }
 
 function createStarfieldSpheres() {
-  // Outer starfield sphere
-  const outerStarfieldGeometry = new THREE.SphereGeometry(200, 64, 64);
+  // Outer starfield sphere - much larger so camera is inside
+  const outerStarfieldGeometry = new THREE.SphereGeometry(400, 64, 64);
   const outerStarfieldMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(1.2, 1.2, 1.2),
     side: THREE.BackSide,
@@ -229,8 +258,8 @@ function createStarfieldSpheres() {
   const outerStarfield = new THREE.Mesh(outerStarfieldGeometry, outerStarfieldMaterial);
   scene.add(outerStarfield);
   
-  // Inner atmospheric sphere
-  const innerStarfieldGeometry = new THREE.SphereGeometry(190, 64, 64);
+  // Inner atmospheric sphere - also larger
+  const innerStarfieldGeometry = new THREE.SphereGeometry(390, 64, 64);
   const innerStarfieldMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(0.8, 0.9, 1.0),
     side: THREE.BackSide,
@@ -239,6 +268,7 @@ function createStarfieldSpheres() {
   });
   const innerStarfield = new THREE.Mesh(innerStarfieldGeometry, innerStarfieldMaterial);
   scene.add(innerStarfield);
+  console.log('⭐ Starfield spheres created');
 }
 
 function createDistantStars() {

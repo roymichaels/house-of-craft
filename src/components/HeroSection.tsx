@@ -26,7 +26,7 @@ const HeroSection = () => {
       <Navigation />
       
       {/* Vanilla Three.js container */}
-      <div ref={containerRef} className="fixed inset-0 -z-10" />
+      <div ref={containerRef} className="fixed inset-0 z-0" />
 
       <div className="scene-vignette" />
       
