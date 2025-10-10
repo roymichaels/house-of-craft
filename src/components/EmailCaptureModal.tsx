@@ -13,13 +13,21 @@ const EmailCaptureModal = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    // Migrate old storage keys
+    const oldHouseKey = localStorage.getItem("house-visited");
+    if (oldHouseKey) {
+      localStorage.removeItem("house-visited");
+    }
+
     // Check if user has already signed up or dismissed
     const hasSignedUp = localStorage.getItem("apollon_email_signup");
     const hasDismissed = sessionStorage.getItem("apollon_email_dismissed");
+    const hasEnteredRitual = localStorage.getItem("apollon-visited");
 
-    if (!hasSignedUp && !hasDismissed) {
-      // Show modal after 3 seconds
-      const timer = setTimeout(() => setIsOpen(true), 3000);
+    // Only show if user has completed ritual entry, hasn't signed up, and hasn't dismissed
+    if (hasEnteredRitual && !hasSignedUp && !hasDismissed) {
+      // Show modal after 5 seconds (gives time for ritual entry to complete)
+      const timer = setTimeout(() => setIsOpen(true), 5000);
       return () => clearTimeout(timer);
     }
   }, []);
