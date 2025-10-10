@@ -47,12 +47,24 @@ const HeroScene = ({
           <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
           
-          {/* Conditional chamber rendering */}
-          {mode === 'hero' && <ChamberAtrium lightColor={lightColor} />}
-          {mode === 'mindcraft' && <ChamberMastery lightColor={lightColor} accentColor={accentColor} />}
-          {mode === 'objects' && <ChamberVault lightColor={lightColor} />}
-          {mode === 'doctrine' && <ChamberDoctrine lightColor={lightColor} />}
-          {mode === 'circle' && <ChamberInner lightColor={lightColor} />}
+          {/* Unified Temple - All chambers always rendered in 3D space */}
+          <group name="apollon-temple">
+            <group position={[0, 0, 0]}>
+              <ChamberAtrium lightColor={lightColor} />
+            </group>
+            <group position={[15, 2, -5]}>
+              <ChamberMastery lightColor={lightColor} accentColor={accentColor} />
+            </group>
+            <group position={[-12, -1, -10]}>
+              <ChamberVault lightColor={lightColor} />
+            </group>
+            <group position={[-15, 3, 5]}>
+              <ChamberDoctrine lightColor={lightColor} />
+            </group>
+            <group position={[0, 10, -8]}>
+              <ChamberInner lightColor={lightColor} />
+            </group>
+          </group>
           
           <Environment preset="city" />
           

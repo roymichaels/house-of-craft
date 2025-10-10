@@ -1,8 +1,9 @@
 import { useRef, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, Vector3 } from "three";
+import { PerspectiveCamera, Vector3, MathUtils } from "three";
 import { SceneMode } from "@/contexts/SceneContext";
 import { chamberPaths } from "@/lib/cameraPaths";
+import { useModalStore } from "@/stores/modalStore";
 
 interface CameraControllerProps {
   mode: SceneMode;
@@ -12,11 +13,13 @@ interface CameraControllerProps {
 
 const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
   const { camera, size } = useThree();
+  const activeModal = useModalStore(state => state.activeModal);
   const mousePosition = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
   const targetPosition = useRef(new Vector3());
   const targetLookAt = useRef(new Vector3());
   const targetFov = useRef(50);
+  const targetRoll = useRef(0);
   const introComplete = useRef(false);
 
   useEffect(() => {
@@ -45,9 +48,15 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
     targetPosition.current.set(...path.position);
     targetLookAt.current.set(...path.lookAt);
     targetFov.current = path.fov;
+    targetRoll.current = path.roll;
   }, [mode]);
 
   useFrame((state) => {
+    // Disable camera movement when modal is active
+    if (activeModal !== 'none') {
+      return;
+    }
+
     // Extended intro dolly animation (0-5 seconds) with focus pull
     const elapsed = state.clock.getElapsedTime();
     if (elapsed < 5 && !introComplete.current && camera instanceof PerspectiveCamera) {
@@ -63,28 +72,33 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
         introComplete.current = true;
       }
     } else if (introComplete.current) {
-      // Chamber navigation - smooth lerp
-      camera.position.lerp(targetPosition.current, 0.02);
+      // Cinematic camera transitions - smooth lerp with easing
+      const lerpSpeed = 0.025;
+      camera.position.lerp(targetPosition.current, lerpSpeed);
       
       // Smooth lookAt transition
       const currentLookAt = new Vector3();
       camera.getWorldDirection(currentLookAt);
       currentLookAt.add(camera.position);
-      currentLookAt.lerp(targetLookAt.current, 0.02);
+      currentLookAt.lerp(targetLookAt.current, lerpSpeed);
       camera.lookAt(currentLookAt);
       
-      // FOV transition
+      // FOV transition with smooth easing
       if (camera instanceof PerspectiveCamera) {
-        camera.fov += (targetFov.current - camera.fov) * 0.02;
+        camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
         camera.updateProjectionMatrix();
       }
+
+      // Camera roll (z-axis rotation) for cinematic effect
+      const targetRollRad = (targetRoll.current * Math.PI) / 180;
+      camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
       
-      // Parallax effect - subtle camera rotation based on mouse (reduced during transitions)
-      const parallaxStrength = 0.03;
+      // Parallax effect - subtle camera rotation based on mouse (reduced strength)
+      const parallaxStrength = 0.015;
       targetRotation.current.y = mousePosition.current.x * parallaxStrength;
       targetRotation.current.x = mousePosition.current.y * parallaxStrength;
 
-      // Smooth lerp interpolation
+      // Smooth lerp interpolation for parallax
       camera.rotation.y += (targetRotation.current.y - camera.rotation.y) * 0.03;
       camera.rotation.x += (targetRotation.current.x - camera.rotation.x) * 0.03;
     }
