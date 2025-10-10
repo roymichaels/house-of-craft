@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment, Stars } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette, DepthOfField } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import WatchModel from "./WatchModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
@@ -74,11 +74,6 @@ const HeroScene = ({
               mipmapBlur
             />
             <Vignette offset={0.5} darkness={0.6} />
-            <DepthOfField 
-              focusDistance={0.01} 
-              focalLength={0.05} 
-              bokehScale={2}
-            />
           </EffectComposer>
         </Suspense>
       </Canvas>
