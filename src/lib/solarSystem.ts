@@ -12,6 +12,7 @@ let controls: OrbitControls;
 let composer: EffectComposer;
 let animationId: number;
 let isInitialized = false;
+let sunLayers: any = null;
 
 interface CelestialBody {
   mesh: THREE.Mesh;
@@ -156,15 +157,169 @@ export function initSolarSystem(container: HTMLElement) {
   createStarfield();
   
   // ============================================================================
-  // SUN
+  // SUN - Realistic Pulsating Lava
   // ============================================================================
-  const sunGeometry = new THREE.SphereGeometry(5, 64, 64);
-  const sunMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.5, 1.2, 0.8),
+  const sunGroup = new THREE.Group();
+  
+  // Custom lava shader
+  const lavaShader = {
+    uniforms: {
+      time: { value: 0 },
+      colorHot: { value: new THREE.Color(0xFFFFFF) },
+      colorMid: { value: new THREE.Color(0xFFD700) },
+      colorCool: { value: new THREE.Color(0xFF4500) },
+      colorDark: { value: new THREE.Color(0x8B0000) }
+    },
+    vertexShader: `
+      uniform float time;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      
+      // Simple noise function
+      float noise(vec3 p) {
+        return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
+      }
+      
+      void main() {
+        vUv = uv;
+        vNormal = normalize(normalMatrix * normal);
+        vPosition = position;
+        
+        // Displacement for lava turbulence
+        vec3 pos = position;
+        float displacement = noise(position * 2.0 + time * 0.1) * 0.15;
+        displacement += noise(position * 4.0 - time * 0.15) * 0.08;
+        pos += normal * displacement;
+        
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float time;
+      uniform vec3 colorHot;
+      uniform vec3 colorMid;
+      uniform vec3 colorCool;
+      uniform vec3 colorDark;
+      varying vec2 vUv;
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      
+      float noise(vec3 p) {
+        return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
+      }
+      
+      void main() {
+        // Fresnel effect
+        vec3 viewDir = normalize(cameraPosition - vPosition);
+        float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 3.0);
+        
+        // Animated noise for lava patterns
+        float noiseValue = noise(vPosition * 3.0 + time * 0.1);
+        noiseValue += noise(vPosition * 6.0 - time * 0.2) * 0.5;
+        noiseValue += noise(vPosition * 12.0 + time * 0.3) * 0.25;
+        noiseValue /= 1.75;
+        
+        // Dark spots (sunspots)
+        float spots = step(0.65, noiseValue);
+        
+        // Color mixing based on noise
+        vec3 color;
+        if (noiseValue < 0.3) {
+          color = mix(colorDark, colorCool, noiseValue / 0.3);
+        } else if (noiseValue < 0.6) {
+          color = mix(colorCool, colorMid, (noiseValue - 0.3) / 0.3);
+        } else {
+          color = mix(colorMid, colorHot, (noiseValue - 0.6) / 0.4);
+        }
+        
+        // Add fresnel glow
+        color = mix(color, colorHot, fresnel * 0.6);
+        
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `
+  };
+  
+  // Core - brightest white-yellow center
+  const coreGeometry = new THREE.SphereGeometry(4.5, 64, 64);
+  const coreMaterial = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(1.5, 1.5, 1.5),
     toneMapped: false
   });
-  const sun = new THREE.Mesh(sunGeometry, sunMaterial);
-  scene.add(sun);
+  const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
+  sunGroup.add(sunCore);
+  
+  // Surface layer - lava with shader
+  const surfaceGeometry = new THREE.SphereGeometry(5.0, 128, 128);
+  const surfaceMaterial = new THREE.ShaderMaterial({
+    uniforms: lavaShader.uniforms,
+    vertexShader: lavaShader.vertexShader,
+    fragmentShader: lavaShader.fragmentShader
+  });
+  const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+  sunGroup.add(sunSurface);
+  
+  // Chromosphere - red transparent layer
+  const chromoGeometry = new THREE.SphereGeometry(5.5, 48, 48);
+  const chromoMaterial = new THREE.MeshBasicMaterial({
+    color: 0xFF3300,
+    transparent: true,
+    opacity: 0.4,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const chromosphere = new THREE.Mesh(chromoGeometry, chromoMaterial);
+  sunGroup.add(chromosphere);
+  
+  // Corona 1 - orange glow
+  const corona1Geometry = new THREE.SphereGeometry(6.0, 32, 32);
+  const corona1Material = new THREE.MeshBasicMaterial({
+    color: 0xFF6600,
+    transparent: true,
+    opacity: 0.3,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const corona1 = new THREE.Mesh(corona1Geometry, corona1Material);
+  sunGroup.add(corona1);
+  
+  // Corona 2 - yellow glow
+  const corona2Geometry = new THREE.SphereGeometry(7.0, 32, 32);
+  const corona2Material = new THREE.MeshBasicMaterial({
+    color: 0xFFAA00,
+    transparent: true,
+    opacity: 0.2,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const corona2 = new THREE.Mesh(corona2Geometry, corona2Material);
+  sunGroup.add(corona2);
+  
+  // Outer corona - soft yellow-white
+  const corona3Geometry = new THREE.SphereGeometry(8.5, 32, 32);
+  const corona3Material = new THREE.MeshBasicMaterial({
+    color: 0xFFDD88,
+    transparent: true,
+    opacity: 0.15,
+    side: THREE.BackSide,
+    blending: THREE.AdditiveBlending
+  });
+  const corona3 = new THREE.Mesh(corona3Geometry, corona3Material);
+  sunGroup.add(corona3);
+  
+  scene.add(sunGroup);
+  
+  // Store references for animation
+  sunLayers = {
+    core: sunCore,
+    surface: sunSurface,
+    chromosphere,
+    corona1,
+    corona2,
+    corona3,
+    material: surfaceMaterial
+  };
   
   // ============================================================================
   // ASTEROID BELT
@@ -247,8 +402,37 @@ export function initSolarSystem(container: HTMLElement) {
   function animate() {
     animationId = requestAnimationFrame(animate);
     
-    // Rotate sun
-    sun.rotation.y += 0.001;
+    const time = performance.now() * 0.001; // Time in seconds
+    
+    // Animate sun - pulsating lava effect
+    if (sunLayers) {
+      // Update shader time uniform
+      sunLayers.material.uniforms.time.value = time;
+      
+      // Pulsating scale - breathing effect
+      const pulseScale = 1.0 + Math.sin(time * 0.5) * 0.02 + Math.sin(time * 1.2) * 0.01;
+      sunLayers.core.scale.setScalar(pulseScale);
+      sunLayers.surface.scale.setScalar(pulseScale);
+      
+      // Multi-speed rotation for lava flow effect
+      sunLayers.surface.rotation.y += 0.0008;
+      sunLayers.surface.rotation.x += 0.0002;
+      sunLayers.chromosphere.rotation.y -= 0.0006;
+      
+      // Pulsating glow on corona layers
+      const glowPulse1 = 0.3 + Math.sin(time * 0.8) * 0.1;
+      const glowPulse2 = 0.2 + Math.sin(time * 1.1) * 0.08;
+      const glowPulse3 = 0.15 + Math.sin(time * 0.6) * 0.05;
+      
+      sunLayers.corona1.material.opacity = glowPulse1;
+      sunLayers.corona2.material.opacity = glowPulse2;
+      sunLayers.corona3.material.opacity = glowPulse3;
+      
+      // Slight rotation variation on coronas
+      sunLayers.corona1.rotation.y += 0.0003;
+      sunLayers.corona2.rotation.y -= 0.0002;
+      sunLayers.corona3.rotation.y += 0.0001;
+    }
     
     // Update planets
     celestialBodies.forEach(body => {
