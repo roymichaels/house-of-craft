@@ -6,13 +6,6 @@ import MenuDrawer from "./MenuDrawer";
 
 const Navigation = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const location = useLocation();
-  const isHomepage = location.pathname === "/";
-  const { scrollYProgress } = useScroll();
-  
-  // Navigation appears after scrolling on homepage, always visible on other pages
-  const navOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
-  const shouldShowNav = !isHomepage;
 
   return (
     <>
@@ -28,7 +21,6 @@ const Navigation = () => {
                    opacity-60 hover:opacity-100 hover:border-ancient-gold/60
                    transition-all duration-300
                    focus:outline-none focus:ring-2 focus:ring-ancient-gold/50"
-        style={{ opacity: shouldShowNav ? 1 : navOpacity }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Open menu"
@@ -36,11 +28,8 @@ const Navigation = () => {
         <Menu className="h-5 w-5 text-ancient-gold" />
       </motion.button>
 
-      {/* Logo - appears after scroll on homepage, always visible on other pages */}
-      <motion.div
-        className="fixed top-8 left-12 md:left-16 z-40"
-        style={{ opacity: shouldShowNav ? 1 : navOpacity }}
-      >
+      {/* Logo */}
+      <motion.div className="fixed top-8 left-12 md:left-16 z-40">
         <Link 
           to="/" 
           className="text-xl font-ancient tracking-wider text-ancient-gold 
