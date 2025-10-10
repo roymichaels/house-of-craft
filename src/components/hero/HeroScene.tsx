@@ -1,10 +1,10 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { Environment, Stars, Points } from "@react-three/drei";
+import { Environment, Stars } from "@react-three/drei";
 import OrbModel from "./OrbModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
-import * as THREE from "three";
+import AmbientDust from "./AmbientDust";
 
 interface HeroSceneProps {
   rotationSpeed: number;
@@ -54,26 +54,7 @@ const HeroScene = ({
           />
 
           {/* Ambient dust particles */}
-          <Points limit={250}>
-            <pointsMaterial
-              size={0.02}
-              color="#C4A661"
-              transparent
-              opacity={0.3}
-              sizeAttenuation
-              blending={THREE.AdditiveBlending}
-            />
-            {Array.from({ length: 250 }).map((_, i) => (
-              <point
-                key={i}
-                position={[
-                  (Math.random() - 0.5) * 20,
-                  (Math.random() - 0.5) * 20,
-                  (Math.random() - 0.5) * 20,
-                ]}
-              />
-            ))}
-          </Points>
+          <AmbientDust />
         </Suspense>
       </Canvas>
     </div>
