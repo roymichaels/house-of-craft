@@ -101,9 +101,9 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
       />
       
       {/* Ambient temple glow - unified space */}
-      <ambientLight intensity={0.45} color="#c9b896" />
+      <ambientLight intensity={1.2} color="#d4af37" />
       <hemisphereLight
-        args={["#d4af37", "#1a1a1a", 0.35]}
+        args={["#d4af37", "#6b5d4a", 0.8]}
       />
       
       {/* Rim light - accent separation */}

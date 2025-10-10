@@ -152,6 +152,23 @@ const Sun = ({ radius }: SunProps) => {
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
+      {/* Powerful point light to illuminate planets */}
+      <pointLight
+        position={[0, 0, 0]}
+        color="#ffd966"
+        intensity={15}
+        distance={100}
+        decay={1.5}
+      />
+
+      {/* Additional fill light for better planet visibility */}
+      <pointLight
+        position={[0, 0, 0]}
+        color="#d4af37"
+        intensity={10}
+        distance={150}
+        decay={1.2}
+      />
     </group>
   );
 };

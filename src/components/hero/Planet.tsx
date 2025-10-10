@@ -67,11 +67,11 @@ const Planet = ({
         <sphereGeometry args={[radius, 64, 64]} />
         <meshStandardMaterial
           color={color}
-          emissive={emissive || "#000000"}
-          emissiveIntensity={emissive ? 0.15 : 0}
-          roughness={0.7}
-          metalness={0.3}
-          envMapIntensity={1.2}
+          emissive={emissive || color}
+          emissiveIntensity={emissive ? 0.6 : 0.4}
+          roughness={0.5}
+          metalness={0.4}
+          envMapIntensity={1.5}
         />
       </mesh>
 
