@@ -1,8 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import HeroSeal from "./HeroSeal";
 import HeroLogo from "./HeroLogo";
-import ScrollIndicator from "./ScrollIndicator";
 import { useTitleReveal } from "@/hooks/useTitleReveal";
 
 interface HeroOverlayProps {
@@ -107,29 +105,6 @@ const HeroOverlay = ({
         </motion.div>
       )}
 
-      {/* CTA - appears later */}
-      <motion.div
-        className="absolute bottom-[16vh] md:bottom-[18vh] left-1/2 -translate-x-1/2 z-20"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 7, duration: 1.2, ease: "easeOut" }}
-        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
-      >
-        {ctaStyle === "seal" ? (
-          <HeroSeal ctaLink={ctaLink} />
-        ) : (
-          <a
-            href={ctaLink}
-            className="text-sm tracking-widest opacity-70 hover:opacity-100 
-                       transition-opacity duration-300 font-sans pointer-events-auto"
-          >
-            Enter
-          </a>
-        )}
-      </motion.div>
-
-      {/* Scroll Indicator */}
-      <ScrollIndicator />
     </>
   );
 };

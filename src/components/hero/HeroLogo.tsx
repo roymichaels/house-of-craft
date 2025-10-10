@@ -23,7 +23,7 @@ const HeroLogo = ({ logoText, show }: HeroLogoProps) => {
 
   return (
     <motion.div
-      className="absolute top-8 left-[8%] md:left-[10%] z-20 flex flex-col gap-1 group cursor-pointer"
+      className="absolute top-8 left-1/2 -translate-x-1/2 md:left-[10%] md:translate-x-0 z-20 flex flex-col gap-1 group cursor-pointer"
       initial={{ opacity: 0, y: -30, scale: 0.9 }}
       animate={{ 
         opacity: 1, 
