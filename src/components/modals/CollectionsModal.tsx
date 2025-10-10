@@ -12,20 +12,23 @@ import { GoldenIcon } from "@/components/ui/GoldenIcon";
 type ViewState = 'categories' | 'category-detail';
 
 const CollectionsModal = () => {
-  const { activeModal, closeModal } = useModalStore();
+  const { activeModal, closeModal, selectedCategory } = useModalStore();
   const isOpen = activeModal === 'collections';
 
   // State management
   const [viewState, setViewState] = useState<ViewState>('categories');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  // Reset state when modal closes
+  // Handle initial category selection from VaultTeaser or reset state when modal closes
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen && selectedCategory) {
+      setActiveCategory(selectedCategory);
+      setViewState('category-detail');
+    } else if (!isOpen) {
       setViewState('categories');
       setActiveCategory(null);
     }
-  }, [isOpen]);
+  }, [isOpen, selectedCategory]);
 
   // Keyboard navigation
   useEffect(() => {
