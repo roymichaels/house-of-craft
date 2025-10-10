@@ -3,6 +3,7 @@ import { useScroll } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import HeroScene from "@/components/hero/HeroScene";
+import MapBackground from "@/components/MapBackground";
 import Mindcraft from "@/components/sections/Mindcraft";
 import Objects from "@/components/sections/Objects";
 import Doctrine from "@/components/sections/Doctrine";
@@ -74,13 +75,16 @@ const Index = () => {
       <CursorGlow />
       <VoiceOfHouse />
       
-      {/* Persistent 3D Background */}
-      <div className="fixed inset-0 z-0">
+      {/* 3D Map Background */}
+      <MapBackground />
+      
+      {/* 3D Scene Layer */}
+      <div className="fixed inset-0 z-[2] pointer-events-none">
         <HeroScene {...config} />
       </div>
 
       {/* Content overlays */}
-      <div className="relative z-10">
+      <div className="relative z-[3]">
         <Navigation />
         <section id="hero" className="min-h-screen">
           <HeroSection />
