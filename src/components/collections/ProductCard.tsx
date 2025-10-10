@@ -86,7 +86,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </h3>
         
         {/* Subtitle/Description */}
-        <p className="text-xs font-ancient-tulip text-muted-foreground line-clamp-1">
+        <p className="text-xs font-sans text-muted-foreground line-clamp-1">
           {product.description}
         </p>
 
