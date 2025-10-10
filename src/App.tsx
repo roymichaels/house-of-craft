@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import CheckoutCancel from "./pages/CheckoutCancel";
 import CartModal from "./components/modals/CartModal";
+import DoctrineModal from "./components/modals/DoctrineModal";
+import SanctumModal from "./components/modals/SanctumModal";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,8 @@ const App = () => (
       <BrowserRouter>
         <AnimatedRoutes />
         <CartModal />
+        <DoctrineModal />
+        <SanctumModal />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
