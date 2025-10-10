@@ -24,10 +24,10 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
         </motion.h1>
 
         {/* Bottom Section - Subtitle + CTAs */}
-        <div className="flex flex-col items-center gap-8 pb-12">
+        <div className="flex flex-col items-center gap-4 pb-4">
           {/* Subtitle with decorative divider */}
           <motion.div
-          className="max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
