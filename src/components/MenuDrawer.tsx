@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, User } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/stores/modalStore";
 import type { ModalType } from "@/stores/modalStore";
@@ -12,7 +12,6 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { openModal } = useModalStore();
   const isHomepage = location.pathname === "/";
 
@@ -30,24 +29,13 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     onClose();
     
     if (item.type === "scroll") {
-      if (isHomepage) {
-        // On homepage, scroll to section
-        setTimeout(() => {
-          const element = document.getElementById(item.scrollTo);
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }, 300);
-      } else {
-        // Navigate home first, then scroll
-        navigate("/");
-        setTimeout(() => {
-          const element = document.getElementById(item.scrollTo);
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }, 500);
-      }
+      // Scroll to section
+      setTimeout(() => {
+        const element = document.getElementById(item.scrollTo);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 300);
     } else if (item.type === "modal" && item.modal) {
       // Open modal
       setTimeout(() => {

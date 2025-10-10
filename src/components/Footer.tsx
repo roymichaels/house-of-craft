@@ -1,26 +1,24 @@
-import { Link } from "react-router-dom";
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     House: [
-      { name: "Philosophy", path: "/about" },
-      { name: "Doctrine", path: "/stories" },
-      { name: "Inner Chamber", path: "/concierge" },
-      { name: "Council", path: "/club" },
+      { name: "Philosophy", path: "#mindcraft" },
+      { name: "Doctrine", path: "#doctrine" },
+      { name: "Inner Chamber", path: "#circle" },
+      { name: "Council", path: "#circle" },
     ],
     Archives: [
-      { name: "Chronometers", path: "/collections/watches" },
-      { name: "Vestments", path: "/collections/tailoring" },
-      { name: "Leather Goods", path: "/collections/leather" },
-      { name: "Implements", path: "/collections/accessories" },
+      { name: "Chronometers", path: "#objects" },
+      { name: "Vestments", path: "#objects" },
+      { name: "Leather Goods", path: "#objects" },
+      { name: "Implements", path: "#objects" },
     ],
     Support: [
-      { name: "Provenance", path: "/authentication" },
-      { name: "Dispatch", path: "/returns" },
-      { name: "Privacy", path: "/privacy" },
-      { name: "Terms", path: "/terms" },
+      { name: "Provenance", path: "#mindcraft" },
+      { name: "Dispatch", path: "#circle" },
+      { name: "Privacy", path: "#" },
+      { name: "Terms", path: "#" },
     ],
   };
 
@@ -46,12 +44,12 @@ const Footer = () => {
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.path}>
-                    <Link
-                      to={link.path}
+                    <a
+                      href={link.path}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>

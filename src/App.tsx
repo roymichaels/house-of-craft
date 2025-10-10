@@ -5,9 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
-import Collections from "./pages/Collections";
-import Stories from "./pages/Stories";
-import Concierge from "./pages/Concierge";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,9 +16,6 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
-        <Route path="/collections" element={<Collections />} />
-        <Route path="/stories" element={<Stories />} />
-        <Route path="/concierge" element={<Concierge />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
