@@ -12,6 +12,7 @@ let renderer: THREE.WebGLRenderer;
 let controls: OrbitControls;
 let composer: EffectComposer;
 let animationId: number;
+let isInitialized = false;
 
 interface CelestialBody {
   mesh: THREE.Mesh;
@@ -66,13 +67,20 @@ const DWARF_PLANETS_DATA = [
 ];
 
 export function initSolarSystem(container: HTMLElement) {
+  // Prevent double initialization
+  if (isInitialized) {
+    console.warn('⚠️ Solar System already initialized, skipping...');
+    return () => {};
+  }
+  
+  console.log('🌌 Initializing Solar System...');
+  isInitialized = true;
+  
   // Clean up any existing scene first
   if (renderer && container.contains(renderer.domElement)) {
     container.removeChild(renderer.domElement);
   }
   cleanupSolarSystem();
-  
-  console.log('🌌 Initializing Solar System...');
   
   // Scene Setup
   scene = new THREE.Scene();
@@ -247,8 +255,10 @@ export function initSolarSystem(container: HTMLElement) {
   window.addEventListener('resize', handleResize);
 
   return () => {
+    console.log('🔄 Cleanup function called');
     window.removeEventListener('resize', handleResize);
     cancelAnimationFrame(animationId);
+    isInitialized = false;
   };
 }
 
@@ -545,6 +555,7 @@ export function cleanupSolarSystem() {
   // Cancel animation
   if (animationId) {
     cancelAnimationFrame(animationId);
+    animationId = 0;
   }
   
   // Clear arrays
@@ -576,6 +587,9 @@ export function cleanupSolarSystem() {
     });
     scene.clear();
   }
+  
+  // Reset initialization flag
+  isInitialized = false;
   
   console.log('✅ Cleanup complete');
 }
