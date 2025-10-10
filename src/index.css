@@ -199,6 +199,27 @@ All colors MUST be HSL.
     scroll-behavior: smooth;
   }
   
+  /* Custom scrollbars - Golden theme */
+  .momentum-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .momentum-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  .momentum-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--ancient-gold) / 0.5), hsl(var(--ancient-gold) / 0.3));
+    border-radius: 4px;
+    border: 1px solid hsl(var(--ancient-gold) / 0.2);
+  }
+
+  .momentum-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(var(--ancient-gold) / 0.7), hsl(var(--ancient-gold) / 0.5));
+  }
+  
 .text-balance {
   text-wrap: balance;
 }
