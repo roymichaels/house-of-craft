@@ -34,7 +34,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
         stiffness: 300,
         damping: 30,
       }}
-      className="px-4 md:px-12 pb-12"
+      className="px-4 md:px-12 pb-6"
     >
       {/* Grid Layout - 2-3 columns */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">

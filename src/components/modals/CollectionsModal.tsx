@@ -139,11 +139,11 @@ const CollectionsModal = () => {
               </div>
 
               {/* Scrollable Content */}
-              <div className="h-[90vh] overflow-y-auto momentum-scroll"
+              <div className="max-h-[90vh] overflow-y-auto momentum-scroll flex flex-col"
                    onClick={(e) => e.target === e.currentTarget && closeModal()}>
                 {/* Header - Only show when viewing categories */}
                 {viewState === 'categories' && (
-                  <div className="relative text-center pt-20 pb-8 px-6">
+                  <div className="relative text-center pt-12 pb-4 px-6">
                     {/* Golden aura backdrop */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] 
                                     bg-primary/5 blur-[120px] pointer-events-none" />
@@ -155,23 +155,23 @@ const CollectionsModal = () => {
                       className="relative z-10"
                     >
                       {/* Latin inscription */}
-                      <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-3">
+                      <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-1.5">
                         Arcanum Sapientis
                       </p>
                       
                       {/* Main title */}
-                      <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-4 
+                      <h2 className="text-4xl md:text-5xl font-ancient text-ancient-gold mb-2 
                                      drop-shadow-[0_0_30px_rgba(196,166,97,0.4)] tracking-wider">
                         COLLECTIO
                       </h2>
                       
                       {/* Subtitle */}
-                      <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-2 leading-relaxed">
+                      <p className="text-sm md:text-base text-foreground/80 max-w-xl mx-auto mb-1 leading-relaxed">
                         {BrandLanguage.voice.tagline}
                       </p>
                       
                       {/* Secondary copy */}
-                      <p className="text-sm text-muted-foreground/50 max-w-xl mx-auto italic">
+                      <p className="text-xs text-muted-foreground/50 max-w-xl mx-auto italic">
                         Choose your category to explore our curated selection.
                       </p>
                     </motion.div>
