@@ -22,7 +22,7 @@ const Navigation = () => {
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           
           {/* Brand Section */}
-          <div className="flex items-center gap-3 md:gap-4 relative z-[5]">
+          <div className="flex items-center gap-3 relative z-[5]">
             
             {/* ΛΠ Symbol */}
             <Link 
@@ -35,10 +35,7 @@ const Navigation = () => {
               ΛΠ
             </Link>
 
-            {/* Gradient Divider */}
-            <div className="hidden sm:block w-12 md:w-14 h-6 rounded-sm bg-gradient-to-r from-ancient-gold/50 to-transparent shrink-0" />
-
-            {/* Brand Title - Using exact HeroLogo styling */}
+            {/* Brand Title - Right next to logo */}
             <div className="hidden sm:flex flex-col gap-0.5">
               <h2 className="font-ancient text-lg md:text-xl tracking-[0.03em] text-ancient-gold drop-shadow-[0_0_20px_rgba(196,166,97,0.5)] m-0 leading-none">
                 Apollon
