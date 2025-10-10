@@ -9,6 +9,7 @@ export interface CategoryShowcase {
   tagline: string;
   heroImage: string;
   productCount: number;
+  icon: string;
 }
 
 export const categoryShowcase: CategoryShowcase[] = [
@@ -17,41 +18,55 @@ export const categoryShowcase: CategoryShowcase[] = [
     name: 'TIMEPIECES',
     tagline: 'Master hours, not chase them',
     heroImage: timepieceImage,
-    productCount: 12
+    productCount: 12,
+    icon: 'Watch'
   },
   {
     id: 'accessories',
     name: 'ACCESSORIES',
     tagline: 'Symbols of presence and order',
     heroImage: accessoriesImage,
-    productCount: 18
+    productCount: 18,
+    icon: 'Crown'
   },
   {
     id: 'leather-goods',
     name: 'LEATHER GOODS',
     tagline: 'Carriers of intent',
     heroImage: leatherImage,
-    productCount: 15
+    productCount: 15,
+    icon: 'Wallet'
   },
   {
     id: 'apparel',
     name: 'APPAREL',
     tagline: 'Tailored discipline',
     heroImage: tailoringImage,
-    productCount: 24
+    productCount: 24,
+    icon: 'Shirt'
   },
   {
     id: 'home-ritual',
     name: 'HOME & RITUAL',
     tagline: 'Space as discipline',
     heroImage: leatherImage,
-    productCount: 16
+    productCount: 16,
+    icon: 'BookOpen'
   },
   {
     id: 'print-media',
     name: 'PRINT & MEDIA',
     tagline: 'Reflections for the modern stoic',
     heroImage: accessoriesImage,
-    productCount: 8
+    productCount: 8,
+    icon: 'PenTool'
+  },
+  {
+    id: 'limited-edition',
+    name: 'LIMITED EDITION',
+    tagline: 'Exclusive pieces for the discerning',
+    heroImage: timepieceImage,
+    productCount: 4,
+    icon: 'Sparkles'
   }
 ];

@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import HeroScene from "@/components/hero/HeroScene";
 import Mindcraft from "@/components/sections/Mindcraft";
-import VaultTeaser from "@/components/sections/VaultTeaser";
+import Objects from "@/components/sections/Objects";
 import Doctrine from "@/components/sections/Doctrine";
 import Circle from "@/components/sections/Circle";
 import Footer from "@/components/Footer";
@@ -89,7 +89,7 @@ const Index = () => {
           <Mindcraft />
         </section>
         <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center">
-          <VaultTeaser />
+          <Objects />
         </section>
         <section ref={doctrineRef} id="doctrine" className="min-h-screen flex items-center">
           <Doctrine />

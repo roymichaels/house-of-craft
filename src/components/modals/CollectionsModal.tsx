@@ -154,17 +154,14 @@ const CollectionsModal = () => {
                     className="relative z-10"
                   >
                     {/* Latin inscription */}
-                    <p className="font-order text-primary/50 text-xs tracking-[0.3em] mb-4">
-                      {viewState === 'categories' 
-                        ? BrandLanguage.latin.vault
-                        : BrandLanguage.latin[activeCategory as keyof typeof BrandLanguage.latin] || BrandLanguage.latin.vault
-                      }
+                    <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-4">
+                      Arcanum Sapientis
                     </p>
                     
                     {/* Main title */}
                     <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-6 
-                                   drop-shadow-[0_0_30px_rgba(196,166,97,0.4)]">
-                      {viewState === 'categories' ? 'COLLECTIONS' : currentCategory?.name.toUpperCase()}
+                                   drop-shadow-[0_0_30px_rgba(196,166,97,0.4)] tracking-wider">
+                      {viewState === 'categories' ? 'COLLECTIO' : currentCategory?.name.toUpperCase()}
                     </h2>
                     
                     {/* Subtitle */}
