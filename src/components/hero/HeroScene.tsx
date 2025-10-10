@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment, Stars } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import WatchModel from "./WatchModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
@@ -64,17 +63,6 @@ const HeroScene = ({
             fade 
             speed={0.3}
           />
-          
-          {/* Post-processing effects */}
-          <EffectComposer>
-            <Bloom 
-              intensity={0.3} 
-              luminanceThreshold={0.9} 
-              luminanceSmoothing={0.9}
-              mipmapBlur
-            />
-            <Vignette offset={0.5} darkness={0.6} />
-          </EffectComposer>
         </Suspense>
       </Canvas>
     </div>
