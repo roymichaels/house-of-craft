@@ -1,75 +1,63 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import { InteractiveRelic } from "@/components/3d/InteractiveRelic";
+import { Text3D } from "../3d/ui/Text3D";
+import { InfoPanel3D } from "../3d/ui/InfoPanel3D";
+import { ProductCard3D } from "../3d/ui/ProductCard3D";
+import { useModalStore } from "@/stores/modalStore";
 import { relics } from "@/data/relics";
-import { LightColumns } from "../3d/effects/LightColumns";
-import { SolarHalo } from "../3d/effects/SolarHalo";
-import { LatinInscription } from "../3d/LatinInscription";
 
 interface ChamberMasteryProps {
   lightColor: string;
   accentColor: string;
 }
 
-const ChamberMastery = ({ lightColor, accentColor }: ChamberMasteryProps) => {
-  const relicRefs = useRef<(THREE.Mesh | null)[]>([]);
+const ChamberMastery = ({ lightColor }: ChamberMasteryProps) => {
+  const { openModal } = useModalStore();
+  const masteryRelics = Object.values(relics).filter(r => r.chamber === 'mastery');
 
-  // Gentle floating animation for relics
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    relicRefs.current.forEach((relic, i) => {
-      if (relic) {
-        relic.position.y = Math.sin(time * 0.5 + i) * 0.1;
-        relic.rotation.y = time * 0.3 + i;
-      }
-    });
-  });
-
-  // Linear arrangement facing camera
-  const relicConfigs = [
-    { position: [-2, 0, 0] as [number, number, number], data: relics.watch, color: "#C4A661", scale: 0.6 },
-    { position: [-0.7, 0, 0] as [number, number, number], data: relics.pen, color: "#7A6A4F", scale: 0.5 },
-    { position: [0.7, 0, 0] as [number, number, number], data: relics.ring, color: "#A08968", scale: 0.55 },
-    { position: [2, 0, 0] as [number, number, number], data: relics.seal, color: "#D4B86A", scale: 0.65 }
+  const productPositions: [number, number, number][] = [
+    [-1.5, 1.5, -2],
+    [0, 1.5, -2],
+    [1.5, 1.5, -2],
   ];
 
   return (
     <group>
-      {/* Volumetric Light Columns */}
-      <LightColumns lightColor={lightColor} intensity={0.6} />
+      {/* Section Header - 3D Holographic Text */}
+      <Text3D 
+        content="OBJECTS OF MASTERY"
+        position={[0, 3, -2]}
+        fontSize={0.4}
+        color="#C4A661"
+        entranceDelay={0.5}
+      />
       
-      {/* Solar Halo */}
-      <SolarHalo radius={4.5} lightColor={lightColor} intensity={0.8} />
+      <InfoPanel3D
+        content="Designed for men who master hours, not chase them."
+        position={[0, 2.2, -1.8]}
+        width={5}
+        height={0.6}
+        fontSize={0.12}
+        entranceDelay={1}
+      />
       
-      {/* Latin Inscription */}
-      <LatinInscription mode="mindcraft" position={[0, 3.5, -2]} />
-      
-      {/* Linear Relics Display */}
-      {relicConfigs.map((config, i) => (
-        <group key={config.data.id} position={config.position}>
-          <InteractiveRelic
-            geometry={new THREE.SphereGeometry(config.scale, 32, 32)}
-            material={new THREE.MeshStandardMaterial({
-              color: config.color,
-              roughness: 0.3,
-              metalness: 0.7,
-              emissive: config.color,
-              emissiveIntensity: 0.2
-            })}
-            position={[0, 0, 0]}
-            scale={config.scale}
-            userData={{
-              title: config.data.title,
-              category: config.data.category,
-              description: config.data.description,
-              image: config.data.image,
-              story: config.data.story,
-              price: config.data.price
-            }}
-            glowColor={lightColor}
-          />
-        </group>
+      {/* Interactive Product Cards in Space */}
+      {masteryRelics.slice(0, 3).map((relic, i) => (
+        <ProductCard3D
+          key={i}
+          title={relic.title}
+          category={relic.category}
+          image={relic.image}
+          position={productPositions[i]}
+          onClick={() => openModal('object', {
+            title: relic.title,
+            category: relic.category,
+            description: relic.description,
+            image: relic.image,
+            story: relic.story,
+            price: relic.price
+          })}
+          color={lightColor}
+          entranceDelay={1.5 + i * 0.3}
+        />
       ))}
     </group>
   );

@@ -73,7 +73,7 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       }
     } else if (introComplete.current) {
       // Cinematic camera transitions - slower for unified temple flow
-      const lerpSpeed = 0.015;
+      const lerpSpeed = 0.01; // Slower for smoother, more cinematic motion
       camera.position.lerp(targetPosition.current, lerpSpeed);
       
       // Smooth lookAt transition
