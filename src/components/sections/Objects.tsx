@@ -66,14 +66,8 @@ const Objects = () => {
               }}
             >
               <button
-                onClick={() => openModal('object', {
-                  title: collection.title,
-                  category: collection.category,
-                  description: collection.description,
-                  image: collection.image,
-                  story: collection.story,
-                })}
-                className="group block relative overflow-hidden border border-border hover:border-ancient-gold/50 transition-all duration-500 w-full text-left"
+                onClick={() => openModal('collections')}
+                className="group block relative overflow-hidden border border-border hover:border-ancient-gold/50 transition-all duration-500 w-full text-left beam-ripple"
               >
                 {/* Image container */}
                 <div className="aspect-[4/5] overflow-hidden bg-muted">
