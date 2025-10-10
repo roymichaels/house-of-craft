@@ -77,7 +77,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             </button>
 
             {/* Menu Items */}
-            <nav className="flex flex-col items-center gap-8">
+            <nav className="flex flex-col items-center gap-6">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.type === "scroll" ? item.scrollTo : item.name}
@@ -91,7 +91,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 >
                   <button
                     onClick={() => handleNavClick(item)}
-                    className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-ancient-gold/70
+                    className="font-ancient text-3xl md:text-5xl text-ancient-gold hover:text-ancient-gold/70
                                transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
                                hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
                   >
@@ -99,6 +99,9 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                   </button>
                 </motion.div>
               ))}
+
+              {/* Divider */}
+              <div className="w-24 h-px bg-ancient-gold/20 mt-4" />
 
               {/* Sign In */}
               <motion.div
@@ -109,7 +112,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                   duration: 0.8,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="mt-8"
+                className="mt-6"
               >
                 <Button
                   variant="outline"

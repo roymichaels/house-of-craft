@@ -117,7 +117,7 @@ const CollectionsModal = () => {
                   >
                     <GoldenIcon icon={ChevronLeft} size="sm" glow="subtle" 
                                 className="group-hover:-translate-x-0.5 duration-300" />
-                    <span className="text-xs md:text-sm font-medium text-ancient-gold">Back</span>
+                    <span className="hidden md:inline text-xs md:text-sm font-medium text-ancient-gold">Back</span>
                   </motion.button>
                 )}
                 
@@ -142,7 +142,7 @@ const CollectionsModal = () => {
               <div className="h-[90vh] overflow-y-auto momentum-scroll"
                    onClick={(e) => e.target === e.currentTarget && closeModal()}>
                 {/* Header */}
-                <div className="relative text-center pt-24 pb-12 px-6">
+                <div className="relative text-center pt-20 pb-8 px-6">
                   {/* Golden aura backdrop */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] 
                                   bg-primary/5 blur-[120px] pointer-events-none" />
@@ -154,18 +154,18 @@ const CollectionsModal = () => {
                     className="relative z-10"
                   >
                     {/* Latin inscription */}
-                    <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-4">
+                    <p className="font-serif italic text-muted-foreground/60 text-xs tracking-[0.2em] mb-3">
                       Arcanum Sapientis
                     </p>
                     
                     {/* Main title */}
-                    <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-6 
+                    <h2 className="text-5xl md:text-7xl font-ancient text-ancient-gold mb-4 
                                    drop-shadow-[0_0_30px_rgba(196,166,97,0.4)] tracking-wider">
                       {viewState === 'categories' ? 'COLLECTIO' : currentCategory?.name.toUpperCase()}
                     </h2>
                     
                     {/* Subtitle */}
-                    <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-3 leading-relaxed">
+                    <p className="text-base md:text-lg text-foreground/80 max-w-2xl mx-auto mb-2 leading-relaxed">
                       {viewState === 'categories'
                         ? BrandLanguage.voice.tagline
                         : currentCategory?.tagline

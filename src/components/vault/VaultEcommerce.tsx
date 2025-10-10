@@ -70,22 +70,22 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
         className="min-h-[600px]"
       >
         {/* Sticky Header with Blur */}
-        <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-primary/10 pb-6">
-          <div className="p-8">
+        <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-primary/10 pb-4">
+          <div className="px-6 pt-6 pb-0">
             {/* Hero Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.4 }}
-              className="mb-8 text-center"
+              className="mb-6 text-center"
             >
               {/* Latin Inscription */}
-              <p className="font-order text-primary/60 text-xs tracking-[0.3em] mb-3">
+              <p className="font-order text-primary/60 text-xs tracking-[0.3em] mb-2">
                 {BrandLanguage.latin[category.id as keyof typeof BrandLanguage.latin] || BrandLanguage.latin.vault}
               </p>
 
               {/* Category Title */}
-              <h2 className="text-4xl md:text-5xl font-ancient text-ancient-gold mb-3 
+              <h2 className="text-4xl md:text-5xl font-ancient text-ancient-gold mb-2 
                              drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]">
                 {category.name.toUpperCase()}
               </h2>
@@ -101,7 +101,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.4 }}
-              className="flex justify-center"
+              className="flex justify-center pb-2"
             >
               <SegmentedControl
                 options={segmentedOptions}
@@ -113,7 +113,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
         </div>
 
         {/* Main Content Area */}
-        <div className="p-8">
+        <div className="px-6 py-8">
           {/* Product Grid */}
           <AnimatePresence mode="wait">
             <motion.div
@@ -126,7 +126,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
                 stiffness: 300,
                 damping: 30,
               }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto"
             >
               {isLoading ? (
                 // Skeleton loaders

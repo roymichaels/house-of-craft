@@ -8,7 +8,7 @@ interface SegmentedControlProps {
 
 const SegmentedControl = ({ options, activeOption, onChange }: SegmentedControlProps) => {
   return (
-    <div className="inline-flex bg-card/50 backdrop-blur-sm p-1 rounded-full border border-primary/10">
+    <div className="inline-flex bg-card/50 backdrop-blur-sm p-0.5 rounded-full border border-primary/10">
       {options.map((option) => {
         const isActive = activeOption === option.id;
         
@@ -16,7 +16,7 @@ const SegmentedControl = ({ options, activeOption, onChange }: SegmentedControlP
           <button
             key={option.id}
             onClick={() => onChange(option.id)}
-            className="relative px-4 py-2 text-sm font-medium transition-colors rounded-full min-w-[100px]"
+            className="relative px-3 py-1.5 text-sm font-medium transition-colors rounded-full min-w-[80px]"
           >
             {/* Animated background pill */}
             {isActive && (
