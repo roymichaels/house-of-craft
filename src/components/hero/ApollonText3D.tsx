@@ -18,11 +18,11 @@ const ApollonText3D = () => {
   });
 
   return (
-    <group position={[0, 0, 0]}>
+    <group position={[0, 3.5, 0]}>
       <Text
         ref={textRef}
         font="/fonts/Ancient-Medium.woff"
-        fontSize={0.5}
+        fontSize={0.6}
         letterSpacing={0.08}
         position={[0, 0, 0]}
         anchorX="center"

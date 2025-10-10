@@ -12,12 +12,12 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
 
   return (
     <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-8 h-full pointer-events-none">
-      <div className="flex flex-col items-center justify-center h-full space-y-12 md:space-y-16">
-        {/* Title - Hidden as it's now 3D in the scene */}
+      <div className="flex flex-col items-center justify-center h-full space-y-6 md:space-y-8 mt-24">
+        {/* Title - Now in 3D above orb */}
 
-        {/* Subtitle with decorative divider */}
+        {/* Subtitle with decorative divider - positioned below 3D APOLLON text */}
         <motion.div
-          className="max-w-2xl mx-auto mb-12"
+          className="max-w-2xl mx-auto mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
