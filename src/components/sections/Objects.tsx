@@ -53,13 +53,13 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
       }}
     >
       {/* Background Image */}
-      <div className="absolute inset-0 opacity-70 group-hover:opacity-80 transition-opacity duration-700">
+      <div className="absolute inset-0 opacity-80 group-hover:opacity-90 transition-opacity duration-700">
         <img
           src={category.heroImage}
           alt={category.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/30 to-transparent" />
       </div>
 
       {/* Content */}
