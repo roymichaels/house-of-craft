@@ -122,9 +122,9 @@ export function initSolarSystem(container: HTMLElement) {
 
   bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.5,  // strength - increased for more dramatic glow
-    0.8,  // radius - wider bloom
-    0.1   // threshold - lower to capture more lights
+    0.8,  // strength - reduced for subtler glow
+    0.6,  // radius - tighter bloom
+    0.3   // threshold - higher to reduce overall glow
   );
   composer.addPass(bloomPass);
 
@@ -291,41 +291,21 @@ export function initSolarSystem(container: HTMLElement) {
   const corona1 = new THREE.Mesh(corona1Geometry, corona1Material);
   sunGroup.add(corona1);
   
-  // Corona 2 - yellow glow
-  const corona2Geometry = new THREE.SphereGeometry(7.0, 32, 32);
+  // Corona 2 - yellow glow (reduced)
+  const corona2Geometry = new THREE.SphereGeometry(6.5, 32, 32);
   const corona2Material = new THREE.MeshBasicMaterial({
     color: 0xFFAA00,
-    transparent: true,
-    opacity: 0.2,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const corona2 = new THREE.Mesh(corona2Geometry, corona2Material);
-  sunGroup.add(corona2);
-  
-  // Outer corona - soft yellow-white
-  const corona3Geometry = new THREE.SphereGeometry(8.5, 32, 32);
-  const corona3Material = new THREE.MeshBasicMaterial({
-    color: 0xFFDD88,
     transparent: true,
     opacity: 0.15,
     side: THREE.BackSide,
     blending: THREE.AdditiveBlending
   });
-  const corona3 = new THREE.Mesh(corona3Geometry, corona3Material);
-  sunGroup.add(corona3);
+  const corona2 = new THREE.Mesh(corona2Geometry, corona2Material);
+  sunGroup.add(corona2);
 
-  // Lens flare effect - largest outer glow
-  const flareGeo = new THREE.SphereGeometry(12, 32, 32);
-  const flareMat = new THREE.MeshBasicMaterial({
-    color: 0xFFFFAA,
-    transparent: true,
-    opacity: 0.08,
-    side: THREE.BackSide,
-    blending: THREE.AdditiveBlending
-  });
-  const lensFlare = new THREE.Mesh(flareGeo, flareMat);
-  sunGroup.add(lensFlare);
+  // Outer corona removed for cleaner look
+  const corona3 = null;
+  const lensFlare = null;
   
   scene.add(sunGroup);
   
@@ -445,33 +425,25 @@ export function initSolarSystem(container: HTMLElement) {
       
       // Pulsating glow on corona layers
       const glowPulse1 = 0.3 + Math.sin(time * 0.8) * 0.1;
-      const glowPulse2 = 0.2 + Math.sin(time * 1.1) * 0.08;
-      const glowPulse3 = 0.15 + Math.sin(time * 0.6) * 0.05;
-      
+      const glowPulse2 = 0.15 + Math.sin(time * 1.1) * 0.06;
+
       sunLayers.corona1.material.opacity = glowPulse1;
       sunLayers.corona2.material.opacity = glowPulse2;
-      sunLayers.corona3.material.opacity = glowPulse3;
-      
+
       // Slight rotation variation on coronas
       sunLayers.corona1.rotation.y += 0.0003;
       sunLayers.corona2.rotation.y -= 0.0002;
-      sunLayers.corona3.rotation.y += 0.0001;
-
-      // Lens flare subtle pulsing
-      const flarePulse = 0.08 + Math.sin(time * 0.3) * 0.03;
-      sunLayers.lensFlare.material.opacity = flarePulse;
-      sunLayers.lensFlare.rotation.y += 0.00015;
     }
 
-    // Dynamic bloom based on camera distance from sun
+    // Dynamic bloom based on camera distance from sun (reduced intensity)
     const distanceToSun = camera.position.length();
     const maxDistance = 100;
     const minDistance = 10;
     const normalizedDistance = Math.max(0, Math.min(1, (distanceToSun - minDistance) / (maxDistance - minDistance)));
 
-    // Closer to sun = stronger bloom
-    bloomPass.strength = 1.5 + (1 - normalizedDistance) * 1.0;
-    bloomPass.radius = 0.8 + (1 - normalizedDistance) * 0.3;
+    // Closer to sun = slightly stronger bloom
+    bloomPass.strength = 0.6 + (1 - normalizedDistance) * 0.4;
+    bloomPass.radius = 0.5 + (1 - normalizedDistance) * 0.2;
     
     // Update planets
     celestialBodies.forEach(body => {
