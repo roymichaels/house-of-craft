@@ -59,75 +59,73 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       return;
     }
 
-    // Extended intro dolly animation (0-5 seconds) with focus pull
+    // Quick intro dolly animation (0-2 seconds)
     const elapsed = state.clock.getElapsedTime();
-    if (elapsed < 5 && !introComplete.current && camera instanceof PerspectiveCamera) {
-      const progress = Math.min(elapsed / 5, 1);
+    if (elapsed < 2 && !introComplete.current && camera instanceof PerspectiveCamera) {
+      const progress = Math.min(elapsed / 2, 1);
       const easeOut = 1 - Math.pow(1 - progress, 3);
       camera.position.z = position.z + 1.5 - (1.5 * easeOut);
       
-      // Subtle camera sway (breathing effect)
-      const sway = Math.sin(elapsed * 0.5) * 0.02;
-      camera.position.y = position.y + sway;
-      
-      if (elapsed >= 4.9) {
+      if (elapsed >= 1.9) {
         introComplete.current = true;
       }
-    } else if (introComplete.current) {
-      // Scroll-based zoom and perspective shift for hero mode
-      if (mode === 'hero') {
-        // Smooth zoom throughout the entire hero section (0-15% scroll range)
-        const heroScrollProgress = Math.min(scrollProgress / 0.15, 1); // Normalize to 0-1
-        const zoomAmount = heroScrollProgress * 2.5; // Zoom in by 2.5 units max
-        const perspectiveShift = heroScrollProgress * 0.8; // Upward camera tilt
-        const fovShift = heroScrollProgress * 8; // FOV shift for dramatic effect
-        
-        // Smooth easing function for luxury feel
-        const easeInOutCubic = (t: number) => 
-          t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-        
-        const easedProgress = easeInOutCubic(heroScrollProgress);
-        
-        // Apply smooth camera transformations
-        const targetPos = new Vector3(
-          targetPosition.current.x,
-          targetPosition.current.y + (perspectiveShift * easedProgress),
-          targetPosition.current.z - (zoomAmount * easedProgress)
-        );
-        
-        camera.position.lerp(targetPos, 0.1); // Smooth lerp for luxury feel
-        camera.lookAt(targetLookAt.current);
-        
-        // Adjust FOV for cinematic zoom effect
-        if (camera instanceof PerspectiveCamera) {
-          const targetFovValue = targetFov.current - (fovShift * easedProgress);
-          camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.08);
-          camera.updateProjectionMatrix();
-        }
-      } else {
-        // Cinematic camera transitions for other modes - slower for unified temple flow
-        const lerpSpeed = 0.01;
-        camera.position.lerp(targetPosition.current, lerpSpeed);
-        
-        // Smooth lookAt transition
-        const currentLookAt = new Vector3();
-        camera.getWorldDirection(currentLookAt);
-        currentLookAt.add(camera.position);
-        currentLookAt.lerp(targetLookAt.current, lerpSpeed);
-        camera.lookAt(currentLookAt);
-        
-        // FOV transition with smooth easing
-        if (camera instanceof PerspectiveCamera) {
-          camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
-          camera.updateProjectionMatrix();
-        }
-
-        // Camera roll (z-axis rotation) for cinematic effect
-        const targetRollRad = (targetRoll.current * Math.PI) / 180;
-        camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
-      }
+    }
+    
+    // Scroll-based zoom for hero mode - active ALWAYS (even during intro)
+    if (mode === 'hero') {
+      // Smooth zoom throughout the entire hero section (0-15% scroll range)
+      const heroScrollProgress = Math.min(scrollProgress / 0.15, 1); // Normalize to 0-1
+      const zoomAmount = heroScrollProgress * 2.5; // Zoom in by 2.5 units max
+      const perspectiveShift = heroScrollProgress * 0.8; // Upward camera tilt
+      const fovShift = heroScrollProgress * 8; // FOV shift for dramatic effect
       
-      // Parallax effect - subtle camera rotation based on mouse (reduced strength)
+      // Smooth easing function for luxury feel
+      const easeInOutCubic = (t: number) => 
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      
+      const easedProgress = easeInOutCubic(heroScrollProgress);
+      
+      // Apply smooth camera transformations
+      const targetPos = new Vector3(
+        targetPosition.current.x,
+        targetPosition.current.y + (perspectiveShift * easedProgress),
+        targetPosition.current.z - (zoomAmount * easedProgress)
+      );
+      
+      camera.position.lerp(targetPos, 0.1); // Smooth lerp for luxury feel
+      camera.lookAt(targetLookAt.current);
+      
+      // Adjust FOV for cinematic zoom effect
+      if (camera instanceof PerspectiveCamera) {
+        const targetFovValue = targetFov.current - (fovShift * easedProgress);
+        camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.08);
+        camera.updateProjectionMatrix();
+      }
+    } else if (introComplete.current) {
+      // Cinematic camera transitions for other modes - slower for unified temple flow
+      const lerpSpeed = 0.01;
+      camera.position.lerp(targetPosition.current, lerpSpeed);
+      
+      // Smooth lookAt transition
+      const currentLookAt = new Vector3();
+      camera.getWorldDirection(currentLookAt);
+      currentLookAt.add(camera.position);
+      currentLookAt.lerp(targetLookAt.current, lerpSpeed);
+      camera.lookAt(currentLookAt);
+      
+      // FOV transition with smooth easing
+      if (camera instanceof PerspectiveCamera) {
+        camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
+        camera.updateProjectionMatrix();
+      }
+
+      // Camera roll (z-axis rotation) for cinematic effect
+      const targetRollRad = (targetRoll.current * Math.PI) / 180;
+      camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
+    }
+    
+    // Parallax effect - subtle camera rotation based on mouse (reduced strength)
+    if (introComplete.current) {
       const parallaxStrength = 0.015;
       targetRotation.current.y = mousePosition.current.x * parallaxStrength;
       targetRotation.current.x = mousePosition.current.y * parallaxStrength;
