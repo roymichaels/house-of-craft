@@ -145,23 +145,17 @@ const Objects = () => {
           </p>
         </motion.div>
 
-        {/* Category Showcase Grid - 1-3-2 Layout - Centered */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
-          {/* Row 1: Timepieces */}
+        {/* Category Showcase Grid - 2 Rows x 3 Columns - Centered */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+          {/* Row 1: Timepieces, Accessories, Leather Goods */}
           <CategoryCard category={timepieces} delay={0} />
-
-          {/* Row 2: Accessories, Leather Goods, Apparel */}
           <CategoryCard category={accessories} delay={0.1} />
           <CategoryCard category={leatherGoods} delay={0.15} />
-          <CategoryCard category={apparel} delay={0.2} />
 
-          {/* Row 3: Home & Ritual, Print & Media - Centered with offset */}
-          <div className="md:col-start-1">
-            <CategoryCard category={homeRitual} delay={0.25} />
-          </div>
-          <div className="md:col-start-2">
-            <CategoryCard category={printMedia} delay={0.3} />
-          </div>
+          {/* Row 2: Apparel, Home & Ritual, Print & Media */}
+          <CategoryCard category={apparel} delay={0.2} />
+          <CategoryCard category={homeRitual} delay={0.25} />
+          <CategoryCard category={printMedia} delay={0.3} />
         </div>
       </div>
     </section>
