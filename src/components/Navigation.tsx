@@ -34,7 +34,7 @@ const Navigation = () => {
 
       {/* Header */}
       <motion.header 
-        className="fixed top-0 left-0 w-full z-[1000] px-4 md:px-8 py-3 md:py-4 bg-black/40 backdrop-blur-md"
+        className="fixed top-0 left-0 w-full z-[1000] px-4 md:px-8 py-3 md:py-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
