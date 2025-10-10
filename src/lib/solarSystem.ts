@@ -75,8 +75,9 @@ export function initSolarSystem(container: HTMLElement) {
   // SCENE
   // ============================================================================
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0A0404);
-  scene.fog = new THREE.Fog(0x1A0A06, 180, 250);
+  scene.background = new THREE.Color(0x000000);
+  // Enhanced fog for atmospheric depth - exponential falloff
+  scene.fog = new THREE.FogExp2(0x0a0510, 0.0025);
   
   // ============================================================================
   // CAMERA
@@ -112,15 +113,16 @@ export function initSolarSystem(container: HTMLElement) {
   composer = new EffectComposer(renderer);
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
-  
+
+  // Reduced bloom for more realistic appearance
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    2.5,  // strength - maximum intensity for sunrise glow
-    1.8,  // radius - extra wide bloom for sunburst effect
-    0.03  // threshold - very low to bloom entire sun area
+    1.2,  // strength - reduced for realism
+    0.8,  // radius - tighter bloom
+    0.4   // threshold - higher to only bloom bright objects
   );
   composer.addPass(bloomPass);
-  
+
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
   
@@ -137,24 +139,41 @@ export function initSolarSystem(container: HTMLElement) {
   controls.maxDistance = 200;
   
   // ============================================================================
-  // LIGHTING
+  // LIGHTING - Physically Based
   // ============================================================================
-  const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
+  // Reduced ambient for deeper space darkness
+  const ambientLight = new THREE.AmbientLight(0x0a0a15, 0.08);
   scene.add(ambientLight);
-  
-  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 0.4, 0.15), 18.0, 1000, 0.35);
+
+  // Main sun light - realistic color temperature and intensity
+  const sunLight = new THREE.PointLight(0xfff4e0, 25.0, 800, 2);
   sunLight.position.set(0, 0, 0);
-  sunLight.castShadow = false;
+  sunLight.castShadow = true;
+  sunLight.shadow.mapSize.width = 2048;
+  sunLight.shadow.mapSize.height = 2048;
+  sunLight.shadow.camera.near = 0.5;
+  sunLight.shadow.camera.far = 500;
   scene.add(sunLight);
-  
-  const fillLight = new THREE.PointLight(new THREE.Color(0.8, 0.2, 0.1), 3.0, 100, 1);
-  fillLight.position.set(50, 50, -100);
+
+  // Subtle rim light for depth separation
+  const rimLight = new THREE.DirectionalLight(0x2a4a7a, 0.15);
+  rimLight.position.set(-100, 50, -100);
+  scene.add(rimLight);
+
+  // Secondary fill light for subtle illumination of dark sides
+  const fillLight = new THREE.PointLight(0x1a1a30, 0.5, 300, 2);
+  fillLight.position.set(80, 40, -80);
   scene.add(fillLight);
   
   // ============================================================================
   // STARFIELD
   // ============================================================================
   createStarfield();
+
+  // ============================================================================
+  // VOLUMETRIC SPACE DUST
+  // ============================================================================
+  createSpaceDust();
   
   // ============================================================================
   // SUN - Realistic Pulsating Lava
@@ -324,13 +343,55 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
+  // Corona glow - outer atmosphere
+  const coronaGeometry = new THREE.SphereGeometry(6.8, 64, 64);
+  const coronaMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      time: { value: 0 },
+      glowColor: { value: new THREE.Color(0xff6622) }
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float time;
+      uniform vec3 glowColor;
+      varying vec3 vNormal;
+      varying vec3 vPosition;
+
+      void main() {
+        vec3 viewDir = normalize(cameraPosition - vPosition);
+        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
+
+        float pulse = sin(time * 0.5) * 0.15 + 0.85;
+        float intensity = fresnel * 0.6 * pulse;
+
+        vec3 color = glowColor * intensity;
+        gl_FragColor = vec4(color, intensity * 0.4);
+      }
+    `,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    side: THREE.BackSide
+  });
+  const corona = new THREE.Mesh(coronaGeometry, coronaMaterial);
+  sunGroup.add(corona);
+
   scene.add(sunGroup);
 
   // Store references for animation
   sunLayers = {
     core: sunCore,
     surface: sunSurface,
-    material: surfaceMaterial
+    material: surfaceMaterial,
+    corona: corona,
+    coronaMaterial: coronaMaterial
   };
   
   // ============================================================================
@@ -342,14 +403,39 @@ export function initSolarSystem(container: HTMLElement) {
   // PLANETS
   // ============================================================================
   PLANETS_DATA.forEach(planetData => {
-    // Create planet
-    const geometry = new THREE.SphereGeometry(planetData.radius, 32, 32);
+    // Create planet with enhanced PBR materials
+    const geometry = new THREE.SphereGeometry(planetData.radius, 64, 64);
+
+    // Planet-specific material properties for realism
+    let roughness = 0.9;
+    let metalness = 0.0;
+    let emissive = new THREE.Color(0x000000);
+    let emissiveIntensity = 0.0;
+
+    // Customize materials based on planet type
+    if (planetData.name === 'Venus' || planetData.name === 'Mars') {
+      roughness = 0.95; // Very rough, rocky surface
+    } else if (planetData.name === 'Earth') {
+      roughness = 0.6; // Oceans are smoother
+      emissive = new THREE.Color(0x0a1a2a);
+      emissiveIntensity = 0.05; // Subtle city lights effect
+    } else if (planetData.name === 'Jupiter' || planetData.name === 'Saturn' ||
+               planetData.name === 'Uranus' || planetData.name === 'Neptune') {
+      roughness = 0.4; // Gas giants are smoother, more reflective
+      metalness = 0.1;
+    }
+
     const material = new THREE.MeshStandardMaterial({
       color: planetData.color,
-      roughness: 0.7,
-      metalness: 0.3
+      roughness: roughness,
+      metalness: metalness,
+      emissive: emissive,
+      emissiveIntensity: emissiveIntensity,
+      envMapIntensity: 0.8
     });
     const planet = new THREE.Mesh(geometry, material);
+    planet.castShadow = true;
+    planet.receiveShadow = true;
     
     // Set initial position
     planet.position.x = Math.cos(planetData.angle) * planetData.distance;
@@ -385,13 +471,16 @@ export function initSolarSystem(container: HTMLElement) {
     
     // Add moon for Earth
     if (planetData.moon) {
-      const moonGeometry = new THREE.SphereGeometry(planetData.moon.radius, 16, 16);
+      const moonGeometry = new THREE.SphereGeometry(planetData.moon.radius, 32, 32);
       const moonMaterial = new THREE.MeshStandardMaterial({
         color: planetData.moon.color,
-        roughness: 0.9,
-        metalness: 0.1
+        roughness: 0.95,
+        metalness: 0.0,
+        envMapIntensity: 0.3
       });
       const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+      moon.castShadow = true;
+      moon.receiveShadow = true;
       scene.add(moon);
       
       bodyData.moons = [{
@@ -420,15 +509,20 @@ export function initSolarSystem(container: HTMLElement) {
     if (sunLayers) {
       // Update shader time uniform
       sunLayers.material.uniforms.time.value = time;
+      sunLayers.coronaMaterial.uniforms.time.value = time;
 
       // Pulsating scale
       const pulseScale = 1.0 + Math.sin(time * 0.7) * 0.05 + Math.sin(time * 1.5) * 0.025 + Math.sin(time * 2.3) * 0.015;
       sunLayers.core.scale.setScalar(pulseScale * 1.03);
       sunLayers.surface.scale.setScalar(pulseScale);
+      sunLayers.corona.scale.setScalar(pulseScale * 1.02);
 
       // Rotation for lava flow
       sunLayers.surface.rotation.y += 0.002;
       sunLayers.surface.rotation.x += 0.0005;
+
+      // Slower counter-rotation for corona
+      sunLayers.corona.rotation.y -= 0.0008;
     }
     
     // Update planets
@@ -482,60 +576,173 @@ export function initSolarSystem(container: HTMLElement) {
 // ============================================================================
 
 function createStarfield() {
-  const starCount = 5000;
+  // Create multiple layers of stars for parallax depth effect
+  const layers = [
+    { count: 3000, minRadius: 180, maxRadius: 250, sizeRange: [0.5, 1.8], opacity: 1.0 },
+    { count: 2000, minRadius: 250, maxRadius: 350, sizeRange: [0.3, 1.2], opacity: 0.85 },
+    { count: 1500, minRadius: 350, maxRadius: 500, sizeRange: [0.2, 0.8], opacity: 0.7 }
+  ];
+
+  layers.forEach(layer => {
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(layer.count * 3);
+    const colors = new Float32Array(layer.count * 3);
+    const sizes = new Float32Array(layer.count);
+
+    for (let i = 0; i < layer.count; i++) {
+      const i3 = i * 3;
+      const radius = layer.minRadius + Math.random() * (layer.maxRadius - layer.minRadius);
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+
+      positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i3 + 2] = radius * Math.cos(phi);
+
+      // Variable star sizes for depth
+      sizes[i] = layer.sizeRange[0] + Math.random() * (layer.sizeRange[1] - layer.sizeRange[0]);
+
+      // Realistic stellar colors
+      const colorChoice = Math.random();
+      if (colorChoice < 0.6) {
+        // White stars (main sequence)
+        const brightness = 0.85 + Math.random() * 0.15;
+        colors[i3] = brightness;
+        colors[i3 + 1] = brightness;
+        colors[i3 + 2] = brightness;
+      } else if (colorChoice < 0.75) {
+        // Blue-white stars (hot stars)
+        colors[i3] = 0.7 + Math.random() * 0.2;
+        colors[i3 + 1] = 0.8 + Math.random() * 0.15;
+        colors[i3 + 2] = 0.95 + Math.random() * 0.05;
+      } else if (colorChoice < 0.88) {
+        // Yellow-orange stars (sun-like)
+        colors[i3] = 0.95 + Math.random() * 0.05;
+        colors[i3 + 1] = 0.8 + Math.random() * 0.15;
+        colors[i3 + 2] = 0.5 + Math.random() * 0.2;
+      } else {
+        // Red stars (cool giants)
+        colors[i3] = 0.9 + Math.random() * 0.1;
+        colors[i3 + 1] = 0.4 + Math.random() * 0.2;
+        colors[i3 + 2] = 0.3 + Math.random() * 0.15;
+      }
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    const material = new THREE.PointsMaterial({
+      size: 1.2,
+      sizeAttenuation: true,
+      vertexColors: true,
+      transparent: true,
+      opacity: layer.opacity,
+      blending: THREE.AdditiveBlending
+    });
+
+    const stars = new THREE.Points(geometry, material);
+    scene.add(stars);
+  });
+
+  // Add nebula background
+  createNebulaBackground();
+}
+
+function createNebulaBackground() {
+  // Create distant nebula clouds for depth
+  const nebulaCount = 8;
+  for (let i = 0; i < nebulaCount; i++) {
+    const geometry = new THREE.SphereGeometry(20 + Math.random() * 30, 16, 16);
+
+    const nebulaColors = [
+      0x1a0a2e, // Deep purple
+      0x0f2027, // Dark blue-green
+      0x2c1a4d, // Purple-blue
+      0x1a1a3e  // Deep indigo
+    ];
+
+    const material = new THREE.MeshBasicMaterial({
+      color: nebulaColors[Math.floor(Math.random() * nebulaColors.length)],
+      transparent: true,
+      opacity: 0.03 + Math.random() * 0.05,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide
+    });
+
+    const nebula = new THREE.Mesh(geometry, material);
+
+    // Random position far from center
+    const distance = 250 + Math.random() * 200;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.random() * Math.PI;
+
+    nebula.position.x = distance * Math.sin(phi) * Math.cos(theta);
+    nebula.position.y = distance * Math.sin(phi) * Math.sin(theta);
+    nebula.position.z = distance * Math.cos(phi);
+
+    scene.add(nebula);
+  }
+}
+
+function createSpaceDust() {
+  // Create volumetric dust particles that catch light
+  const dustCount = 2000;
   const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(starCount * 3);
-  const colors = new Float32Array(starCount * 3);
-  const sizes = new Float32Array(starCount);
-  
-  for (let i = 0; i < starCount; i++) {
+  const positions = new Float32Array(dustCount * 3);
+  const colors = new Float32Array(dustCount * 3);
+  const sizes = new Float32Array(dustCount);
+
+  for (let i = 0; i < dustCount; i++) {
     const i3 = i * 3;
-    const radius = 200 + Math.random() * 200;
+
+    // Distribute dust in a sphere around solar system
+    const radius = 40 + Math.random() * 120;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
-    
+
     positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
     positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
     positions[i3 + 2] = radius * Math.cos(phi);
-    
-    // Variable star sizes for depth
-    sizes[i] = Math.random() * 2.5 + 0.5;
-    
-    // Color variation - mostly white, some blue/orange tints
-    const colorChoice = Math.random();
-    if (colorChoice < 0.7) {
-      // White stars with brightness variation
-      const brightness = 0.7 + Math.random() * 0.3;
-      colors[i3] = brightness;
-      colors[i3 + 1] = brightness;
-      colors[i3 + 2] = brightness;
-    } else if (colorChoice < 0.85) {
-      // Blue tint stars
-      colors[i3] = 0.6 + Math.random() * 0.2;
-      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
-      colors[i3 + 2] = 0.9 + Math.random() * 0.1;
+
+    // Very small particles
+    sizes[i] = 0.1 + Math.random() * 0.3;
+
+    // Dust colors - warm near sun, cool farther out
+    const distanceFromCenter = Math.sqrt(
+      positions[i3] * positions[i3] +
+      positions[i3 + 1] * positions[i3 + 1] +
+      positions[i3 + 2] * positions[i3 + 2]
+    );
+
+    if (distanceFromCenter < 60) {
+      // Warm dust near sun
+      colors[i3] = 0.8 + Math.random() * 0.2;
+      colors[i3 + 1] = 0.5 + Math.random() * 0.3;
+      colors[i3 + 2] = 0.3 + Math.random() * 0.2;
     } else {
-      // Orange tint stars
-      colors[i3] = 0.9 + Math.random() * 0.1;
-      colors[i3 + 1] = 0.7 + Math.random() * 0.2;
-      colors[i3 + 2] = 0.5 + Math.random() * 0.2;
+      // Cool dust farther out
+      colors[i3] = 0.4 + Math.random() * 0.2;
+      colors[i3 + 1] = 0.5 + Math.random() * 0.2;
+      colors[i3 + 2] = 0.6 + Math.random() * 0.3;
     }
   }
-  
+
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-  
+
   const material = new THREE.PointsMaterial({
-    size: 1.5,
+    size: 0.8,
     sizeAttenuation: true,
     vertexColors: true,
     transparent: true,
-    opacity: 0.9
+    opacity: 0.15,
+    blending: THREE.AdditiveBlending
   });
-  
-  const stars = new THREE.Points(geometry, material);
-  scene.add(stars);
+
+  const dust = new THREE.Points(geometry, material);
+  scene.add(dust);
 }
 
 function createAsteroidBelt() {
@@ -543,19 +750,49 @@ function createAsteroidBelt() {
     const size = 0.02 + Math.random() * 0.06;
     const distance = 20 + Math.random() * 4; // Between 20-24
     const angle = Math.random() * Math.PI * 2;
-    
-    const geometry = new THREE.SphereGeometry(size, 6, 6);
+
+    // Irregular shapes for asteroids
+    const geometry = new THREE.DodecahedronGeometry(size, 0);
+
+    // Vary asteroid colors - rocky to metallic
+    const asteroidType = Math.random();
+    let color, roughness, metalness;
+
+    if (asteroidType < 0.7) {
+      // Rocky asteroids (most common)
+      color = 0x555555 + Math.floor(Math.random() * 0x222222);
+      roughness = 0.95;
+      metalness = 0.05;
+    } else if (asteroidType < 0.9) {
+      // Carbonaceous asteroids (darker)
+      color = 0x2a2a2a + Math.floor(Math.random() * 0x111111);
+      roughness = 1.0;
+      metalness = 0.0;
+    } else {
+      // Metallic asteroids (rare, reflective)
+      color = 0x888888;
+      roughness = 0.3;
+      metalness = 0.7;
+    }
+
     const material = new THREE.MeshStandardMaterial({
-      color: 0x666666,
-      roughness: 1.0,
-      metalness: 0.1
+      color: color,
+      roughness: roughness,
+      metalness: metalness
     });
     const asteroid = new THREE.Mesh(geometry, material);
-    
+    asteroid.castShadow = true;
+    asteroid.receiveShadow = true;
+
+    // Random rotation for variety
+    asteroid.rotation.x = Math.random() * Math.PI * 2;
+    asteroid.rotation.y = Math.random() * Math.PI * 2;
+    asteroid.rotation.z = Math.random() * Math.PI * 2;
+
     asteroid.position.x = Math.cos(angle) * distance;
     asteroid.position.z = Math.sin(angle) * distance;
     asteroid.position.y = (Math.random() - 0.5) * 0.5;
-    
+
     scene.add(asteroid);
   }
 }
