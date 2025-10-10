@@ -51,7 +51,7 @@ const HeroScene = ({
           {/* Unified Temple - All chambers in one connected space */}
           <group name="apollon-temple">
             {/* Central Atrium */}
-            <group position={[0, 0, 0]}>
+            <group position={[0, 1.5, 0]}>
               <ChamberAtrium lightColor={lightColor} />
             </group>
 
