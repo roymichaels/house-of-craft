@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Heart } from "lucide-react";
+import { ShoppingBag, Heart, User, LogIn, LogOut, Package, FileText, Shield } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import MenuDrawer from "./MenuDrawer";
@@ -7,12 +7,23 @@ import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useModalStore } from "@/stores/modalStore";
 import { GoldenIcon } from "./ui/GoldenIcon";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Navigation = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { getItemCount } = useCartStore();
   const { items: wishlistItems } = useWishlistStore();
   const { openModal } = useModalStore();
+  const { user, isAdmin, signOut } = useAuth();
   const cartCount = getItemCount();
   const wishlistCount = wishlistItems.length;
 
@@ -47,6 +58,79 @@ const Navigation = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-3">
+            {/* User Menu or Login Button */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.button
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-full
+                               border border-ancient-gold/25 bg-transparent
+                               flex items-center justify-center
+                               hover:shadow-[0_0_8px_rgba(212,175,55,0.4)]
+                               transition-all duration-300
+                               focus:outline-none focus:ring-2 focus:ring-ancient-gold/50"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label="User menu"
+                  >
+                    <GoldenIcon icon={User} size={18} />
+                  </motion.button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel className="text-sm truncate">
+                    {user.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
+                      <User size={16} />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/orders" className="flex items-center gap-2 cursor-pointer">
+                      <FileText size={16} />
+                      My Orders
+                    </Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin/products" className="flex items-center gap-2 cursor-pointer">
+                          <Shield size={16} />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={signOut}
+                    className="flex items-center gap-2 cursor-pointer text-destructive focus:text-destructive"
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <motion.button
+                  className="w-9 h-9 md:w-10 md:h-10 rounded-full
+                             border border-ancient-gold/25 bg-transparent
+                             flex items-center justify-center
+                             hover:shadow-[0_0_8px_rgba(212,175,55,0.4)]
+                             transition-all duration-300
+                             focus:outline-none focus:ring-2 focus:ring-ancient-gold/50"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label="Sign in"
+                >
+                  <GoldenIcon icon={LogIn} size={18} />
+                </motion.button>
+              </Link>
+            )}
             {/* Wishlist Button */}
             <motion.button
               onClick={() => openModal('wishlist')}
