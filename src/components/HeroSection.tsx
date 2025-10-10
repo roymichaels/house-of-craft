@@ -31,9 +31,6 @@ const HeroSection = () => {
       {/* Three.js Solar System - Bottom layer */}
       <div ref={containerRef} className="absolute inset-0 z-0" />
 
-      {/* CSS Sunrise Gradient Backup - Enhanced layer */}
-      <div className="sunrise-gradient pointer-events-none absolute inset-0 z-5" />
-
       {/* Vignette effect - Middle layer */}
       <div className="scene-vignette pointer-events-none absolute inset-0 z-10" />
 

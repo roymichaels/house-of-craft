@@ -316,23 +316,6 @@ a, button {
   cursor: pointer;
 }
 
-/* Sunrise gradient - Radial sunburst effect behind APOLLO text */
-.sunrise-gradient {
-  background: radial-gradient(
-    ellipse 110% 90% at 50% 42%,
-    rgba(255, 200, 80, 0.28) 0%,
-    rgba(255, 170, 51, 0.22) 12%,
-    rgba(255, 136, 34, 0.18) 25%,
-    rgba(255, 100, 20, 0.14) 40%,
-    rgba(220, 60, 10, 0.09) 55%,
-    rgba(140, 30, 5, 0.05) 70%,
-    rgba(40, 10, 2, 0.02) 85%,
-    transparent 100%
-  );
-  mix-blend-mode: screen;
-  opacity: 0.95;
-}
-
 /* Depth-based vignette for 3D scene framing - Apocalyptic atmosphere */
 .scene-vignette {
   position: fixed;
