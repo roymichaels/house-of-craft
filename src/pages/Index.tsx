@@ -88,8 +88,7 @@ const Index = () => {
         <section ref={mindcraftRef} id="mindcraft" className="min-h-[80vh] flex items-center bg-gradient-to-b from-transparent via-obsidian-smoke/50 to-transparent">
           <Mindcraft />
         </section>
-        <section className="min-h-[120vh] bg-transparent pointer-events-none" />
-        <section ref={objectsRef} id="objects" className="min-h-[80vh] flex items-center bg-gradient-to-b from-transparent via-obsidian-smoke/30 to-transparent">
+        <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center">
           <Objects />
         </section>
         <section ref={doctrineRef} id="doctrine" className="min-h-screen flex items-center bg-gradient-to-b from-transparent via-obsidian-smoke/50 to-transparent">
