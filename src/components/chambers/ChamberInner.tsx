@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { LightColumns } from "../3d/effects/LightColumns";
-import { SolarHalo } from "../3d/effects/SolarHalo";
+import { Text3D } from "../3d/ui/Text3D";
+import { InfoPanel3D } from "../3d/ui/InfoPanel3D";
 
 interface ChamberInnerProps {
   lightColor: string;
@@ -27,20 +27,32 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
 
   return (
     <group>
-      {/* Brightest Light Columns - Inner sanctum */}
-      <LightColumns lightColor={lightColor} intensity={1.5} />
+      {/* Section Header */}
+      <Text3D 
+        content="THE INNER CIRCLE"
+        position={[0, 3, 0]}
+        fontSize={0.4}
+        color="#C4A661"
+        entranceDelay={0.5}
+      />
       
-      {/* Pulsing Solar Halo */}
-      <SolarHalo radius={4.0} lightColor={lightColor} intensity={1.2} />
+      <InfoPanel3D
+        content="Reserved for those who have proven themselves worthy."
+        position={[0, 2, 0.2]}
+        width={5}
+        height={0.6}
+        fontSize={0.12}
+        entranceDelay={1}
+      />
       
       {/* Floor sigil - visible from below during doctrine */}
       <mesh
         ref={sigilRef}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -6, 0]}
+        position={[0, -2, 0]}
         receiveShadow
       >
-        <circleGeometry args={[3, 64]} />
+        <circleGeometry args={[2, 64]} />
         <meshStandardMaterial 
           color={lightColor}
           roughness={0.2}
@@ -53,9 +65,9 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
       {/* Outer ring */}
       <mesh 
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -5.95, 0]}
+        position={[0, -1.95, 0]}
       >
-        <ringGeometry args={[3.2, 3.5, 64]} />
+        <ringGeometry args={[2.2, 2.5, 64]} />
         <meshBasicMaterial 
           color={lightColor}
           transparent
@@ -67,14 +79,11 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
       {/* Central pulsing light */}
       <pointLight 
         ref={glowRef}
-        position={[0, -5, 0]}
+        position={[0, -1, 0]}
         color={lightColor}
         intensity={2}
-        distance={10}
+        distance={5}
       />
-      
-      {/* Ambient sanctum glow */}
-      <ambientLight intensity={0.3} color={lightColor} />
     </group>
   );
 };

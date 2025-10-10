@@ -1,5 +1,4 @@
 import OrbModel from "../hero/OrbModel";
-import { SolarHalo } from "../3d/effects/SolarHalo";
 import { Text3D } from "../3d/ui/Text3D";
 import { Button3D } from "../3d/ui/Button3D";
 import { useModalStore } from "@/stores/modalStore";
@@ -15,9 +14,6 @@ const ChamberAtrium = ({ lightColor }: ChamberAtriumProps) => {
     <group>
       {/* Central Orb - Eye of Apollo */}
       <OrbModel rotationSpeed={0.3} lightColor={lightColor} />
-      
-      {/* Apollo's Halo - Solar Ring */}
-      <SolarHalo radius={3.5} lightColor={lightColor} intensity={1.0} />
       
       {/* 3D UI Elements - Holographic Interface */}
       <Text3D 

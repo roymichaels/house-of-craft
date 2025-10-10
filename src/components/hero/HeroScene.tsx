@@ -50,29 +50,6 @@ const HeroScene = ({
           
           {/* Unified Temple - All chambers in one connected space */}
           <group name="apollon-temple">
-            {/* Temple Floor - Shared ground plane */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, -5]} receiveShadow>
-              <planeGeometry args={[40, 30]} />
-              <meshStandardMaterial 
-                color="#0a0a0a"
-                roughness={0.8}
-                metalness={0.2}
-                emissive="#1a1a1a"
-                emissiveIntensity={0.1}
-              />
-            </mesh>
-
-            {/* Vaulted Ceiling */}
-            <mesh position={[0, 12, -5]} rotation={[0, 0, 0]}>
-              <planeGeometry args={[30, 20]} />
-              <meshStandardMaterial 
-                color="#050505"
-                transparent
-                opacity={0.3}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
-
             {/* Central Atrium */}
             <group position={[0, 0, 0]}>
               <ChamberAtrium lightColor={lightColor} />

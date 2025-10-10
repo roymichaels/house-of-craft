@@ -1,73 +1,39 @@
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
-import { LightColumns } from "../3d/effects/LightColumns";
-import { LatinInscription } from "../3d/LatinInscription";
+import { Text3D } from "../3d/ui/Text3D";
+import { InfoPanel3D } from "../3d/ui/InfoPanel3D";
 
 interface ChamberDoctrineProps {
   lightColor: string;
 }
 
 const ChamberDoctrine = ({ lightColor }: ChamberDoctrineProps) => {
-  const tabletsRef = useRef<(THREE.Mesh | null)[]>([]);
-
-  // Floating animation for tablets
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    tabletsRef.current.forEach((tablet, i) => {
-      if (tablet) {
-        tablet.position.y = i * 1.5 + Math.sin(time * 0.4 + i * 1.5) * 0.15;
-        tablet.rotation.y = Math.sin(time * 0.2 + i) * 0.1;
-      }
-    });
-  });
-
-  // 3 floating tablets in ascending rows
-  const tablets = Array.from({ length: 3 }, (_, i) => ({
-    position: [
-      (i - 1) * 2,
-      i * 1.2,
-      0
-    ] as [number, number, number],
-    key: i
-  }));
-
   return (
     <group>
-      {/* Minimal Light Columns - Focus on tablets */}
-      <LightColumns lightColor={lightColor} intensity={0.4} />
+      {/* Section Header */}
+      <Text3D 
+        content="THE DOCTRINE"
+        position={[0, 3, -2]}
+        fontSize={0.4}
+        color="#C4A661"
+        entranceDelay={0.5}
+      />
       
-      {/* Latin Inscription */}
-      <LatinInscription mode="doctrine" position={[0, 4, -3]} />
+      <InfoPanel3D
+        content="The world bends to the man who moves with intent."
+        position={[0, 2, -1.8]}
+        width={6}
+        height={0.8}
+        fontSize={0.14}
+        entranceDelay={1}
+      />
       
-      {/* Floating Tablets */}
-      {tablets.map((tablet) => (
-        <group key={tablet.key}>
-          <mesh 
-            ref={(el) => tabletsRef.current[tablet.key] = el}
-            position={tablet.position}
-            castShadow
-          >
-            <boxGeometry args={[1.8, 2.4, 0.15]} />
-            <meshStandardMaterial 
-              color="#e8e4dc"
-              roughness={0.7}
-              metalness={0.1}
-            />
-          </mesh>
-          
-          {/* Golden edge glow */}
-          <mesh position={tablet.position}>
-            <boxGeometry args={[1.85, 2.45, 0.12]} />
-            <meshBasicMaterial 
-              color={lightColor}
-              transparent
-              opacity={0.2}
-              side={THREE.BackSide}
-            />
-          </mesh>
-        </group>
-      ))}
+      <InfoPanel3D
+        content="Manifestos of Order. Essays on discipline, clarity, and dominion."
+        position={[0, 0.8, -1.6]}
+        width={5}
+        height={0.6}
+        fontSize={0.11}
+        entranceDelay={1.5}
+      />
     </group>
   );
 };
