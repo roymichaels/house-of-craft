@@ -31,7 +31,7 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden flex flex-col">
       <RitualEntry />
       <CursorGlow />
       <VoiceOfHouse />
@@ -44,9 +44,8 @@ const Index = () => {
       {/* Depth vignette for framing */}
       <div className="scene-vignette" />
 
-      {/* Content overlays */}
-      <div className="relative z-10 h-screen">
-        <Navigation />
+      {/* Content overlays - h-full with proper spacing */}
+      <div className="relative z-10 h-full flex flex-col">
         <HeroSection />
       </div>
       

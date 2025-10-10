@@ -78,16 +78,14 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             PHILOSOPHY
           </motion.button>
 
-          {/* Gold Button - Mission */}
+          {/* Text Link - Mission */}
           <motion.button
             onClick={() => openModal('mission')}
             className="
               h-14 px-10 md:px-12 rounded
-              bg-ancient-gold text-background
+              bg-transparent text-ancient-gold
               font-romania text-sm md:text-base tracking-[0.2em] font-bold
-              shadow-[0_0_30px_hsl(var(--ancient-gold)/0.4)]
-              hover:shadow-[0_0_40px_hsl(var(--ancient-gold)/0.6)]
-              hover:brightness-110
+              hover:text-ancient-gold/80
               transition-all duration-500 ease-out
               focus:outline-none focus:ring-2 focus:ring-ancient-gold/50 focus:ring-offset-2
               focus:ring-offset-background
