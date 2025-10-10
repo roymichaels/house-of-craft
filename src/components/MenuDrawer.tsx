@@ -17,11 +17,11 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const isHomepage = location.pathname === "/";
 
   const navItems = [
-    { name: "Mindcraft", scrollTo: "mindcraft", type: "scroll" as const },
+    { name: "Instruments", scrollTo: "mindcraft", type: "scroll" as const },
     { name: "Objects", scrollTo: "objects", type: "scroll" as const },
     { name: "Doctrine", scrollTo: "doctrine", type: "scroll" as const },
-    { name: "Circle", scrollTo: "circle", type: "scroll" as const },
-    { name: "Collections", modal: "collections" as ModalType, type: "modal" as const },
+    { name: "Inner Chamber", scrollTo: "circle", type: "scroll" as const },
+    { name: "Archives", modal: "collections" as ModalType, type: "modal" as const },
     { name: "Stories", modal: "stories" as ModalType, type: "modal" as const },
     { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];

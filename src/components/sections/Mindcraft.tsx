@@ -9,23 +9,23 @@ const Mindcraft = () => {
   const instruments = [
     {
       icon: Clock,
-      title: "Timepieces",
-      description: "Mechanical instruments that embody precision and presence.",
+      title: "Chronometers",
+      description: "Time made tangible. Discipline measured in seconds.",
     },
     {
       icon: Brain,
-      title: "Hypnosis Tools",
-      description: "Artifacts of influence and transformation.",
+      title: "Implements of Influence",
+      description: "For those who shape reality through will.",
     },
     {
       icon: Target,
-      title: "Focus Objects",
-      description: "Curated tools that sharpen attention and intent.",
+      title: "Artifacts of Attention",
+      description: "Objects that sharpen perception.",
     },
     {
       icon: Sparkles,
-      title: "Ritual Items",
-      description: "Objects that anchor practice and elevate daily mastery.",
+      title: "Ritual Implements",
+      description: "Symbols that anchor daily command.",
     },
   ];
 
@@ -43,10 +43,10 @@ const Mindcraft = () => {
           className="text-center mb-20"
         >
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
-            The Hypnotist's Instruments
+            The Instruments of Mastery
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
-            Where precision meets perception. Tools of mastery.
+            Where discipline meets design. Tools for men who live with intent.
           </p>
         </motion.div>
 

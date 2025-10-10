@@ -25,19 +25,57 @@ const CursorGlow = () => {
   }, []);
 
   return (
-    <motion.div
-      className="pointer-events-none fixed z-[9999] w-64 h-64 rounded-full"
-      style={{
-        left: mousePosition.x - 128,
-        top: mousePosition.y - 128,
-        background: "radial-gradient(circle at center, rgba(196,166,97,0.15) 0%, transparent 70%)",
-      }}
-      animate={{
-        opacity: isOverInteractive ? 1 : 0,
-        scale: isOverInteractive ? 1 : 0.8,
-      }}
-      transition={{ duration: 0.2 }}
-    />
+    <>
+      {/* Golden ring cursor */}
+      <motion.div
+        className="pointer-events-none fixed z-[9999]"
+        style={{
+          left: mousePosition.x,
+          top: mousePosition.y,
+          transform: 'translate(-50%, -50%)',
+        }}
+        animate={{
+          scale: isOverInteractive ? 1.4 : 1,
+        }}
+        transition={{ duration: 0.15 }}
+      >
+        <div className="relative w-6 h-6">
+          {/* Golden ring */}
+          <div 
+            className="absolute inset-0 rounded-full border-2 border-ancient-gold"
+            style={{
+              boxShadow: isOverInteractive 
+                ? '0 0 12px rgba(196,166,97,0.6)' 
+                : '0 0 6px rgba(196,166,97,0.3)',
+            }}
+          />
+          {/* Inner pulse effect on hover */}
+          {isOverInteractive && (
+            <motion.div
+              className="absolute inset-0 rounded-full bg-ancient-gold"
+              initial={{ opacity: 0.4, scale: 0.8 }}
+              animate={{ opacity: 0, scale: 1.2 }}
+              transition={{ duration: 0.6, repeat: Infinity }}
+            />
+          )}
+        </div>
+      </motion.div>
+
+      {/* Subtle glow halo on interactive elements */}
+      <motion.div
+        className="pointer-events-none fixed z-[9998] w-32 h-32 rounded-full"
+        style={{
+          left: mousePosition.x - 64,
+          top: mousePosition.y - 64,
+          background: "radial-gradient(circle at center, rgba(196,166,97,0.08) 0%, transparent 70%)",
+        }}
+        animate={{
+          opacity: isOverInteractive ? 1 : 0,
+          scale: isOverInteractive ? 1 : 0.8,
+        }}
+        transition={{ duration: 0.2 }}
+      />
+    </>
   );
 };
 

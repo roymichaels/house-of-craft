@@ -16,8 +16,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
 
   useFrame((state) => {
     if (groupRef.current) {
-      // Slow continuous rotation of entire group
-      groupRef.current.rotation.y += rotationSpeed * 0.005;
+      // Slower rotation for ancient mechanical feel
+      groupRef.current.rotation.y += rotationSpeed * 0.003;
       
       // Breathing animation
       const breathe = Math.sin(state.clock.elapsedTime * (Math.PI / 2)) * 0.015;
@@ -48,87 +48,87 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
 
   return (
     <group ref={groupRef}>
-      {/* Central Orb - Core of mastery */}
+      {/* Central Astrolabe Core - Dark Bronze */}
       <mesh ref={orbRef} position={[0, 0, 0]} castShadow receiveShadow>
         <sphereGeometry args={[0.8, 64, 64]} />
         <meshPhysicalMaterial
-          color={lightColor}
+          color="#4A4035"
+          metalness={0.85}
+          roughness={0.35}
+          envMapIntensity={1.8}
+          clearcoat={0.6}
+          clearcoatRoughness={0.25}
+          emissive="#4A4035"
+          emissiveIntensity={0.03}
+        />
+      </mesh>
+
+      {/* Obsidian inner sphere - Ancient core */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.75, 32, 32]} />
+        <meshPhysicalMaterial
+          color="#0a0a0a"
+          metalness={0.95}
+          roughness={0.4}
+          envMapIntensity={1.2}
+        />
+      </mesh>
+
+      {/* Ring 1 - Outer bronze astrolabe band */}
+      <mesh ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
+        <torusGeometry args={[1.5, 0.04, 16, 100]} />
+        <meshPhysicalMaterial
+          color="#5A5040"
           metalness={0.9}
-          roughness={0.2}
-          envMapIntensity={2.5}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          emissive={lightColor}
+          roughness={0.25}
+          envMapIntensity={1.5}
+          emissive="#5A5040"
           emissiveIntensity={0.05}
         />
       </mesh>
 
-      {/* Obsidian inner sphere - depth */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.75, 32, 32]} />
-        <meshPhysicalMaterial
-          color="#1a1a1a"
-          metalness={0.95}
-          roughness={0.3}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-
-      {/* Ring 1 - Outer orbit (Gold) */}
-      <mesh ref={ring1Ref} rotation={[Math.PI / 4, 0, 0]}>
-        <torusGeometry args={[1.5, 0.03, 16, 100]} />
-        <meshPhysicalMaterial
-          color={lightColor}
-          metalness={0.95}
-          roughness={0.15}
-          envMapIntensity={2.0}
-          emissive={lightColor}
-          emissiveIntensity={0.1}
-        />
-      </mesh>
-
-      {/* Ring 2 - Middle orbit (Silver) */}
+      {/* Ring 2 - Middle brass band */}
       <mesh ref={ring2Ref} rotation={[0, Math.PI / 3, Math.PI / 4]}>
-        <torusGeometry args={[1.3, 0.025, 16, 100]} />
+        <torusGeometry args={[1.3, 0.03, 16, 100]} />
         <meshPhysicalMaterial
-          color="#B9B9B9"
-          metalness={0.98}
-          roughness={0.1}
-          envMapIntensity={2.5}
-          emissive="#B9B9B9"
-          emissiveIntensity={0.08}
-        />
-      </mesh>
-
-      {/* Ring 3 - Inner orbit (Gold, thinner) */}
-      <mesh ref={ring3Ref} rotation={[Math.PI / 6, Math.PI / 2, 0]}>
-        <torusGeometry args={[1.1, 0.02, 16, 100]} />
-        <meshPhysicalMaterial
-          color={lightColor}
-          metalness={0.92}
+          color="#B8860B"
+          metalness={0.88}
           roughness={0.2}
-          envMapIntensity={1.8}
-          emissive={lightColor}
+          envMapIntensity={1.7}
+          emissive="#B8860B"
           emissiveIntensity={0.06}
         />
       </mesh>
 
-      {/* Accent points - 8 orbiting particles */}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i * Math.PI) / 4;
-        const radius = 1.8;
+      {/* Ring 3 - Inner oxidized copper */}
+      <mesh ref={ring3Ref} rotation={[Math.PI / 6, Math.PI / 2, 0]}>
+        <torusGeometry args={[1.1, 0.025, 16, 100]} />
+        <meshPhysicalMaterial
+          color="#7A6A4F"
+          metalness={0.85}
+          roughness={0.3}
+          envMapIntensity={1.4}
+          emissive="#7A6A4F"
+          emissiveIntensity={0.04}
+        />
+      </mesh>
+
+      {/* Vita flames - 4 red accent spheres at cardinal points */}
+      {[...Array(4)].map((_, i) => {
+        const angle = (i * Math.PI) / 2;
+        const radius = 1.65;
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
         
         return (
           <mesh key={i} position={[x, 0, z]}>
-            <sphereGeometry args={[0.04, 16, 16]} />
+            <sphereGeometry args={[0.06, 16, 16]} />
             <meshStandardMaterial
-              color={lightColor}
-              metalness={0.95}
-              roughness={0.1}
-              emissive={lightColor}
-              emissiveIntensity={0.3}
+              color="#C73E3A"
+              metalness={0.9}
+              roughness={0.15}
+              emissive="#C73E3A"
+              emissiveIntensity={0.5}
             />
           </mesh>
         );

@@ -11,17 +11,17 @@ const Doctrine = () => {
   const writings = [
     {
       title: "On Mastery",
-      excerpt: "Luxury begins in the mind. Not acquired through possession, but cultivated through precision of thought.",
+      excerpt: "Luxury begins in the mind. It's not what you own, but how you hold it.",
       category: "Philosophy",
     },
     {
-      title: "The Instruments of Time",
-      excerpt: "A timepiece is not worn to track hours—it is worn to command them. Each mechanism, a reminder that every second belongs to you.",
+      title: "On Time",
+      excerpt: "A chronometer is not worn to count seconds, but to remind you that they are yours.",
       category: "Essays",
     },
     {
-      title: "The Language of Influence",
-      excerpt: "Words shape reality. The hypnotist knows this. So does the craftsman. Both deal in transformation.",
+      title: "On Influence",
+      excerpt: "The world bends to the man who moves with intent.",
       category: "Manifestos",
     },
   ];
@@ -45,7 +45,7 @@ const Doctrine = () => {
             The Doctrine
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
-            Essays, aphorisms, and manifestos. Luxury begins in the mind.
+            Writings, aphorisms, and manifestos on mastery, perception, and command.
           </p>
         </motion.div>
 

@@ -5,8 +5,8 @@ import * as THREE from "three";
 const AmbientDust = () => {
   const pointsRef = useRef<THREE.Points>(null);
   
-  // Generate random particle positions
-  const particleCount = 250;
+  // Generate random marble dust particle positions
+  const particleCount = 150;
   const positions = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
@@ -17,18 +17,20 @@ const AmbientDust = () => {
     return pos;
   }, []);
 
-  // Animate particles slowly upward
+  // Animate marble dust particles - slow upward drift like temple incense
   useFrame((state) => {
     if (pointsRef.current) {
       const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
       
       for (let i = 0; i < positions.length; i += 3) {
-        // Slow upward drift
-        positions[i + 1] += 0.001;
+        // Slow upward drift with slight horizontal drift
+        positions[i + 1] += 0.002; // y - upward
+        positions[i] += Math.sin(state.clock.elapsedTime + i) * 0.001; // x - subtle drift
         
         // Reset particles that drift too high
         if (positions[i + 1] > 10) {
           positions[i + 1] = -10;
+          positions[i] = (Math.random() - 0.5) * 20;
         }
       }
       
@@ -47,10 +49,10 @@ const AmbientDust = () => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.02}
-        color="#C4A661"
+        size={0.025}
+        color="#E8E8E8"
         transparent
-        opacity={0.3}
+        opacity={0.25}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
       />

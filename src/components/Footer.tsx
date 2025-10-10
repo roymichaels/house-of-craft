@@ -5,22 +5,22 @@ const Footer = () => {
 
   const footerLinks = {
     House: [
-      { name: "About", path: "/about" },
-      { name: "Stories", path: "/stories" },
-      { name: "Concierge", path: "/concierge" },
-      { name: "The Club", path: "/club" },
+      { name: "Philosophy", path: "/about" },
+      { name: "Doctrine", path: "/stories" },
+      { name: "Inner Chamber", path: "/concierge" },
+      { name: "Council", path: "/club" },
     ],
-    Collections: [
-      { name: "Watches", path: "/collections/watches" },
-      { name: "Tailoring", path: "/collections/tailoring" },
-      { name: "Leather", path: "/collections/leather" },
-      { name: "Pens & Eyewear", path: "/collections/accessories" },
+    Archives: [
+      { name: "Chronometers", path: "/collections/watches" },
+      { name: "Vestments", path: "/collections/tailoring" },
+      { name: "Leather Goods", path: "/collections/leather" },
+      { name: "Implements", path: "/collections/accessories" },
     ],
     Support: [
-      { name: "Authentication", path: "/authentication" },
-      { name: "Shipping & Returns", path: "/returns" },
-      { name: "Privacy Policy", path: "/privacy" },
-      { name: "Terms of Service", path: "/terms" },
+      { name: "Provenance", path: "/authentication" },
+      { name: "Dispatch", path: "/returns" },
+      { name: "Privacy", path: "/privacy" },
+      { name: "Terms", path: "/terms" },
     ],
   };
 
@@ -61,15 +61,20 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="pt-8 border-t border-border/50 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
-            © {currentYear} The House. All rights reserved.
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              © {currentYear} The House. All rights reserved.
+            </p>
+            <span className="text-xs font-cinzel text-ancient-gold/40 tracking-wider">
+              EST. MMXXV
+            </span>
+          </div>
           <div className="flex gap-6">
             <a
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm text-muted-foreground hover:text-ancient-gold transition-colors"
             >
               Instagram
             </a>
@@ -77,9 +82,9 @@ const Footer = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm text-muted-foreground hover:text-ancient-gold transition-colors"
             >
-              Twitter
+              X
             </a>
           </div>
         </div>

@@ -71,3 +71,19 @@ export const toggleMute = () => {
 };
 
 export const getMuteState = () => isMuted;
+
+// Metallic chime for link hovers
+export const playMetallicChime = () => {
+  if (isMuted) return;
+  
+  const synth = new Tone.MetalSynth({
+    envelope: { attack: 0.001, decay: 0.15, release: 0.05 },
+    harmonicity: 8,
+    modulationIndex: 20,
+    resonance: 3000,
+    octaves: 1.2,
+  }).toDestination();
+  
+  synth.volume.value = -28;
+  synth.triggerAttackRelease('G5', '64n');
+};

@@ -7,7 +7,7 @@ All colors MUST be HSL.
 */
 
 /* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display+SC:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display+SC:wght@400;700&family=Cinzel:wght@400;600&display=swap');
 
 /* Ancient Font - Brand Wordmark */
 @font-face {
@@ -61,6 +61,13 @@ All colors MUST be HSL.
     --gold: 43 74% 66%;
     --gold-dark: 40 20% 35%;
     --brass: 40 25% 45%;
+    
+    /* Roman Imperial Palette */
+    --imperial-bronze: 28 38% 35%;
+    --temple-marble: 0 0% 95%;
+    --obsidian-core: 0 0% 8%;
+    --vita-flame: 4 69% 50%;
+    --laurel-green: 86 35% 28%;
     
     --success: 156 48% 48%;
     --warning: 40 70% 45%;
@@ -182,5 +189,22 @@ All colors MUST be HSL.
 /* Body text font */
 body p {
   font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Imperial caps utility */
+.imperial-caps {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* Custom cursor */
+body {
+  cursor: default;
+}
+
+a, button {
+  cursor: pointer;
 }
 }

@@ -12,22 +12,22 @@ const Circle = () => {
     {
       icon: Lock,
       title: "Private Access",
-      description: "Exclusive offerings and first access to rare objects.",
+      description: "First rights to relics and collaborations.",
     },
     {
       icon: Users,
       title: "Inner Circle",
-      description: "Connect with fellow masters and collaborators.",
+      description: "Council of craftsmen, strategists, and creators.",
     },
     {
       icon: Zap,
       title: "Bespoke Services",
-      description: "Custom commissions and personal consultations.",
+      description: "Commissions of objects and ideas.",
     },
     {
       icon: Crown,
       title: "Legacy Projects",
-      description: "Participate in collaborations that shape the House.",
+      description: "Partnerships that shape the future canon of the House.",
     },
   ];
 
@@ -54,7 +54,7 @@ const Circle = () => {
             The Inner Chamber
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
-            Private chambers of The House—collaborations, commissions, and mastery.
+            Private access to The House — for those who lead, create, and command.
           </p>
         </motion.div>
 

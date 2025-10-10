@@ -11,21 +11,21 @@ const Objects = () => {
     {
       category: "Timepieces",
       title: "Instruments of Time",
-      description: "Every object here serves one purpose—to make the mind precise.",
-      story: "Forged for those who master presence. Each timepiece is a meditation on control.",
+      description: "Every object here serves one purpose — to sharpen the mind that wields it.",
+      story: "Forged for those who master presence. Each chronometer is a meditation on control.",
       image: "/placeholder.svg",
     },
     {
       category: "Writing Instruments",
       title: "Tools of Thought",
-      description: "Precision begins with how you mark the world.",
-      story: "Master craftsmen understand: the instrument shapes the idea. These are not pens—they are extensions of will.",
+      description: "Every mark is a declaration. Every word, a weapon.",
+      story: "Master craftsmen understand: the instrument shapes the idea. These are not pens — they are extensions of will.",
       image: "/placeholder.svg",
     },
     {
       category: "Accessories",
       title: "Objects of Power",
-      description: "What you carry defines what you command.",
+      description: "What you wear announces what you've conquered.",
       story: "Curated for clarity. Every piece selected for function, refined for presence.",
       image: "/placeholder.svg",
     },
@@ -45,7 +45,7 @@ const Objects = () => {
             Selected Objects
           </h2>
           <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
-            Curated instruments of precision and presence.
+            Chosen for precision, presence, and permanence.
           </p>
         </motion.div>
 
@@ -95,7 +95,7 @@ const Objects = () => {
                     {collection.description}
                   </p>
                   <div className="flex items-center text-ancient-gold text-sm font-medium group-hover:translate-x-2 transition-transform duration-300">
-                    View Object →
+                    Acquire →
                   </div>
                 </div>
               </button>

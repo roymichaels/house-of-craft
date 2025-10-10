@@ -60,6 +60,11 @@ export default {
         "ancient-gold": "hsl(var(--ancient-gold))",
         "ancient-silver": "hsl(var(--ancient-silver))",
         "ancient-patina": "hsl(var(--ancient-patina))",
+        "imperial-bronze": "hsl(var(--imperial-bronze))",
+        "temple-marble": "hsl(var(--temple-marble))",
+        "obsidian-core": "hsl(var(--obsidian-core))",
+        "vita-flame": "hsl(var(--vita-flame))",
+        "laurel-green": "hsl(var(--laurel-green))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -71,6 +76,7 @@ export default {
         serif: ['Playfair Display', 'Georgia', 'serif'],
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
         mono: ['IBM Plex Mono', 'Menlo', 'monospace'],
+        cinzel: ['Cinzel', 'serif'],
       },
       keyframes: {
         "accordion-down": {
@@ -100,6 +106,10 @@ export default {
         "parallax": {
           "0%": { transform: "translateY(0px)" },
           "100%": { transform: "translateY(-8px)" }
+        },
+        "marble-float": {
+          "0%, 100%": { transform: "translateY(0px) translateX(0px)", opacity: "0.3" },
+          "50%": { transform: "translateY(-20px) translateX(10px)", opacity: "0.6" }
         }
       },
       animation: {
@@ -110,6 +120,7 @@ export default {
         "scale-in": "scale-in var(--duration-fast) var(--spring)",
         "slide-up": "slide-up var(--duration-slow) var(--spring)",
         "parallax": "parallax 1s ease-out forwards",
+        "marble-float": "marble-float 8s ease-in-out infinite",
       },
       transitionTimingFunction: {
         spring: 'var(--spring)',
