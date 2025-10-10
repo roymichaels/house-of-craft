@@ -100,7 +100,10 @@ export function initSolarSystem(container: HTMLElement) {
   console.log('📷 Camera position:', camera.position);
 
   // Renderer
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({ 
+    antialias: true,
+    alpha: false // Opaque background - we want the scene background color to show
+  });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
