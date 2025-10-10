@@ -16,7 +16,7 @@ const HeroSeal = ({ ctaLink }: HeroSealProps) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 7, duration: 1.2, ease: "easeOut" }}
         whileHover={{ scale: 1.1 }}
-        aria-label="Enter The House"
+        aria-label="Enter The Order"
       >
         {/* Inner dot */}
         <span className="absolute inset-0 flex items-center justify-center">

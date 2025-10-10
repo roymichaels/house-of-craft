@@ -9,7 +9,7 @@ const RitualEntry = () => {
   const [hasEntered, setHasEntered] = useState(false);
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("house-visited");
+    const hasVisited = localStorage.getItem("apollon-visited");
     
     if (!hasVisited) {
       setShowEntry(true);
@@ -20,7 +20,7 @@ const RitualEntry = () => {
 
   const handleEnter = () => {
     playModalClick();
-    localStorage.setItem("house-visited", "true");
+    localStorage.setItem("apollon-visited", "true");
     setShowEntry(false);
     setTimeout(() => setHasEntered(true), 1000);
   };
