@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import Navigation from "./Navigation";
 import HeroOverlay from "./hero/HeroOverlay";
-import LavaBackground from "./effects/LavaBackground";
 import { useHeroScene } from "@/hooks/useHeroScene";
 import { initSolarSystem, cleanupSolarSystem } from "@/lib/solarSystem";
 
@@ -12,8 +11,10 @@ const HeroSection = () => {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // Initialize the vanilla Three.js solar system
     const cleanup = initSolarSystem(containerRef.current);
 
+    // Cleanup on unmount
     return () => {
       cleanup();
       cleanupSolarSystem();
@@ -21,19 +22,14 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-[#1a0a05]">
+    <div className="relative h-screen w-full overflow-hidden bg-[#000814]">
       {/* Navigation - Top layer */}
       <div className="relative z-30">
         <Navigation />
       </div>
 
-      {/* Lava Background - Bottom layer */}
-      <div className="absolute inset-0 z-0">
-        <LavaBackground />
-      </div>
-
-      {/* Three.js Solar System - Hidden but kept for other sections */}
-      <div ref={containerRef} className="absolute inset-0 z-0 opacity-0 pointer-events-none" />
+      {/* Three.js Solar System - Bottom layer */}
+      <div ref={containerRef} className="absolute inset-0 z-0" />
 
       {/* Vignette effect - Middle layer */}
       <div className="scene-vignette pointer-events-none absolute inset-0 z-10" />

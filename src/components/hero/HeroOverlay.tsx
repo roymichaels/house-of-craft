@@ -15,10 +15,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
       <div className="flex flex-col h-full justify-between pt-8 pb-0 bg-transparent">
         {/* APOLLO Title - Top */}
         <motion.h1
-          className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] pt-12"
-          style={{
-            textShadow: '0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(212, 175, 55, 0.6), 0 8px 24px rgba(0, 0, 0, 0.9)'
-          }}
+          className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)] pt-12"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -40,12 +37,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             <div className="w-1.5 h-1.5 rounded-full bg-ancient-gold animate-pulse" />
             <div className="h-px flex-1 bg-gradient-to-l from-transparent via-ancient-gold/40 to-ancient-gold/40" />
           </div>
-          <p
-            className="text-base md:text-xl text-ancient-silver/90 font-light tracking-wide text-center px-4"
-            style={{
-              textShadow: '0 2px 6px rgba(0, 0, 0, 0.9), 0 4px 12px rgba(0, 0, 0, 0.8)'
-            }}
-          >
+          <p className="text-base md:text-xl text-ancient-silver/80 font-light tracking-wide text-center px-4">
             {subtitle}
           </p>
           <div className="flex items-center gap-3 md:gap-4 mt-2 md:mt-4">
