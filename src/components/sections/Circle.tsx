@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Circle = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
 
   const benefits = [
     {
@@ -52,8 +52,8 @@ const Circle = () => {
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
             THE INNER CHAMBER
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Private access to Roy Michaels' world—collaborations, commissions, and conversations reserved for those who seek mastery.
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+            Private chambers of The House—collaborations, commissions, and mastery.
           </p>
         </motion.div>
 
@@ -75,7 +75,7 @@ const Circle = () => {
               <h3 className="font-ancient text-2xl text-foreground mb-3 tracking-wide">
                 {benefit.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed font-serif">
                 {benefit.description}
               </p>
               
@@ -93,10 +93,10 @@ const Circle = () => {
           className="text-center"
         >
           <div className="mb-8">
-            <p className="text-foreground text-lg mb-2">
-              Membership is by invitation or request.
+            <p className="text-foreground text-lg mb-2 font-serif">
+              Initiation is by invitation or request.
             </p>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm font-serif">
               For serious inquiries regarding collaborations, commissions, or private access.
             </p>
           </div>

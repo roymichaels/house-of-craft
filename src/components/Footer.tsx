@@ -32,10 +32,10 @@ const Footer = () => {
           <div>
             <h3 className="text-3xl font-ancient tracking-wider text-ancient-gold mb-2">THE HOUSE</h3>
             <p className="text-xs font-sans tracking-widest text-ancient-silver/50 uppercase mb-4">
-              by Roy Michaels
+              Est. MMXXV
             </p>
             <p className="text-sm text-muted-foreground mb-6 text-balance">
-              A luxury maison for discerning collectors of timepieces, tailoring, and timeless objects.
+              A sanctuary for those who master time, mind, and matter.
             </p>
           </div>
 

@@ -1,33 +1,33 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { useModalStore } from "@/stores/modalStore";
 
 const Objects = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
+  const { openModal } = useModalStore();
 
   const collections = [
     {
       category: "Timepieces",
-      title: "Mechanical Precision",
-      description: "Curated watches that embody mastery of time and craftsmanship.",
+      title: "Instruments of Time",
+      description: "Every object here serves one purpose—to make the mind precise.",
+      story: "Forged for those who master presence. Each timepiece is a meditation on control.",
       image: "/placeholder.svg",
-      link: "/collections?category=timepieces",
     },
     {
       category: "Writing Instruments",
       title: "Tools of Thought",
-      description: "Pens and notebooks designed for those who shape ideas into reality.",
+      description: "Precision begins with how you mark the world.",
+      story: "Master craftsmen understand: the instrument shapes the idea. These are not pens—they are extensions of will.",
       image: "/placeholder.svg",
-      link: "/collections?category=writing",
     },
     {
       category: "Accessories",
       title: "Objects of Power",
-      description: "Rings, pendants, and pocket knives—each with meaning beyond function.",
+      description: "What you carry defines what you command.",
+      story: "Curated for clarity. Every piece selected for function, refined for presence.",
       image: "/placeholder.svg",
-      link: "/collections?category=accessories",
     },
   ];
 
@@ -44,8 +44,8 @@ const Objects = () => {
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
             SELECTED OBJECTS
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Curated tools for the modern mind-maker. Each object chosen for precision, presence, and power.
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+            Curated instruments of precision and presence.
           </p>
         </motion.div>
 
@@ -62,9 +62,15 @@ const Objects = () => {
                 ease: [0.16, 1, 0.3, 1],
               }}
             >
-              <Link
-                to={collection.link}
-                className="group block relative overflow-hidden border border-border hover:border-ancient-gold/50 transition-all duration-500"
+              <button
+                onClick={() => openModal({
+                  title: collection.title,
+                  category: collection.category,
+                  description: collection.description,
+                  image: collection.image,
+                  story: collection.story,
+                })}
+                className="group block relative overflow-hidden border border-border hover:border-ancient-gold/50 transition-all duration-500 w-full text-left"
               >
                 {/* Image container */}
                 <div className="aspect-[4/5] overflow-hidden bg-muted">
@@ -85,15 +91,14 @@ const Objects = () => {
                   <h3 className="font-ancient text-3xl text-foreground mb-3 tracking-wide group-hover:text-ancient-gold transition-colors duration-300">
                     {collection.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 font-serif">
                     {collection.description}
                   </p>
                   <div className="flex items-center text-ancient-gold text-sm font-medium group-hover:translate-x-2 transition-transform duration-300">
-                    Explore Collection
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    View Object →
                   </div>
                 </div>
-              </Link>
+              </button>
             </motion.div>
           ))}
         </div>

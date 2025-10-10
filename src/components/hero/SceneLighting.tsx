@@ -1,16 +1,47 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { SpotLight, PointLight } from "three";
+import { useSceneStore, SceneMode } from "@/contexts/SceneContext";
 
 interface SceneLightingProps {
   lightColor: string;
   accentColor: string;
 }
 
+const getLightingForMode = (mode: SceneMode) => {
+  switch (mode) {
+    case 'hero':
+      return { keyLight: 0.8, jewelLight: 0.3 };
+    case 'mindcraft':
+      return { keyLight: 0.6, jewelLight: 0.5 };
+    case 'objects':
+      return { keyLight: 0.9, jewelLight: 0.2 };
+    case 'doctrine':
+      return { keyLight: 0.5, jewelLight: 0.1 };
+    case 'circle':
+      return { keyLight: 0.8, jewelLight: 0.4 };
+    default:
+      return { keyLight: 0.8, jewelLight: 0.3 };
+  }
+};
+
 const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
+  const { mode } = useSceneStore();
   const keyLightRef = useRef<SpotLight>(null);
   const sweepLightRef = useRef<SpotLight>(null);
   const jewelLightRef = useRef<PointLight>(null);
+
+  useEffect(() => {
+    // Smoothly transition lighting based on scene mode
+    const targetIntensities = getLightingForMode(mode);
+    
+    if (keyLightRef.current) {
+      keyLightRef.current.intensity = targetIntensities.keyLight;
+    }
+    if (jewelLightRef.current) {
+      jewelLightRef.current.intensity = targetIntensities.jewelLight;
+    }
+  }, [mode]);
 
   useFrame((state) => {
     if (keyLightRef.current) {
@@ -27,16 +58,18 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
       sweepLightRef.current.position.z = Math.sin(sweepAngle) * sweepRadius;
     }
 
-    // Pulsating jewel light synced with heartbeat (every 3s)
+    // Pulsating jewel light (mode-dependent)
     if (jewelLightRef.current) {
       const heartbeat = Math.sin(state.clock.elapsedTime * (Math.PI / 1.5));
-      const pulse = 0.3 + heartbeat * 0.2;
+      const basePulse = mode === 'mindcraft' ? 0.5 : 0.3;
+      const pulse = basePulse + heartbeat * 0.2;
       jewelLightRef.current.intensity = pulse;
     }
     
     // Sync key light intensity with heartbeat
     if (keyLightRef.current) {
-      const flicker = 0.8 + Math.sin(state.clock.elapsedTime * (Math.PI / 3)) * 0.1;
+      const baseIntensity = getLightingForMode(mode).keyLight;
+      const flicker = baseIntensity + Math.sin(state.clock.elapsedTime * (Math.PI / 3)) * 0.1;
       keyLightRef.current.intensity = flicker;
     }
   });

@@ -4,7 +4,7 @@ import { Brain, Clock, Target, Sparkles } from "lucide-react";
 
 const Mindcraft = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
 
   const instruments = [
     {
@@ -45,8 +45,8 @@ const Mindcraft = () => {
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
             THE HYPNOTIST'S INSTRUMENTS
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Where precision meets perception. Objects engineered for mastery of time, mind, and matter.
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+            Where precision meets perception. Tools of mastery.
           </p>
         </motion.div>
 
@@ -69,7 +69,7 @@ const Mindcraft = () => {
                 <h3 className="font-ancient text-2xl text-foreground mb-4 tracking-wide">
                   {instrument.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed font-serif">
                   {instrument.description}
                 </p>
                 

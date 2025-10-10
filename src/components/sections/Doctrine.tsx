@@ -5,22 +5,22 @@ import { Link } from "react-router-dom";
 
 const Doctrine = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-38% 0px" });
 
   const writings = [
     {
       title: "On Mastery",
-      excerpt: "Luxury begins in the mind. It is not acquired through possession, but cultivated through precision of thought and deliberate action.",
+      excerpt: "Luxury begins in the mind. Not acquired through possession, but cultivated through precision of thought.",
       category: "Philosophy",
     },
     {
       title: "The Instruments of Time",
-      excerpt: "A timepiece is not worn to track hours—it is worn to master them. Each mechanism, a reminder that every second is yours to command.",
+      excerpt: "A timepiece is not worn to track hours—it is worn to command them. Each mechanism, a reminder that every second belongs to you.",
       category: "Essays",
     },
     {
       title: "The Language of Influence",
-      excerpt: "Words shape reality. The hypnotist knows this. So does the craftsman. Both deal in transformation through language—spoken or forged.",
+      excerpt: "Words shape reality. The hypnotist knows this. So does the craftsman. Both deal in transformation.",
       category: "Manifestos",
     },
   ];
@@ -43,8 +43,8 @@ const Doctrine = () => {
           <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
             THE DOCTRINE
           </h2>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
-            Essays, aphorisms, and short manifestos. Because luxury begins in the mind.
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+            Essays, aphorisms, and manifestos. Luxury begins in the mind.
           </p>
         </motion.div>
 
@@ -71,7 +71,7 @@ const Doctrine = () => {
                   <h3 className="font-ancient text-3xl text-foreground mb-4 tracking-wide group-hover:text-ancient-gold transition-colors duration-300">
                     {writing.title}
                   </h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed mb-4 italic">
+                  <p className="text-muted-foreground text-lg leading-relaxed mb-4 font-serif italic">
                     "{writing.excerpt}"
                   </p>
                   <Link
