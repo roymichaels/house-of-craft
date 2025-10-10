@@ -9,8 +9,8 @@ export interface CameraPath {
 
 export const chamberPaths: Record<SceneMode, CameraPath> = {
   hero: {
-    position: [0, 0, 10],
-    lookAt: [0, 0, 0],
+    position: [0, 0, 6],
+    lookAt: [0, 0.5, 0],
     fov: 50,
     roll: 0
   },
