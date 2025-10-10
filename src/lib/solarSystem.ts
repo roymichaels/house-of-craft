@@ -214,23 +214,26 @@ export function initSolarSystem(container: HTMLElement) {
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 3.0);
         
-        // Animated noise for lava patterns
-        float noiseValue = noise(vPosition * 3.0 + time * 0.1);
-        noiseValue += noise(vPosition * 6.0 - time * 0.2) * 0.5;
-        noiseValue += noise(vPosition * 12.0 + time * 0.3) * 0.25;
-        noiseValue /= 1.75;
-        
-        // Dark spots (sunspots)
-        float spots = step(0.65, noiseValue);
-        
-        // Color mixing based on noise
+        // Multi-layered noise for lava patterns
+        float noiseValue = noise(vPosition * 2.0 + time * 0.15);
+        noiseValue += noise(vPosition * 4.0 - time * 0.25) * 0.6;
+        noiseValue += noise(vPosition * 8.0 + time * 0.35) * 0.3;
+        noiseValue += noise(vPosition * 16.0 - time * 0.4) * 0.15;
+        noiseValue /= 2.05;
+
+        // Create more contrast
+        noiseValue = pow(noiseValue, 0.8);
+
+        // Color mixing with more distinct bands
         vec3 color;
-        if (noiseValue < 0.3) {
-          color = mix(colorDark, colorCool, noiseValue / 0.3);
-        } else if (noiseValue < 0.6) {
-          color = mix(colorCool, colorMid, (noiseValue - 0.3) / 0.3);
+        if (noiseValue < 0.25) {
+          color = mix(colorDark, colorCool, noiseValue / 0.25);
+        } else if (noiseValue < 0.5) {
+          color = mix(colorCool, colorMid, (noiseValue - 0.25) / 0.25);
+        } else if (noiseValue < 0.75) {
+          color = mix(colorMid, colorHot, (noiseValue - 0.5) / 0.25);
         } else {
-          color = mix(colorMid, colorHot, (noiseValue - 0.6) / 0.4);
+          color = colorHot;
         }
         
         // Add fresnel glow
@@ -241,10 +244,10 @@ export function initSolarSystem(container: HTMLElement) {
     `
   };
   
-  // Core - brightest white-yellow center
-  const coreGeometry = new THREE.SphereGeometry(4.5, 64, 64);
+  // Core - small bright center
+  const coreGeometry = new THREE.SphereGeometry(2.0, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.5, 1.5, 1.5),
+    color: new THREE.Color(1.8, 0.8, 0.4),
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
