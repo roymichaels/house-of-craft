@@ -77,7 +77,7 @@ const HeroOverlay = ({
 
       {/* The Summoning CTA - Ceremonial Button - appears at 7-9s */}
       <motion.div
-        className="absolute bottom-[15vh] md:bottom-[20vh] left-0 right-0 z-30 flex flex-col items-center gap-4 px-6"
+        className="absolute bottom-[8vh] md:bottom-[12vh] left-0 right-0 z-30 flex flex-col items-center gap-4 px-6"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 7, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -87,7 +87,7 @@ const HeroOverlay = ({
         <div className="relative group">
           {/* Initial pulse ring (appears once at 8s) */}
           <motion.div
-            className="absolute inset-0 rounded-md border-2 border-primary/60 pointer-events-none"
+            className="absolute inset-0 rounded border-2 border-primary/60 pointer-events-none"
             initial={{ scale: 1, opacity: 1 }}
             animate={{ scale: 1.5, opacity: 0 }}
             transition={{ delay: 8, duration: 1.5, ease: "easeOut" }}
@@ -96,27 +96,27 @@ const HeroOverlay = ({
           <motion.button
             onClick={() => openModal('collections')}
             className="
-              relative px-10 py-4 rounded-md
-              bg-gradient-to-r from-[#D4AF37] to-[#F9E79F] text-black
-              font-ancient text-sm md:text-base tracking-[0.15em] font-semibold
-              shadow-[0_0_20px_rgba(212,175,55,0.3)]
-              hover:bg-black hover:text-[#D4AF37]
-              hover:shadow-[0_0_40px_rgba(212,175,55,0.6)]
+              relative px-12 py-4 rounded
+              bg-[hsl(var(--apollon-gold))] text-black
+              font-ancient text-sm md:text-base tracking-[0.2em] font-bold
+              shadow-[0_0_20px_rgba(196,166,97,0.4)]
+              hover:shadow-[0_0_40px_rgba(196,166,97,0.7)]
+              hover:bg-[hsl(var(--primary))]
               transition-all duration-500 ease-out
               focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2
               focus:ring-offset-background
               
-              before:absolute before:inset-0 before:rounded-md 
-              before:border-2 before:border-primary/20
+              before:absolute before:inset-0 before:rounded
+              before:border-2 before:border-primary/30
               before:scale-100 before:opacity-0
-              hover:before:scale-125 hover:before:opacity-100
+              hover:before:scale-110 hover:before:opacity-100
               before:transition-all before:duration-700
               before:pointer-events-none
             "
             initial={{ scale: 0.95 }}
             animate={{ scale: 1 }}
             transition={{ delay: 7.5, duration: 0.6, ease: "easeOut" }}
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
           >
             ENTER THE ORDER
