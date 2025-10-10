@@ -12,12 +12,14 @@ interface OrbModelProps {
 const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
   const groupRef = useRef<Group>(null);
   const sunRef = useRef<Mesh>(null);
+  const moonRef = useRef<Mesh>(null);
   const corona1Ref = useRef<Mesh>(null);
   const corona2Ref = useRef<Mesh>(null);
   const corona3Ref = useRef<Mesh>(null);
   const flare1Ref = useRef<Mesh>(null);
   const flare2Ref = useRef<Mesh>(null);
   const flare3Ref = useRef<Mesh>(null);
+  const chromosphereRef = useRef<Mesh>(null);
 
   const [isDragging, setIsDragging] = useState(false);
   const [previousMouse, setPreviousMouse] = useState(new Vector2());
@@ -119,42 +121,37 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         }
         
         void main() {
-          // Create turbulent plasma surface with more pronounced texture
-          vec3 noisePos = vPosition * 4.0 + vec3(time * 0.1);
-          float noise1 = snoise(noisePos);
-          float noise2 = snoise(noisePos * 2.0 + vec3(time * 0.15));
-          float noise3 = snoise(noisePos * 4.0 - vec3(time * 0.2));
-          
-          float turbulence = noise1 * 0.5 + noise2 * 0.3 + noise3 * 0.2;
-          
           // Distance from center (for radial gradient)
           float dist = length(vUv - 0.5) * 2.0;
           
-          // Realistic limb darkening (sun is brighter in center)
-          float limbDarken = pow(1.0 - dist, 0.8);
+          // Corona texture
+          vec3 noisePos = vPosition * 4.0 + vec3(time * 0.1);
+          float noise1 = snoise(noisePos);
+          float noise2 = snoise(noisePos * 2.0 + vec3(time * 0.15));
+          float turbulence = noise1 * 0.5 + noise2 * 0.5;
           
-          // Sun color gradient: brighter white center -> warm yellow -> soft golden
-          vec3 coreColor = vec3(1.0, 1.0, 1.0);        // Pure white
-          vec3 midColor = vec3(1.0, 0.95, 0.7);        // Warmer white/pale yellow
-          vec3 edgeColor = vec3(1.0, 0.8, 0.4);        // Soft golden
+          // ECLIPSE EFFECT: Inverse limb - bright at edges, dark in center
+          float limbBrighten = pow(dist, 2.5);
           
-          // Mix colors based on distance and turbulence
-          vec3 color = mix(coreColor, midColor, dist * 0.7 + turbulence * 0.3);
-          color = mix(color, edgeColor, dist * dist);
+          // Eclipse color gradient - dark core, bright corona edges
+          vec3 coreColor = vec3(0.05, 0.05, 0.05);  // Almost black core
+          vec3 midColor = vec3(1.5, 1.4, 1.0);      // Bright white-gold corona
+          vec3 edgeColor = vec3(2.0, 1.8, 1.2);     // Intense golden-white rays
           
-          // Add surface granulation (solar convection cells) - more prominent
-          float granulation = snoise(vPosition * 10.0 + vec3(time * 0.05)) * 0.15;
+          vec3 color = mix(coreColor, midColor, pow(dist, 1.5));
+          color = mix(color, edgeColor, pow(dist, 3.0));
+          
+          // Add corona texture
+          float granulation = snoise(vPosition * 10.0 + vec3(time * 0.05)) * 0.2;
           color += granulation;
           
-          // Enhanced brightness with limb darkening
-          float brightness = (2.0 - dist * 0.4) * intensity * limbDarken;
-          color *= brightness;
+          // Subtle pulsing
+          float pulse = 1.0 + sin(time * 2.0) * 0.05;
           
-          // Pulsing effect
-          float pulse = 1.0 + sin(time * 2.0) * 0.1;
-          color *= pulse;
+          // Eclipse brightness - bright edges, dark center
+          float brightness = (0.2 + dist * 3.0) * intensity * limbBrighten;
           
-          gl_FragColor = vec4(color, 1.0);
+          gl_FragColor = vec4(color * brightness * pulse, 1.0);
         }
       `,
       toneMapped: false,
@@ -239,41 +236,48 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       material.uniforms.intensity.value = 1.2 + Math.sin(time * 1.5) * 0.2;
     }
 
-    // Rotating corona layers (different speeds) - much subtler
+    // Rotating corona layers - ECLIPSE MODE (highly visible)
     if (corona1Ref.current) {
-      corona1Ref.current.rotation.z = time * 0.1;
+      corona1Ref.current.rotation.z = time * 0.05;
       const mat1 = corona1Ref.current.material as THREE.MeshBasicMaterial;
-      mat1.opacity = 0.08 + Math.sin(time * 0.5) * 0.02;
+      mat1.opacity = 0.4 + Math.sin(time * 0.5) * 0.05;
     }
     if (corona2Ref.current) {
-      corona2Ref.current.rotation.z = -time * 0.08;
+      corona2Ref.current.rotation.z = -time * 0.04;
       const mat2 = corona2Ref.current.material as THREE.MeshBasicMaterial;
-      mat2.opacity = 0.05 + Math.sin(time * 0.7) * 0.02;
+      mat2.opacity = 0.3 + Math.sin(time * 0.7) * 0.05;
     }
     if (corona3Ref.current) {
-      corona3Ref.current.rotation.z = time * 0.06;
+      corona3Ref.current.rotation.z = time * 0.03;
       const mat3 = corona3Ref.current.material as THREE.MeshBasicMaterial;
-      mat3.opacity = 0.03 + Math.sin(time * 0.9) * 0.01;
+      mat3.opacity = 0.25 + Math.sin(time * 0.9) * 0.05;
     }
 
-    // Solar flares/prominences (spinning and pulsing) - much subtler
+    // Corona streamers (slower, more ethereal)
     if (flare1Ref.current) {
-      flare1Ref.current.rotation.x = time * 0.4;
-      flare1Ref.current.rotation.y = time * 0.3;
+      flare1Ref.current.rotation.x = time * 0.15;
+      flare1Ref.current.rotation.y = time * 0.1;
       const flareMat1 = flare1Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat1.emissiveIntensity = 3 + Math.sin(time * 2) * 0.5;
+      flareMat1.emissiveIntensity = 10 + Math.sin(time * 2) * 2;
     }
     if (flare2Ref.current) {
-      flare2Ref.current.rotation.x = -time * 0.35;
-      flare2Ref.current.rotation.z = time * 0.25;
+      flare2Ref.current.rotation.x = -time * 0.12;
+      flare2Ref.current.rotation.z = time * 0.08;
       const flareMat2 = flare2Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat2.emissiveIntensity = 3 + Math.sin(time * 2.5) * 0.5;
+      flareMat2.emissiveIntensity = 10 + Math.sin(time * 2.5) * 2;
     }
     if (flare3Ref.current) {
-      flare3Ref.current.rotation.y = time * 0.45;
-      flare3Ref.current.rotation.z = -time * 0.2;
+      flare3Ref.current.rotation.y = time * 0.14;
+      flare3Ref.current.rotation.z = -time * 0.06;
       const flareMat3 = flare3Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat3.emissiveIntensity = 3 + Math.sin(time * 3) * 0.5;
+      flareMat3.emissiveIntensity = 10 + Math.sin(time * 3) * 2;
+    }
+    
+    // Chromosphere pulse
+    if (chromosphereRef.current) {
+      chromosphereRef.current.rotation.z = time * 0.2;
+      const chromoMat = chromosphereRef.current.material as THREE.MeshBasicMaterial;
+      chromoMat.opacity = 0.7 + Math.sin(time * 3) * 0.1;
     }
   });
 
@@ -282,33 +286,42 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       ref={groupRef}
       onPointerDown={handlePointerDown}
     >
-      {/* Central Sun Sphere - Custom WebGL Shader */}
+      {/* Central Sun Sphere with ECLIPSE shader */}
       <mesh ref={sunRef}>
         <sphereGeometry args={[1, 128, 128]} />
         <primitive object={sunShaderMaterial} attach="material" />
       </mesh>
 
-      {/* Corona Layer 1 - Innermost glow (subtle white-yellow) */}
-      <mesh ref={corona1Ref}>
-        <sphereGeometry args={[1.25, 32, 32]} />
+      {/* Occluding Moon - The dark silhouette creating the eclipse */}
+      <mesh ref={moonRef} position={[0.15, -0.1, 0.3]}>
+        <sphereGeometry args={[0.95, 64, 64]} />
         <meshBasicMaterial
-          color="#FFFEF0"
+          color="#000000"
+          toneMapped={false}
+        />
+      </mesh>
+
+      {/* Corona Layer 1 - Bright inner corona (ECLIPSE MODE) */}
+      <mesh ref={corona1Ref}>
+        <sphereGeometry args={[3, 64, 64]} />
+        <meshBasicMaterial
+          color="#FFFDF7"
           transparent
-          opacity={0.08}
+          opacity={0.4}
           blending={THREE.AdditiveBlending}
           side={THREE.BackSide}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Corona Layer 2 - Mid glow (very subtle) */}
+      {/* Corona Layer 2 - Mid corona glow (ECLIPSE MODE) */}
       {!isMobile && (
         <mesh ref={corona2Ref}>
-          <sphereGeometry args={[1.6, 32, 32]} />
+          <sphereGeometry args={[4, 64, 64]} />
           <meshBasicMaterial
-            color="#FFFEF0"
+            color="#FFFDF7"
             transparent
-            opacity={0.05}
+            opacity={0.3}
             blending={THREE.AdditiveBlending}
             side={THREE.BackSide}
             toneMapped={false}
@@ -316,14 +329,14 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         </mesh>
       )}
 
-      {/* Corona Layer 3 - Barely visible outer glow */}
+      {/* Corona Layer 3 - Outer corona wispy glow (ECLIPSE MODE) */}
       {!isMobile && (
         <mesh ref={corona3Ref}>
-          <sphereGeometry args={[2.1, 32, 32]} />
+          <sphereGeometry args={[5, 64, 64]} />
           <meshBasicMaterial
-            color="#FFFEF0"
+            color="#FFFACD"
             transparent
-            opacity={0.03}
+            opacity={0.25}
             blending={THREE.AdditiveBlending}
             side={THREE.BackSide}
             toneMapped={false}
@@ -331,78 +344,79 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         </mesh>
       )}
 
-      {/* Solar Flare/Prominence 1 - Much thinner and subtler */}
+      {/* Corona Streamer 1 - Ethereal rays */}
       <mesh ref={flare1Ref} position={[0, 0, 0]}>
-        <torusGeometry args={[1.3, 0.02, 16, 100]} />
+        <torusGeometry args={[2.5, 0.08, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF8C69"
-          emissive="#FF8C69"
-          emissiveIntensity={3}
+          color="#FFFACD"
+          emissive="#FFD700"
+          emissiveIntensity={10}
           metalness={0}
-          roughness={0.5}
+          roughness={0.3}
           transparent
-          opacity={0.6}
+          opacity={0.9}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Solar Flare/Prominence 2 */}
+      {/* Corona Streamer 2 */}
       <mesh ref={flare2Ref} position={[0, 0, 0]} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[1.4, 0.018, 16, 100]} />
+        <torusGeometry args={[3, 0.1, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF8C69"
-          emissive="#FF8C69"
-          emissiveIntensity={3}
+          color="#FFFACD"
+          emissive="#FFD700"
+          emissiveIntensity={10}
           metalness={0}
-          roughness={0.5}
+          roughness={0.3}
           transparent
-          opacity={0.6}
+          opacity={0.85}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Solar Flare/Prominence 3 */}
+      {/* Corona Streamer 3 */}
       <mesh ref={flare3Ref} position={[0, 0, 0]} rotation={[0, Math.PI / 3, Math.PI / 4]}>
-        <torusGeometry args={[1.35, 0.02, 16, 100]} />
+        <torusGeometry args={[2.8, 0.09, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF8C69"
-          emissive="#FF8C69"
-          emissiveIntensity={3}
+          color="#FFFACD"
+          emissive="#FFD700"
+          emissiveIntensity={10}
           metalness={0}
-          roughness={0.5}
+          roughness={0.3}
           transparent
-          opacity={0.6}
+          opacity={0.88}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Sunspot effect - darker patches (subtle detail) */}
-      <mesh position={[0.5, 0.3, 0.95]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
+      {/* Chromosphere - Pink/red ring visible at sun's edge */}
+      <mesh ref={chromosphereRef} position={[0, 0, 0]}>
+        <torusGeometry args={[1.05, 0.03, 32, 64]} />
         <meshBasicMaterial
-          color="#1A0A00"
+          color="#FF1744"
           transparent
-          opacity={0.3}
+          opacity={0.7}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
         />
       </mesh>
 
-      <mesh position={[-0.4, -0.5, 0.9]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshBasicMaterial
-          color="#1A0A00"
-          transparent
-          opacity={0.25}
-        />
-      </mesh>
-
-      <mesh position={[0.2, -0.7, 0.85]}>
-        <sphereGeometry args={[0.07, 16, 16]} />
-        <meshBasicMaterial
-          color="#1A0A00"
-          transparent
-          opacity={0.28}
-        />
-      </mesh>
+      {/* Bailey's Beads - Bright spots around moon edge */}
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => {
+        const angle = (i / 8) * Math.PI * 2;
+        const radius = 0.95;
+        const x = 0.15 + Math.cos(angle) * radius;
+        const y = -0.1 + Math.sin(angle) * radius;
+        return (
+          <mesh key={i} position={[x, y, 0.3]}>
+            <sphereGeometry args={[0.03, 16, 16]} />
+            <meshBasicMaterial
+              color="#FFFFFF"
+              toneMapped={false}
+            />
+          </mesh>
+        );
+      })}
     </group>
   );
 };
