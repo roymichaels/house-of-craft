@@ -63,7 +63,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="group relative overflow-hidden rounded-2xl bg-card/50 backdrop-blur-sm
                  border border-border/30 hover:border-primary/40
                  shadow-lg hover:shadow-2xl hover:shadow-primary/10
-                 transition-all duration-300 cursor-pointer"
+                 transition-all duration-300 cursor-pointer aspect-square"
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       transition={{
