@@ -70,15 +70,18 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       groupRef.current.scale.setScalar(1 + breathe);
     }
 
-    // Individual ring rotations
+    // Individual ring rotations - increased for visibility
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.z += rotationSpeed * 0.002;
+      ring1Ref.current.rotation.z += rotationSpeed * 0.004;
+      ring1Ref.current.rotation.y += rotationSpeed * 0.002;
     }
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.x += rotationSpeed * 0.0025;
+      ring2Ref.current.rotation.x += rotationSpeed * 0.005;
+      ring2Ref.current.rotation.z += rotationSpeed * 0.003;
     }
     if (ring3Ref.current) {
-      ring3Ref.current.rotation.y += rotationSpeed * 0.003;
+      ring3Ref.current.rotation.y += rotationSpeed * 0.006;
+      ring3Ref.current.rotation.x += rotationSpeed * 0.002;
     }
 
     // Pulsing glow on orb
