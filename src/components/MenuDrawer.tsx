@@ -77,7 +77,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             </button>
 
             {/* Menu Items */}
-            <nav className="flex flex-col items-center gap-6">
+            <nav className="flex flex-col items-center gap-3">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.type === "scroll" ? item.scrollTo : item.name}
@@ -91,8 +91,8 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                 >
                   <button
                     onClick={() => handleNavClick(item)}
-                    className="font-ancient-tulip text-3xl md:text-5xl text-ancient-gold hover:text-ancient-gold/70
-                               transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
+                    className="font-ancient-tulip text-2xl md:text-4xl text-ancient-gold hover:text-ancient-gold/70
+                               transition-colors tracking-wide drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
                                hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
                   >
                     {item.name}
@@ -101,7 +101,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
               ))}
 
               {/* Divider */}
-              <div className="w-24 h-px bg-ancient-gold/20 mt-4" />
+              <div className="w-24 h-px bg-ancient-gold/20" />
 
               {/* Sign In */}
               <motion.div
@@ -112,12 +112,11 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                   duration: 0.8,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="mt-6"
               >
                 <Button
                   variant="outline"
                   size="lg"
-                  className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10"
+                  className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10 font-sans"
                   onClick={onClose}
                 >
                   <GoldenIcon icon={User} size="md" glow="subtle" />
