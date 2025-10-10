@@ -71,40 +71,48 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       }
     }
     
-    // Scroll-based zoom for hero mode - active ALWAYS (even during intro)
+    // Scroll-based camera animation throughout the entire page
     if (mode === 'hero') {
-      // Smooth zoom throughout the entire hero section (0-15% scroll range)
-      const heroScrollProgress = Math.min(scrollProgress / 0.15, 1); // Normalize to 0-1
-      const zoomAmount = heroScrollProgress * 2.5; // Zoom in by 2.5 units max
-      const perspectiveShift = heroScrollProgress * 0.8; // Upward camera tilt
-      const fovShift = heroScrollProgress * 8; // FOV shift for dramatic effect
+      // Hero section (0-15%): Dramatic zoom in
+      const heroScrollProgress = Math.min(scrollProgress / 0.15, 1);
+      const zoomAmount = heroScrollProgress * 2.5;
+      const perspectiveShift = heroScrollProgress * 0.8;
+      const fovShift = heroScrollProgress * 8;
       
-      // Smooth easing function for luxury feel
       const easeInOutCubic = (t: number) => 
         t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       
       const easedProgress = easeInOutCubic(heroScrollProgress);
       
-      // Apply smooth camera transformations
       const targetPos = new Vector3(
         targetPosition.current.x,
         targetPosition.current.y + (perspectiveShift * easedProgress),
         targetPosition.current.z - (zoomAmount * easedProgress)
       );
       
-      camera.position.lerp(targetPos, 0.1); // Smooth lerp for luxury feel
+      camera.position.lerp(targetPos, 0.1);
       camera.lookAt(targetLookAt.current);
       
-      // Adjust FOV for cinematic zoom effect
       if (camera instanceof PerspectiveCamera) {
         const targetFovValue = targetFov.current - (fovShift * easedProgress);
         camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.08);
         camera.updateProjectionMatrix();
       }
     } else if (introComplete.current) {
-      // Cinematic camera transitions for other modes - slower for unified temple flow
-      const lerpSpeed = 0.01;
-      camera.position.lerp(targetPosition.current, lerpSpeed);
+      // Other sections (15-100%): Continue smooth cinematic movement
+      // Map scroll progress to smooth camera transitions
+      const sectionProgress = Math.max(0, (scrollProgress - 0.15) / 0.85); // Normalize 15-100% to 0-1
+      const lerpSpeed = 0.015; // Slightly faster for smoother transitions
+      
+      // Smooth position transition with added scroll-based movement
+      const scrollOffset = sectionProgress * 1.5; // Gentle forward movement
+      const targetPos = new Vector3(
+        targetPosition.current.x,
+        targetPosition.current.y + (scrollOffset * 0.3),
+        targetPosition.current.z - scrollOffset
+      );
+      
+      camera.position.lerp(targetPos, lerpSpeed);
       
       // Smooth lookAt transition
       const currentLookAt = new Vector3();
@@ -113,15 +121,18 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
       currentLookAt.lerp(targetLookAt.current, lerpSpeed);
       camera.lookAt(currentLookAt);
       
-      // FOV transition with smooth easing
+      // FOV transition with scroll influence
       if (camera instanceof PerspectiveCamera) {
-        camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
+        const scrollFovShift = sectionProgress * 3; // Subtle FOV change throughout scroll
+        const targetFovValue = targetFov.current + scrollFovShift;
+        camera.fov = MathUtils.lerp(camera.fov, targetFovValue, 0.03);
         camera.updateProjectionMatrix();
       }
 
       // Camera roll (z-axis rotation) for cinematic effect
       const targetRollRad = (targetRoll.current * Math.PI) / 180;
-      camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
+      const scrollRoll = sectionProgress * 0.02; // Gentle roll throughout page
+      camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad + scrollRoll, 0.02);
     }
     
     // Parallax effect - subtle camera rotation based on mouse (reduced strength)
