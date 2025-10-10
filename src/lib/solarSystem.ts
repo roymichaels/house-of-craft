@@ -180,15 +180,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   const sunGroup = new THREE.Group();
   
-  // Custom lava shader - Enhanced for dramatic effect
-  const lavaShader = {
+  // Photorealistic solar shader - Based on actual sun observations
+  const solarShader = {
     uniforms: {
       time: { value: 0 },
-      colorWhiteHot: { value: new THREE.Color(0xFFFFFF) },
-      colorHot: { value: new THREE.Color(0xFFAA33) },
-      colorMid: { value: new THREE.Color(0xFF4400) },
-      colorCool: { value: new THREE.Color(0xBB1100) },
-      colorDark: { value: new THREE.Color(0x220000) }
+      // Realistic solar color palette from NASA imagery
+      colorCore: { value: new THREE.Color(0xFFFAF0) },      // White-yellow core
+      colorPhotosphere: { value: new THREE.Color(0xFFF4E0) }, // Main surface
+      colorGranule: { value: new THREE.Color(0xFFDD99) },   // Granulation cells
+      colorCool: { value: new THREE.Color(0xFF9944) },      // Cooler regions
+      colorDark: { value: new THREE.Color(0xCC4400) },      // Sunspots/dark areas
+      colorChromosphere: { value: new THREE.Color(0xFF6622) } // Outer atmosphere
     },
     vertexShader: `
       uniform float time;
@@ -196,21 +198,66 @@ export function initSolarSystem(container: HTMLElement) {
       varying vec3 vNormal;
       varying vec3 vPosition;
 
-      // Smooth noise function
-      float noise(vec3 p) {
-        return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
+      // Perlin-style noise for realistic turbulence
+      vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i  = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod289(i);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 0.142857142857;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ *ns.x + ns.yyyy;
+        vec4 y = y_ *ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x;
+        p1 *= norm.y;
+        p2 *= norm.z;
+        p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
       }
 
-      // Smooth Fractal Brownian Motion - fewer octaves for cinematic quality
-      float fbm(vec3 p) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        for(int i = 0; i < 3; i++) {
-          value += amplitude * noise(p);
-          p *= 1.8;
-          amplitude *= 0.5;
+      // Multi-octave turbulence for realistic convection
+      float turbulence(vec3 p) {
+        float sum = 0.0;
+        float freq = 1.0;
+        float amp = 1.0;
+        for(int i = 0; i < 4; i++) {
+          sum += abs(snoise(p * freq)) * amp;
+          freq *= 2.0;
+          amp *= 0.5;
         }
-        return value;
+        return sum;
       }
 
       void main() {
@@ -218,12 +265,11 @@ export function initSolarSystem(container: HTMLElement) {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
 
-        // Smooth cinematic displacement - slow, dramatic movement
+        // Realistic solar convection - granulation pattern displacement
         vec3 pos = position;
-        float disp1 = fbm(position * 1.5 + time * 0.08);
-        float disp2 = fbm(position * 2.2 - time * 0.12);
-        float disp3 = fbm(position * 1.0 + time * 0.05);
-        float displacement = (disp1 * 0.4 + disp2 * 0.35 + disp3 * 0.25) * 1.2;
+        float granulation = turbulence(position * 2.5 + time * 0.03);
+        float convection = snoise(position * 1.2 + time * 0.02) * 0.5 + 0.5;
+        float displacement = (granulation * 0.4 + convection * 0.3) * 0.6;
         pos += normal * displacement;
 
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -240,114 +286,145 @@ export function initSolarSystem(container: HTMLElement) {
       varying vec3 vNormal;
       varying vec3 vPosition;
 
-      float noise(vec3 p) {
-        return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
+      // Perlin noise for realistic patterns
+      vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+      vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
+      vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+      float snoise(vec3 v) {
+        const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+        const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+        vec3 i  = floor(v + dot(v, C.yyy));
+        vec3 x0 = v - i + dot(i, C.xxx);
+        vec3 g = step(x0.yzx, x0.xyz);
+        vec3 l = 1.0 - g;
+        vec3 i1 = min(g.xyz, l.zxy);
+        vec3 i2 = max(g.xyz, l.zxy);
+        vec3 x1 = x0 - i1 + C.xxx;
+        vec3 x2 = x0 - i2 + C.yyy;
+        vec3 x3 = x0 - D.yyy;
+        i = mod289(i);
+        vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+        float n_ = 0.142857142857;
+        vec3 ns = n_ * D.wyz - D.xzx;
+        vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+        vec4 x_ = floor(j * ns.z);
+        vec4 y_ = floor(j - 7.0 * x_);
+        vec4 x = x_ *ns.x + ns.yyyy;
+        vec4 y = y_ *ns.x + ns.yyyy;
+        vec4 h = 1.0 - abs(x) - abs(y);
+        vec4 b0 = vec4(x.xy, y.xy);
+        vec4 b1 = vec4(x.zw, y.zw);
+        vec4 s0 = floor(b0)*2.0 + 1.0;
+        vec4 s1 = floor(b1)*2.0 + 1.0;
+        vec4 sh = -step(h, vec4(0.0));
+        vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+        vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+        vec3 p0 = vec3(a0.xy, h.x);
+        vec3 p1 = vec3(a0.zw, h.y);
+        vec3 p2 = vec3(a1.xy, h.z);
+        vec3 p3 = vec3(a1.zw, h.w);
+        vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+        p0 *= norm.x;
+        p1 *= norm.y;
+        p2 *= norm.z;
+        p3 *= norm.w;
+        vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+        m = m * m;
+        return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
       }
 
-      // Smooth Fractal Brownian Motion - cinematic quality
-      float fbm(vec3 p) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        for(int i = 0; i < 3; i++) {
-          value += amplitude * noise(p);
-          p *= 1.8;
-          amplitude *= 0.5;
+      float turbulence(vec3 p) {
+        float sum = 0.0;
+        float freq = 1.0;
+        float amp = 1.0;
+        for(int i = 0; i < 4; i++) {
+          sum += abs(snoise(p * freq)) * amp;
+          freq *= 2.0;
+          amp *= 0.5;
         }
-        return value;
+        return sum;
       }
 
       void main() {
-        // Dramatic fresnel effect for cinematic edge glow
+        // View direction for limb darkening
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.0);
+        float viewDot = dot(vNormal, viewDir);
 
-        // Slow, dramatic flowing lava patterns - cinematic speeds
-        vec3 flowDir1 = vPosition + vec3(time * 0.05, time * 0.03, 0.0);
-        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.07, time * 0.04);
-        vec3 flowDir3 = vPosition + vec3(time * 0.02, -time * 0.025, time * 0.03);
-        vec3 flowDir4 = vPosition + vec3(time * 0.06, time * 0.015, -time * 0.02);
+        // REALISTIC LIMB DARKENING - sun is darker at edges
+        float limbDarkening = smoothstep(0.0, 1.0, viewDot);
+        limbDarkening = pow(limbDarkening, 0.6);
 
-        float lava1 = fbm(flowDir1 * 1.5);
-        float lava2 = fbm(flowDir2 * 2.0);
-        float lava3 = fbm(flowDir3 * 1.2);
-        float lava4 = noise(vPosition * 4.0 + time * 0.15);
-        float lava5 = fbm(flowDir4 * 1.8);
+        // Solar granulation - convection cells (realistic 1000-2000km scale)
+        float granulation = turbulence(vPosition * 3.0 + time * 0.02) * 0.5 + 0.5;
+        granulation = smoothstep(0.3, 0.7, granulation);
 
-        // Combine patterns for dramatic apocalyptic effect
-        float noiseValue = lava1 * 0.35 + lava2 * 0.25 + lava3 * 0.2 + lava4 * 0.12 + lava5 * 0.08;
+        // Large-scale convection patterns (supergranulation)
+        float superGranulation = snoise(vPosition * 0.8 + time * 0.01) * 0.5 + 0.5;
 
-        // Slow, dramatic swirling veins and flame channels
-        float veins = abs(sin(lava1 * 8.0 + time * 0.3));
-        float veins2 = abs(cos(lava2 * 6.5 - time * 0.25));
-        float veins3 = abs(sin(lava3 * 9.0 + time * 0.2));
-        noiseValue = mix(noiseValue, (veins + veins2 + veins3) * 0.4, 0.35);
+        // Sunspots - cooler, darker regions
+        float sunspots = turbulence(vPosition * 1.5 + time * 0.005);
+        float darkSpots = smoothstep(0.75, 0.85, sunspots);
 
-        // Smooth contrast for cinematic quality
-        noiseValue = pow(noiseValue, 0.6);
-        noiseValue = smoothstep(0.08, 0.92, noiseValue);
+        // Solar flares and active regions
+        float activity = snoise(vPosition * 2.0 + time * 0.03) * 0.5 + 0.5;
+        float brightRegions = smoothstep(0.7, 0.9, activity);
 
-        // Deep dramatic dark spots (cooler lava crust) - slow formation
-        float spots = fbm(vPosition * 2.5 + time * 0.01);
-        float darkSpots = smoothstep(0.65, 0.82, spots);
-        noiseValue = mix(noiseValue * 0.2, noiseValue, darkSpots);
+        // Combine surface features
+        float surfaceDetail = granulation * 0.6 + superGranulation * 0.4;
 
-        // Cinematic apocalyptic color mapping with dramatic heat variation
-        vec3 color;
-        if (noiseValue < 0.15) {
-          color = colorDark;
-        } else if (noiseValue < 0.28) {
-          color = mix(colorDark, colorCool, (noiseValue - 0.15) / 0.13);
-        } else if (noiseValue < 0.48) {
-          color = mix(colorCool, colorMid, (noiseValue - 0.28) / 0.2);
-        } else if (noiseValue < 0.68) {
-          color = mix(colorMid, colorHot, (noiseValue - 0.48) / 0.2);
-        } else if (noiseValue < 0.85) {
-          color = mix(colorHot, colorWhiteHot, (noiseValue - 0.68) / 0.17);
-        } else {
-          color = colorWhiteHot * 1.15;
-        }
+        // Build realistic solar surface color
+        vec3 baseColor = mix(colorGranule, colorPhotosphere, surfaceDetail);
 
-        // Blazing white-hot veins of flowing lava - smooth transitions
-        float brightVeins = smoothstep(0.78, 0.90, noiseValue);
-        color = mix(color, colorWhiteHot * 1.8, brightVeins * 0.7);
+        // Add sunspots (dark, cool regions)
+        baseColor = mix(baseColor, colorDark, darkSpots * 0.8);
 
-        // Dramatic fresnel glow for fiery atmosphere
-        color = mix(color, colorHot * 1.4, fresnel * 0.65);
+        // Add bright active regions
+        baseColor = mix(baseColor, colorCore, brightRegions * 0.4);
 
-        // Subtle surface texture detail - cinematic grain
-        float detail = noise(vPosition * 12.0 + time * 0.05) * 0.08;
-        color += detail * vec3(1.0, 0.7, 0.5);
+        // Apply limb darkening for 3D realism
+        baseColor = mix(baseColor * 0.5, baseColor, limbDarkening);
 
-        gl_FragColor = vec4(color, 1.0);
+        // Chromospheric edge glow (visible at limb)
+        float edgeGlow = pow(1.0 - viewDot, 3.0);
+        baseColor = mix(baseColor, colorChromosphere, edgeGlow * 0.4);
+
+        // Subtle variations in brightness (realistic photosphere)
+        float brightness = 0.95 + turbulence(vPosition * 4.0 + time * 0.02) * 0.05;
+        baseColor *= brightness;
+
+        gl_FragColor = vec4(baseColor, 1.0);
       }
     `
   };
   
-  // Core - BLAZING WHITE-HOT center
-  const coreGeometry = new THREE.SphereGeometry(2.8, 64, 64);
+  // Inner core - intense white-yellow light
+  const coreGeometry = new THREE.SphereGeometry(3.5, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(6.0, 4.2, 3.0),
+    color: new THREE.Color(2.5, 2.2, 2.0),
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
   sunGroup.add(sunCore);
 
-  // Surface layer - lava with shader
-  const surfaceGeometry = new THREE.SphereGeometry(5.0, 128, 128);
+  // Photosphere layer - realistic solar surface
+  const surfaceGeometry = new THREE.SphereGeometry(5.0, 256, 256);
   const surfaceMaterial = new THREE.ShaderMaterial({
-    uniforms: lavaShader.uniforms,
-    vertexShader: lavaShader.vertexShader,
-    fragmentShader: lavaShader.fragmentShader
+    uniforms: solarShader.uniforms,
+    vertexShader: solarShader.vertexShader,
+    fragmentShader: solarShader.fragmentShader
   });
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Corona glow - outer atmosphere
-  const coronaGeometry = new THREE.SphereGeometry(6.8, 64, 64);
+  // Corona - realistic solar atmosphere (chromosphere + corona)
+  const coronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
   const coronaMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xff6622) }
+      coronaColor: { value: new THREE.Color(0xff8844) },
+      chromosphereColor: { value: new THREE.Color(0xff6633) }
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -360,24 +437,30 @@ export function initSolarSystem(container: HTMLElement) {
     `,
     fragmentShader: `
       uniform float time;
-      uniform vec3 glowColor;
+      uniform vec3 coronaColor;
+      uniform vec3 chromosphereColor;
       varying vec3 vNormal;
       varying vec3 vPosition;
 
       void main() {
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
+        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
 
-        float pulse = sin(time * 0.3) * 0.12 + 0.88;
-        float intensity = fresnel * 0.5 * pulse;
+        // Subtle atmospheric activity
+        float activity = sin(time * 0.2 + vPosition.x * 2.0) * 0.1 + 0.9;
 
-        vec3 color = glowColor * intensity;
-        gl_FragColor = vec4(color, intensity * 0.4);
+        // Layer atmospheric colors - chromosphere closer, corona farther
+        vec3 atmosphereColor = mix(chromosphereColor, coronaColor, fresnel * 0.6);
+
+        float intensity = fresnel * 0.35 * activity;
+
+        gl_FragColor = vec4(atmosphereColor * intensity, intensity * 0.3);
       }
     `,
     transparent: true,
     blending: THREE.AdditiveBlending,
-    side: THREE.BackSide
+    side: THREE.BackSide,
+    depthWrite: false
   });
   const corona = new THREE.Mesh(coronaGeometry, coronaMaterial);
   sunGroup.add(corona);
@@ -510,18 +593,19 @@ export function initSolarSystem(container: HTMLElement) {
       sunLayers.material.uniforms.time.value = time;
       sunLayers.coronaMaterial.uniforms.time.value = time;
 
-      // Slow, dramatic pulsating scale - cinematic breathing effect
-      const pulseScale = 1.0 + Math.sin(time * 0.3) * 0.04 + Math.sin(time * 0.6) * 0.02 + Math.sin(time * 0.9) * 0.01;
-      sunLayers.core.scale.setScalar(pulseScale * 1.03);
+      // Subtle pulsing - realistic solar breathing
+      const pulseScale = 1.0 + Math.sin(time * 0.15) * 0.015 + Math.sin(time * 0.3) * 0.008;
+      sunLayers.core.scale.setScalar(pulseScale * 1.02);
       sunLayers.surface.scale.setScalar(pulseScale);
-      sunLayers.corona.scale.setScalar(pulseScale * 1.02);
+      sunLayers.corona.scale.setScalar(pulseScale * 1.01);
 
-      // Very slow rotation for cinematic lava flow
-      sunLayers.surface.rotation.y += 0.0005;
-      sunLayers.surface.rotation.x += 0.0001;
+      // Realistic solar rotation (27 days = very slow)
+      sunLayers.surface.rotation.y += 0.0003;
+      sunLayers.surface.rotation.x += 0.00005;
 
-      // Slow counter-rotation for corona atmosphere
-      sunLayers.corona.rotation.y -= 0.0002;
+      // Atmospheric differential rotation
+      sunLayers.corona.rotation.y -= 0.00015;
+      sunLayers.corona.rotation.z += 0.00008;
     }
     
     // Update planets - slow, contemplative orbital motion
