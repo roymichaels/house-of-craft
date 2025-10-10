@@ -121,7 +121,7 @@ const VaultEcommerce = ({ category }: VaultEcommerceProps) => {
                 stiffness: 300,
                 damping: 30,
               }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto"
+              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto"
             >
               {isLoading ? (
                 // Skeleton loaders

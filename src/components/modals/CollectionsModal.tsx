@@ -86,10 +86,10 @@ const CollectionsModal = () => {
               stiffness: 300,
               damping: 30,
             }}
-            className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center p-4 md:p-8"
+            className="fixed inset-0 z-50 overflow-hidden"
           >
-            <div className="relative w-full max-w-7xl max-h-[90vh] bg-background/98 backdrop-blur-2xl 
-                            rounded-3xl border border-primary/20 shadow-2xl overflow-hidden">
+            <div className="relative w-full h-full bg-background/98 backdrop-blur-2xl 
+                            border-y border-primary/20 overflow-hidden">
               {/* Top Navigation Bar */}
               <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4 md:p-6">
                 {/* Decorative Icon / Back Button */}
@@ -139,7 +139,7 @@ const CollectionsModal = () => {
               </div>
 
               {/* Scrollable Content */}
-              <div className="max-h-[90vh] overflow-y-auto momentum-scroll flex flex-col"
+              <div className="h-full overflow-y-auto momentum-scroll flex flex-col"
                    onClick={(e) => e.target === e.currentTarget && closeModal()}>
                 {/* Header - Only show when viewing categories */}
                 {viewState === 'categories' && (
