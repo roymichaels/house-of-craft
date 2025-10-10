@@ -87,7 +87,7 @@ export function initSolarSystem(container: HTMLElement) {
     0.1,
     1000
   );
-  camera.position.set(0, 30, 70);
+  camera.position.set(0, 20, 65);
   camera.lookAt(0, 0, 0);
   
   // ============================================================================
@@ -115,9 +115,9 @@ export function initSolarSystem(container: HTMLElement) {
   
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    2.0,  // strength - dramatically increased for intense glow
-    1.2,  // radius - much wider bloom for fiery effect
-    0.05  // threshold - lower to bloom more areas
+    2.5,  // strength - maximum intensity for sunrise glow
+    1.8,  // radius - extra wide bloom for sunburst effect
+    0.03  // threshold - very low to bloom entire sun area
   );
   composer.addPass(bloomPass);
   
@@ -325,11 +325,11 @@ export function initSolarSystem(container: HTMLElement) {
   sunGroup.add(sunSurface);
 
   // Inner Corona - INTENSE red-orange flame glow
-  const innerCoronaGeometry = new THREE.SphereGeometry(6.5, 64, 64);
+  const innerCoronaGeometry = new THREE.SphereGeometry(7.5, 64, 64);
   const innerCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(3.0, 1.2, 0.3),
+    color: new THREE.Color(3.5, 1.4, 0.35),
     transparent: true,
-    opacity: 0.55,
+    opacity: 0.65,
     side: THREE.BackSide,
     toneMapped: false
   });
@@ -337,11 +337,11 @@ export function initSolarSystem(container: HTMLElement) {
   sunGroup.add(innerCorona);
 
   // Outer Corona - DRAMATIC fiery atmospheric glow
-  const outerCoronaGeometry = new THREE.SphereGeometry(8.5, 64, 64);
+  const outerCoronaGeometry = new THREE.SphereGeometry(10.5, 64, 64);
   const outerCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(2.5, 0.8, 0.2),
+    color: new THREE.Color(2.8, 0.9, 0.25),
     transparent: true,
-    opacity: 0.38,
+    opacity: 0.48,
     side: THREE.BackSide,
     toneMapped: false
   });
@@ -349,16 +349,28 @@ export function initSolarSystem(container: HTMLElement) {
   sunGroup.add(outerCorona);
 
   // Far Corona - DEEP crimson apocalyptic halo
-  const farCoronaGeometry = new THREE.SphereGeometry(11.0, 64, 64);
+  const farCoronaGeometry = new THREE.SphereGeometry(14.0, 64, 64);
   const farCoronaMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.8, 0.4, 0.15),
+    color: new THREE.Color(2.0, 0.5, 0.18),
     transparent: true,
-    opacity: 0.25,
+    opacity: 0.32,
     side: THREE.BackSide,
     toneMapped: false
   });
   const farCorona = new THREE.Mesh(farCoronaGeometry, farCoronaMaterial);
   sunGroup.add(farCorona);
+
+  // Ultra Far Corona - Extended sunrise atmospheric glow
+  const ultraFarCoronaGeometry = new THREE.SphereGeometry(18.0, 64, 64);
+  const ultraFarCoronaMaterial = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(1.5, 0.35, 0.12),
+    transparent: true,
+    opacity: 0.22,
+    side: THREE.BackSide,
+    toneMapped: false
+  });
+  const ultraFarCorona = new THREE.Mesh(ultraFarCoronaGeometry, ultraFarCoronaMaterial);
+  sunGroup.add(ultraFarCorona);
 
   scene.add(sunGroup);
 
@@ -369,7 +381,8 @@ export function initSolarSystem(container: HTMLElement) {
     material: surfaceMaterial,
     innerCorona: innerCorona,
     outerCorona: outerCorona,
-    farCorona: farCorona
+    farCorona: farCorona,
+    ultraFarCorona: ultraFarCorona
   };
   
   // ============================================================================
@@ -469,20 +482,25 @@ export function initSolarSystem(container: HTMLElement) {
       const coronaPulse1 = 1.0 + Math.sin(time * 0.8) * 0.12 + Math.sin(time * 1.6) * 0.05;
       const coronaPulse2 = 1.0 + Math.sin(time * 0.6 + 1.0) * 0.15 + Math.sin(time * 1.3) * 0.06;
       const coronaPulse3 = 1.0 + Math.sin(time * 0.4 + 2.0) * 0.18 + Math.sin(time * 1.0) * 0.07;
+      const coronaPulse4 = 1.0 + Math.sin(time * 0.3 + 3.0) * 0.22 + Math.sin(time * 0.8) * 0.08;
 
       sunLayers.innerCorona.scale.setScalar(coronaPulse1);
       sunLayers.outerCorona.scale.setScalar(coronaPulse2);
       sunLayers.farCorona.scale.setScalar(coronaPulse3);
+      sunLayers.ultraFarCorona.scale.setScalar(coronaPulse4);
 
       // Vary corona opacity for INTENSE flickering effect
       if (sunLayers.innerCorona.material) {
-        sunLayers.innerCorona.material.opacity = 0.55 + Math.sin(time * 1.2) * 0.2 + Math.sin(time * 2.5) * 0.08;
+        sunLayers.innerCorona.material.opacity = 0.65 + Math.sin(time * 1.2) * 0.22 + Math.sin(time * 2.5) * 0.09;
       }
       if (sunLayers.outerCorona.material) {
-        sunLayers.outerCorona.material.opacity = 0.38 + Math.sin(time * 0.9 + 1.5) * 0.15 + Math.sin(time * 2.0) * 0.06;
+        sunLayers.outerCorona.material.opacity = 0.48 + Math.sin(time * 0.9 + 1.5) * 0.18 + Math.sin(time * 2.0) * 0.07;
       }
       if (sunLayers.farCorona.material) {
-        sunLayers.farCorona.material.opacity = 0.25 + Math.sin(time * 0.7 + 3.0) * 0.12 + Math.sin(time * 1.8) * 0.05;
+        sunLayers.farCorona.material.opacity = 0.32 + Math.sin(time * 0.7 + 3.0) * 0.14 + Math.sin(time * 1.8) * 0.06;
+      }
+      if (sunLayers.ultraFarCorona.material) {
+        sunLayers.ultraFarCorona.material.opacity = 0.22 + Math.sin(time * 0.5 + 4.0) * 0.12 + Math.sin(time * 1.5) * 0.05;
       }
 
       // MUCH faster rotation for violent lava flow
