@@ -1,41 +1,26 @@
-import { useEffect, useRef } from "react";
-import { useScroll } from "framer-motion";
+import { useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import HeroScene from "@/components/hero/HeroScene";
-import Objects from "@/components/sections/Objects";
-import Doctrine from "@/components/sections/Doctrine";
-import Circle from "@/components/sections/Circle";
-import Footer from "@/components/Footer";
 import ObjectModal from "@/components/modals/ObjectModal";
 import CollectionsModal from "@/components/modals/CollectionsModal";
 import StoriesModal from "@/components/modals/StoriesModal";
 import ConciergeModal from "@/components/modals/ConciergeModal";
+import MissionModal from "@/components/modals/MissionModal";
+import PhilosophyModal from "@/components/modals/PhilosophyModal";
 import CursorGlow from "@/components/effects/CursorGlow";
 import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
-import { useSceneStore } from "@/contexts/SceneContext";
 import { useHeroScene } from "@/hooks/useHeroScene";
-import { initChamberAudio, switchChamberAudio } from "@/lib/chamberAudio";
+import { initChamberAudio } from "@/lib/chamberAudio";
 
 const Index = () => {
   const { data } = useHeroScene();
-  const { mode, setMode, setScrollProgress } = useSceneStore();
-  const { scrollYProgress } = useScroll();
-  
-  const objectsRef = useRef<HTMLElement>(null);
-  const doctrineRef = useRef<HTMLElement>(null);
-  const circleRef = useRef<HTMLElement>(null);
 
   // Initialize chamber audio on mount
   useEffect(() => {
     initChamberAudio();
   }, []);
-
-  // Switch chamber audio when mode changes
-  useEffect(() => {
-    switchChamberAudio(mode);
-  }, [mode]);
 
   const config = {
     rotationSpeed: data?.rotation_speed ?? 0.3,
@@ -45,27 +30,8 @@ const Index = () => {
     cameraPosition: data?.camera_position ?? { x: 0, y: 0, z: 6 },
   };
 
-  useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (progress) => {
-      setScrollProgress(progress);
-
-      // Determine which section is active based on scroll position
-      if (progress < 0.25) {
-        setMode('hero');
-      } else if (progress < 0.50) {
-        setMode('objects');
-      } else if (progress < 0.75) {
-        setMode('doctrine');
-      } else {
-        setMode('circle');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [scrollYProgress, setMode, setScrollProgress]);
-
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       <RitualEntry />
       <CursorGlow />
       <VoiceOfHouse />
@@ -79,30 +45,19 @@ const Index = () => {
       <div className="scene-vignette" />
 
       {/* Content overlays */}
-      <div className="relative z-10">
+      <div className="relative z-10 h-screen">
         <Navigation />
-        <section id="hero" className="min-h-screen">
-          <HeroSection />
-        </section>
-        <section ref={objectsRef} id="objects" className="min-h-[140vh] flex items-center pt-20 md:pt-32">
-          <Objects />
-        </section>
-        <section ref={doctrineRef} id="doctrine" className="min-h-screen flex items-center">
-          <Doctrine />
-        </section>
-        <section ref={circleRef} id="circle" className="min-h-screen flex items-center">
-          <Circle />
-        </section>
-        <section id="footer" className="relative bg-card">
-          <Footer />
-        </section>
+        <HeroSection />
       </div>
       
+      {/* Modals */}
       <ObjectModal />
       <CollectionsModal />
       <StoriesModal />
       <ConciergeModal />
-    </>
+      <MissionModal />
+      <PhilosophyModal />
+    </div>
   );
 };
 

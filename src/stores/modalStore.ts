@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge' | 'email-capture' | 'cart' | 'doctrine' | 'sanctum';
+export type ModalType = 'none' | 'object' | 'collections' | 'stories' | 'concierge' | 'email-capture' | 'cart' | 'doctrine' | 'sanctum' | 'mission' | 'philosophy';
 
 export interface MediaItem {
   type: 'image' | 'video';

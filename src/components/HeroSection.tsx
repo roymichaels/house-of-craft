@@ -34,11 +34,6 @@ const HeroSection = () => {
       <HeroOverlay
         title={config.title}
         subtitle={config.subtitle || ""}
-        ctaLink={config.cta_link}
-        ctaStyle={config.cta_style}
-        showLogo={config.show_logo}
-        logoText={config.logo_text}
-        textDelayMs={config.text_delay_ms}
       />
     </section>
   );

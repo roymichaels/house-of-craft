@@ -11,6 +11,8 @@ import CheckoutCancel from "./pages/CheckoutCancel";
 import CartModal from "./components/modals/CartModal";
 import DoctrineModal from "./components/modals/DoctrineModal";
 import SanctumModal from "./components/modals/SanctumModal";
+import MissionModal from "./components/modals/MissionModal";
+import PhilosophyModal from "./components/modals/PhilosophyModal";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
         <CartModal />
         <DoctrineModal />
         <SanctumModal />
+        <MissionModal />
+        <PhilosophyModal />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
