@@ -12,7 +12,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
 
   return (
     <div className="absolute inset-0 z-20 flex flex-col text-center px-8 h-full pointer-events-none bg-transparent">
-      <div className="flex flex-col h-full justify-between pt-8 pb-0 bg-transparent">
+      <div className="flex flex-col h-full pt-8 pb-0 bg-transparent">
         {/* APOLLO Title - Top */}
         <motion.h1
           className="text-6xl md:text-8xl font-ancient text-ancient-gold tracking-[0.15em] drop-shadow-[0_0_40px_rgba(212,175,55,0.6)] pt-12"
@@ -23,8 +23,11 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
           APOLLO
         </motion.h1>
 
+        {/* Spacer to push content to bottom */}
+        <div className="flex-1" />
+
         {/* Bottom Section - Subtitle + CTAs */}
-        <div className="flex flex-col items-center gap-3 pb-0">
+        <div className="flex flex-col items-center gap-3 pb-16 md:pb-20">
           {/* Subtitle with decorative divider */}
           <motion.div
           className="max-w-2xl mx-auto mb-2 md:mb-4"
