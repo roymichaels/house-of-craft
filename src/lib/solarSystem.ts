@@ -142,7 +142,7 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(new THREE.Color(0.13, 0.13, 0.13), 0.5);
   scene.add(ambientLight);
   
-  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 0.4, 0.15), 15.0, 1000, 0.4);
+  const sunLight = new THREE.PointLight(new THREE.Color(1.0, 0.4, 0.15), 18.0, 1000, 0.35);
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = false;
   scene.add(sunLight);
@@ -306,9 +306,9 @@ export function initSolarSystem(container: HTMLElement) {
   };
   
   // Core - BLAZING WHITE-HOT center
-  const coreGeometry = new THREE.SphereGeometry(2.5, 64, 64);
+  const coreGeometry = new THREE.SphereGeometry(2.8, 64, 64);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(5.0, 3.5, 2.5),
+    color: new THREE.Color(6.0, 4.2, 3.0),
     toneMapped: false
   });
   const sunCore = new THREE.Mesh(coreGeometry, coreMaterial);
