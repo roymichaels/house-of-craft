@@ -4,6 +4,7 @@ import { PerspectiveCamera, Vector3, MathUtils } from "three";
 import { SceneMode } from "@/contexts/SceneContext";
 import { chamberPaths } from "@/lib/cameraPaths";
 import { useModalStore } from "@/stores/modalStore";
+import { useSceneStore } from "@/contexts/SceneContext";
 
 interface CameraControllerProps {
   mode: SceneMode;
@@ -14,6 +15,7 @@ interface CameraControllerProps {
 const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
   const { camera, size } = useThree();
   const activeModal = useModalStore(state => state.activeModal);
+  const scrollProgress = useSceneStore(state => state.scrollProgress);
   const mousePosition = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
   const targetPosition = useRef(new Vector3());
@@ -72,26 +74,43 @@ const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
         introComplete.current = true;
       }
     } else if (introComplete.current) {
-      // Cinematic camera transitions - slower for unified temple flow
-      const lerpSpeed = 0.01; // Slower for smoother, more cinematic motion
-      camera.position.lerp(targetPosition.current, lerpSpeed);
-      
-      // Smooth lookAt transition
-      const currentLookAt = new Vector3();
-      camera.getWorldDirection(currentLookAt);
-      currentLookAt.add(camera.position);
-      currentLookAt.lerp(targetLookAt.current, lerpSpeed);
-      camera.lookAt(currentLookAt);
-      
-      // FOV transition with smooth easing
-      if (camera instanceof PerspectiveCamera) {
-        camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
-        camera.updateProjectionMatrix();
-      }
+      // Scroll-based zoom and perspective shift for hero mode
+      if (mode === 'hero' && scrollProgress < 0.2) {
+        // Zoom in as user scrolls (0-20% scroll range)
+        const scrollZoom = scrollProgress * 5; // 0 to 1 over first 20% of scroll
+        const zoomAmount = scrollZoom * 2; // Zoom in by 2 units max
+        const perspectiveShift = scrollZoom * 0.5; // Slight upward tilt
+        
+        camera.position.z = position.z - zoomAmount;
+        camera.position.y = position.y + perspectiveShift;
+        
+        // Adjust FOV for dramatic zoom effect
+        if (camera instanceof PerspectiveCamera) {
+          camera.fov = MathUtils.lerp(50, 45, scrollZoom);
+          camera.updateProjectionMatrix();
+        }
+      } else {
+        // Cinematic camera transitions for other modes - slower for unified temple flow
+        const lerpSpeed = 0.01;
+        camera.position.lerp(targetPosition.current, lerpSpeed);
+        
+        // Smooth lookAt transition
+        const currentLookAt = new Vector3();
+        camera.getWorldDirection(currentLookAt);
+        currentLookAt.add(camera.position);
+        currentLookAt.lerp(targetLookAt.current, lerpSpeed);
+        camera.lookAt(currentLookAt);
+        
+        // FOV transition with smooth easing
+        if (camera instanceof PerspectiveCamera) {
+          camera.fov = MathUtils.lerp(camera.fov, targetFov.current, 0.03);
+          camera.updateProjectionMatrix();
+        }
 
-      // Camera roll (z-axis rotation) for cinematic effect
-      const targetRollRad = (targetRoll.current * Math.PI) / 180;
-      camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
+        // Camera roll (z-axis rotation) for cinematic effect
+        const targetRollRad = (targetRoll.current * Math.PI) / 180;
+        camera.rotation.z = MathUtils.lerp(camera.rotation.z, targetRollRad, 0.02);
+      }
       
       // Parallax effect - subtle camera rotation based on mouse (reduced strength)
       const parallaxStrength = 0.015;
