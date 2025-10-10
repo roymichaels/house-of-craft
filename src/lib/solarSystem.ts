@@ -66,6 +66,12 @@ const DWARF_PLANETS_DATA = [
 ];
 
 export function initSolarSystem(container: HTMLElement) {
+  // Clean up any existing scene first
+  if (renderer && container.contains(renderer.domElement)) {
+    container.removeChild(renderer.domElement);
+  }
+  cleanupSolarSystem();
+  
   console.log('🌌 Initializing Solar System...');
   
   // Scene Setup
@@ -534,10 +540,42 @@ function createLensFlareTexture(size: number, color: THREE.Color) {
 }
 
 export function cleanupSolarSystem() {
-  if (renderer) {
-    renderer.dispose();
+  console.log('🧹 Cleaning up Solar System...');
+  
+  // Cancel animation
+  if (animationId) {
+    cancelAnimationFrame(animationId);
   }
+  
+  // Clear arrays
+  celestialBodies.length = 0;
+  asteroidBelts.length = 0;
+  
+  // Dispose of renderer and composer
   if (composer) {
     composer.dispose();
   }
+  if (renderer) {
+    renderer.dispose();
+    renderer.forceContextLoss();
+  }
+  
+  // Clear scene
+  if (scene) {
+    scene.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        object.geometry?.dispose();
+        if (object.material) {
+          if (Array.isArray(object.material)) {
+            object.material.forEach(material => material.dispose());
+          } else {
+            object.material.dispose();
+          }
+        }
+      }
+    });
+    scene.clear();
+  }
+  
+  console.log('✅ Cleanup complete');
 }
