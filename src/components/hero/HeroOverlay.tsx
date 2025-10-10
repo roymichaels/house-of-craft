@@ -45,7 +45,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             className="
               h-14 px-10 md:px-12 rounded
               bg-ancient-gold text-background
-              font-ancient text-sm md:text-base tracking-[0.2em] font-bold
+              font-romania text-sm md:text-base tracking-[0.2em] font-bold
               shadow-[0_0_30px_hsl(var(--ancient-gold)/0.4)]
               hover:shadow-[0_0_40px_hsl(var(--ancient-gold)/0.6)]
               hover:brightness-110
@@ -65,7 +65,7 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             className="
               h-14 px-10 md:px-12 rounded
               bg-transparent border-2 border-foreground/30 text-foreground
-              font-ancient text-sm md:text-base tracking-[0.2em] font-bold
+              font-romania text-sm md:text-base tracking-[0.2em] font-bold
               hover:border-ancient-gold hover:text-ancient-gold
               hover:shadow-[0_0_20px_hsl(var(--ancient-gold)/0.3)]
               transition-all duration-500 ease-out
@@ -78,19 +78,24 @@ const HeroOverlay = ({ title, subtitle }: HeroOverlayProps) => {
             PHILOSOPHY
           </motion.button>
 
-          {/* Text Link - Mission */}
+          {/* Gold Button - Mission */}
           <motion.button
             onClick={() => openModal('mission')}
             className="
-              h-14 px-6
-              text-sm font-romania text-muted-foreground/60 tracking-wider
-              hover:text-ancient-gold transition-colors duration-300 
-              underline decoration-dotted underline-offset-4
+              h-14 px-10 md:px-12 rounded
+              bg-ancient-gold text-background
+              font-romania text-sm md:text-base tracking-[0.2em] font-bold
+              shadow-[0_0_30px_hsl(var(--ancient-gold)/0.4)]
+              hover:shadow-[0_0_40px_hsl(var(--ancient-gold)/0.6)]
+              hover:brightness-110
+              transition-all duration-500 ease-out
               focus:outline-none focus:ring-2 focus:ring-ancient-gold/50 focus:ring-offset-2
-              focus:ring-offset-background rounded
+              focus:ring-offset-background
             "
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
           >
-            Mission
+            MISSION
           </motion.button>
         </motion.div>
       </div>
