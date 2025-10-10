@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { useModalStore } from "@/stores/modalStore";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const CartModal = () => {
   const { activeModal, closeModal, openModal } = useModalStore();
@@ -22,11 +23,28 @@ const CartModal = () => {
     };
   }, [isOpen]);
 
-  const handleCheckout = () => {
-    closeModal();
-    setTimeout(() => {
-      openModal('concierge');
-    }, 300);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: { items }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error('Unable to create checkout session. Please try again.');
+      setIsCheckingOut(false);
+    }
   };
 
   const handleRemoveItem = (productId: string, productName: string) => {
@@ -239,15 +257,16 @@ const CartModal = () => {
 
                       <motion.button
                         onClick={handleCheckout}
+                        disabled={isCheckingOut}
                         className="flex-[2] py-3 rounded-full
                                    bg-gradient-to-r from-primary via-primary to-primary/80
                                    text-background text-sm font-bold tracking-wider
                                    hover:shadow-lg hover:shadow-primary/25
-                                   transition-all"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                                   transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        whileHover={!isCheckingOut ? { scale: 1.02 } : {}}
+                        whileTap={!isCheckingOut ? { scale: 0.98 } : {}}
                       >
-                        PROCEED TO CHECKOUT
+                        {isCheckingOut ? 'CREATING CHECKOUT...' : 'PROCEED TO CHECKOUT'}
                       </motion.button>
                     </div>
                   </div>
