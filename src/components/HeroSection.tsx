@@ -1,8 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
 import { Suspense } from "react";
-import { EffectComposer, Bloom, DepthOfField, ChromaticAberration, Vignette } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
 import * as THREE from "three";
 import HeroOverlay from "./hero/HeroOverlay";
 import OrbModel from "./hero/OrbModel";
@@ -96,28 +94,6 @@ const HeroSection = () => {
               enableDamping
               dampingFactor={0.05}
             />
-            
-            {/* Post-processing Effects */}
-            <EffectComposer>
-              <Bloom
-                intensity={isMobile ? 0.8 : 1.2}
-                luminanceThreshold={0.2}
-                luminanceSmoothing={0.9}
-                mipmapBlur
-              />
-              {!isMobile && (
-                <DepthOfField
-                  focusDistance={0.01}
-                  focalLength={0.05}
-                  bokehScale={3}
-                />
-              )}
-              <Vignette
-                offset={0.3}
-                darkness={0.7}
-                blendFunction={BlendFunction.NORMAL}
-              />
-            </EffectComposer>
           </Suspense>
         </Canvas>
 
