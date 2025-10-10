@@ -156,18 +156,27 @@ const Sun = ({ radius }: SunProps) => {
       <pointLight
         position={[0, 0, 0]}
         color="#ffd966"
-        intensity={15}
-        distance={100}
-        decay={1.5}
+        intensity={50}
+        distance={200}
+        decay={0.5}
       />
 
       {/* Additional fill light for better planet visibility */}
       <pointLight
         position={[0, 0, 0]}
-        color="#d4af37"
-        intensity={10}
-        distance={150}
-        decay={1.2}
+        color="#f4e4c1"
+        intensity={35}
+        distance={250}
+        decay={0.3}
+      />
+
+      {/* Extra omnidirectional light */}
+      <pointLight
+        position={[0, 0, 0]}
+        color="#ffffff"
+        intensity={25}
+        distance={300}
+        decay={0.2}
       />
     </group>
   );

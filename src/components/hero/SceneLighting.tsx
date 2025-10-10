@@ -101,9 +101,9 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
       />
       
       {/* Ambient temple glow - unified space */}
-      <ambientLight intensity={1.2} color="#d4af37" />
+      <ambientLight intensity={2.5} color="#f4e4c1" />
       <hemisphereLight
-        args={["#d4af37", "#6b5d4a", 0.8]}
+        args={["#f4e4c1", "#d4af37", 1.5]}
       />
       
       {/* Rim light - accent separation */}
@@ -117,7 +117,8 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
       <pointLight
         position={[0, 8, 0]}
         color="#ffffff"
-        intensity={0.2}
+        intensity={5}
+        distance={200}
       />
 
       {/* Jewel accent light - pulsating ruby glow */}
@@ -164,6 +165,35 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         color="#8B7355"
         intensity={0.8}
         distance={15}
+      />
+
+      {/* Additional planet visibility lights */}
+      <pointLight
+        position={[50, 20, 50]}
+        color="#f4e4c1"
+        intensity={20}
+        distance={200}
+      />
+
+      <pointLight
+        position={[-50, 20, -50]}
+        color="#f4e4c1"
+        intensity={20}
+        distance={200}
+      />
+
+      <pointLight
+        position={[50, 20, -50]}
+        color="#d4af37"
+        intensity={15}
+        distance={200}
+      />
+
+      <pointLight
+        position={[-50, 20, 50]}
+        color="#d4af37"
+        intensity={15}
+        distance={200}
       />
 
     </>

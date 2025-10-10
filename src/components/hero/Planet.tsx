@@ -68,10 +68,11 @@ const Planet = ({
         <meshStandardMaterial
           color={color}
           emissive={emissive || color}
-          emissiveIntensity={emissive ? 0.6 : 0.4}
-          roughness={0.5}
-          metalness={0.4}
-          envMapIntensity={1.5}
+          emissiveIntensity={2.5}
+          roughness={0.3}
+          metalness={0.6}
+          envMapIntensity={3}
+          toneMapped={false}
         />
       </mesh>
 
