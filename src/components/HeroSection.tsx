@@ -1,14 +1,9 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, PerspectiveCamera, Environment } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, Environment, Stars } from "@react-three/drei";
 import { Suspense } from "react";
-import * as THREE from "three";
 import HeroOverlay from "./hero/HeroOverlay";
-import OrbModel from "./hero/OrbModel";
-import GoldenParticles from "./hero/GoldenParticles";
-import FloatingGeometry from "./hero/FloatingGeometry";
-import ConstellationField from "./hero/ConstellationField";
+import SolarSystem from "./hero/SolarSystem";
 import SpaceNebula from "./hero/SpaceNebula";
-import MouseLight from "./hero/MouseLight";
 import { useHeroScene } from "@/hooks/useHeroScene";
 import Navigation from "./Navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -43,47 +38,40 @@ const HeroSection = () => {
       {/* Header */}
       <Navigation />
 
-      {/* 3D Scene with Orb and APOLLO text */}
+      {/* 3D Solar System Background */}
       <div className="flex-1 relative flex items-center justify-center">
         <Canvas className="absolute inset-0" dpr={[1, isMobile ? 1.5 : 2]}>
           <Suspense fallback={null}>
             <PerspectiveCamera
               makeDefault
-              position={[
-                config.camera_position.x,
-                config.camera_position.y,
-                config.camera_position.z,
-              ]}
-              fov={config.camera_fov}
+              position={[0, 50, 150]}
+              fov={50}
             />
             
             {/* Lighting Setup */}
-            <ambientLight intensity={0.2} />
-            <pointLight position={[10, 10, 10]} intensity={1.2} color={config.light_color} />
-            <pointLight position={[-10, -10, -10]} intensity={0.6} color="#7A6A4F" />
-            <pointLight position={[0, 5, 5]} intensity={0.8} color="#D4AF37" />
-            
-            {/* Mouse-responsive lighting */}
-            {!isMobile && <MouseLight />}
+            <ambientLight intensity={0.1} />
             
             {/* Background Elements */}
             <SpaceNebula />
-            <ConstellationField />
-            <GoldenParticles count={isMobile ? 150 : 300} radius={3} />
-            {!isMobile && <FloatingGeometry />}
-            
-            {/* Main Orb */}
-            <OrbModel
-              rotationSpeed={config.rotation_speed}
-              lightColor={config.light_color}
+            <Stars 
+              radius={300} 
+              depth={50} 
+              count={5000} 
+              factor={4} 
+              saturation={0} 
+              fade 
+              speed={0.5}
             />
+            
+            {/* Solar System */}
+            <SolarSystem rotationSpeed={config.rotation_speed} />
             
             <Environment preset="night" />
             <OrbitControls
-              enableZoom={false}
-              enablePan={false}
-              minPolarAngle={Math.PI / 3}
-              maxPolarAngle={Math.PI / 1.5}
+              enableZoom={true}
+              enablePan={true}
+              minDistance={20}
+              maxDistance={300}
               enableDamping
               dampingFactor={0.05}
             />
