@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useMemo } from "react";
+import { useRef, useState, useEffect, useMemo, useCallback } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Mesh, Group, Vector2, ShaderMaterial } from "three";
 import * as THREE from "three";
@@ -167,8 +167,10 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
     setPreviousMouse(new Vector2(clientX, clientY));
   };
 
-  const handlePointerMove = (e: PointerEvent | TouchEvent) => {
+  const handlePointerMove = useCallback((e: PointerEvent | TouchEvent) => {
     if (!isDragging || !groupRef.current) return;
+    
+    e.preventDefault();
     
     const clientX = (e as PointerEvent).clientX ?? (e as TouchEvent).touches?.[0]?.clientX ?? 0;
     const clientY = (e as PointerEvent).clientY ?? (e as TouchEvent).touches?.[0]?.clientY ?? 0;
@@ -176,25 +178,25 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
     const deltaX = clientX - previousMouse.x;
     const deltaY = clientY - previousMouse.y;
 
-    // Update rotation velocity
+    // Update rotation velocity - increased for better touch response
     setRotationVelocity({
-      x: deltaY * 0.01,
-      y: deltaX * 0.01
+      x: deltaY * 0.015,
+      y: deltaX * 0.015
     });
 
     setPreviousMouse(new Vector2(clientX, clientY));
-  };
+  }, [isDragging, previousMouse]);
 
-  const handlePointerUp = () => {
+  const handlePointerUp = useCallback(() => {
     setIsDragging(false);
-  };
+  }, []);
 
   // Global event listeners for drag to work on all devices
   useEffect(() => {
     if (isDragging) {
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
-      window.addEventListener('touchmove', handlePointerMove);
+      window.addEventListener('touchmove', handlePointerMove, { passive: false });
       window.addEventListener('touchend', handlePointerUp);
     }
 
@@ -204,7 +206,7 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       window.removeEventListener('touchmove', handlePointerMove);
       window.removeEventListener('touchend', handlePointerUp);
     };
-  }, [isDragging]);
+  }, [isDragging, handlePointerMove, handlePointerUp]);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
@@ -217,12 +219,19 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       } else {
         groupRef.current.rotation.y += rotationSpeed * 0.005;
         
-        // Dampen velocity
+        // Dampen velocity with smoother decay
         setRotationVelocity({
-          x: rotationVelocity.x * 0.95,
-          y: rotationVelocity.y * 0.95
+          x: rotationVelocity.x * 0.92,
+          y: rotationVelocity.y * 0.92
         });
       }
+    }
+    
+    // Keep moon positioned between camera and sun for consistent eclipse
+    if (moonRef.current && groupRef.current) {
+      const moonOffset = new THREE.Vector3(0.15, -0.1, 0.3);
+      moonOffset.applyQuaternion(groupRef.current.quaternion.clone().invert());
+      moonRef.current.position.copy(moonOffset);
     }
 
     // Update shader time and pulsing
@@ -293,7 +302,7 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       </mesh>
 
       {/* Occluding Moon - The dark silhouette creating the eclipse */}
-      <mesh ref={moonRef} position={[0.15, -0.1, 0.3]}>
+      <mesh ref={moonRef}>
         <sphereGeometry args={[0.95, 64, 64]} />
         <meshBasicMaterial
           color="#000000"
@@ -344,45 +353,57 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         </mesh>
       )}
 
-      {/* Corona Streamer 1 - Ethereal rays */}
+      {/* Corona Streamer 1 - Realistic Metallic Gold Ring */}
       <mesh ref={flare1Ref} position={[0, 0, 0]}>
-        <torusGeometry args={[2.5, 0.08, 16, 100]} />
+        <torusGeometry args={[2.5, 0.08, 32, 100]} />
         <meshPhysicalMaterial
-          color="#FFFACD"
-          emissive="#FFD700"
-          emissiveIntensity={10}
-          metalness={0}
-          roughness={0.3}
+          color="#FFD700"
+          emissive="#8B6508"
+          emissiveIntensity={2}
+          metalness={1.0}
+          roughness={0.15}
+          clearcoat={1.0}
+          clearcoatRoughness={0.1}
+          reflectivity={1.0}
+          envMapIntensity={1.5}
           transparent
           opacity={0.9}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Corona Streamer 2 */}
+      {/* Corona Streamer 2 - Realistic Metallic Gold Ring */}
       <mesh ref={flare2Ref} position={[0, 0, 0]} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[3, 0.1, 16, 100]} />
+        <torusGeometry args={[3, 0.1, 32, 100]} />
         <meshPhysicalMaterial
-          color="#FFFACD"
-          emissive="#FFD700"
-          emissiveIntensity={10}
-          metalness={0}
-          roughness={0.3}
+          color="#FFD700"
+          emissive="#8B6508"
+          emissiveIntensity={2}
+          metalness={1.0}
+          roughness={0.15}
+          clearcoat={1.0}
+          clearcoatRoughness={0.1}
+          reflectivity={1.0}
+          envMapIntensity={1.5}
           transparent
           opacity={0.85}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Corona Streamer 3 */}
+      {/* Corona Streamer 3 - Realistic Metallic Gold Ring */}
       <mesh ref={flare3Ref} position={[0, 0, 0]} rotation={[0, Math.PI / 3, Math.PI / 4]}>
-        <torusGeometry args={[2.8, 0.09, 16, 100]} />
+        <torusGeometry args={[2.8, 0.09, 32, 100]} />
         <meshPhysicalMaterial
-          color="#FFFACD"
-          emissive="#FFD700"
-          emissiveIntensity={10}
-          metalness={0}
-          roughness={0.3}
+          color="#FFD700"
+          emissive="#8B6508"
+          emissiveIntensity={2}
+          metalness={1.0}
+          roughness={0.15}
+          clearcoat={1.0}
+          clearcoatRoughness={0.1}
+          reflectivity={1.0}
+          envMapIntensity={1.5}
           transparent
           opacity={0.88}
           toneMapped={false}
