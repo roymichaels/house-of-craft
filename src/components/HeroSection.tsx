@@ -9,15 +9,15 @@ const HeroSection = () => {
 
   // Default values while loading or if query fails
   const config = heroScene || {
-    title: "Time, Composed",
-    subtitle: "A curated maison for collectors who appreciate the art of living well. Timepieces, tailoring, and timeless objects, selected with uncompromising intent.",
+    title: "THE HOUSE",
+    subtitle: "A sanctuary for those who master time, mind, and matter. Objects of power. Instruments of presence. Stories that shape destiny.",
     rotation_speed: 0.3,
-    light_color: "#C7A869",
+    light_color: "#C4A661",
     accent_color: "#7A6A4F",
     camera_fov: 45,
     camera_position: { x: 0, y: 0, z: 5 },
     cta_text: "Enter The House",
-    cta_link: "/collections",
+    cta_link: "#mindcraft",
     show_real_time: false,
     show_balance_wheel: true,
     show_gears: true,
@@ -51,10 +51,6 @@ const HeroSection = () => {
             accentColor={config.accent_color}
             cameraFov={config.camera_fov}
             cameraPosition={config.camera_position}
-            showRealTime={config.show_real_time}
-            showBalanceWheel={config.show_balance_wheel}
-            showGears={config.show_gears}
-            handStyle={config.hand_style}
           />
         </Suspense>
       )}

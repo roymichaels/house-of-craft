@@ -14,9 +14,10 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const isHomepage = location.pathname === "/";
 
   const navItems = [
-    { name: "Collections", scrollTo: "collections", path: "/collections" },
-    { name: "Stories", scrollTo: "trust", path: "/stories" },
-    { name: "Concierge", scrollTo: "footer", path: "/concierge" },
+    { name: "Mindcraft", scrollTo: "mindcraft", path: "/collections" },
+    { name: "Objects", scrollTo: "objects", path: "/collections" },
+    { name: "Doctrine", scrollTo: "doctrine", path: "/stories" },
+    { name: "Circle", scrollTo: "circle", path: "/concierge" },
   ];
 
   const handleNavClick = (item: { name: string; scrollTo: string; path: string }) => {

@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment, Stars } from "@react-three/drei";
-import WatchModel from "./WatchModel";
+import OrbModel from "./OrbModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
 
@@ -11,10 +11,6 @@ interface HeroSceneProps {
   accentColor: string;
   cameraFov: number;
   cameraPosition: { x: number; y: number; z: number };
-  showRealTime: boolean;
-  showBalanceWheel: boolean;
-  showGears: boolean;
-  handStyle: string;
 }
 
 const HeroScene = ({
@@ -23,10 +19,6 @@ const HeroScene = ({
   accentColor,
   cameraFov,
   cameraPosition,
-  showRealTime,
-  showBalanceWheel,
-  showGears,
-  handStyle,
 }: HeroSceneProps) => {
   return (
     <div className="absolute inset-0 z-0">
@@ -43,13 +35,9 @@ const HeroScene = ({
         <Suspense fallback={null}>
           <CameraController fov={cameraFov} position={cameraPosition} />
           <SceneLighting lightColor={lightColor} accentColor={accentColor} />
-          <WatchModel 
+          <OrbModel 
             rotationSpeed={rotationSpeed} 
             lightColor={lightColor}
-            showRealTime={showRealTime}
-            showBalanceWheel={showBalanceWheel}
-            showGears={showGears}
-            handStyle={handStyle}
           />
           <Environment preset="city" />
           
