@@ -119,8 +119,8 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         }
         
         void main() {
-          // Create turbulent plasma surface
-          vec3 noisePos = vPosition * 2.0 + vec3(time * 0.1);
+          // Create turbulent plasma surface with more pronounced texture
+          vec3 noisePos = vPosition * 4.0 + vec3(time * 0.1);
           float noise1 = snoise(noisePos);
           float noise2 = snoise(noisePos * 2.0 + vec3(time * 0.15));
           float noise3 = snoise(noisePos * 4.0 - vec3(time * 0.2));
@@ -130,21 +130,24 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
           // Distance from center (for radial gradient)
           float dist = length(vUv - 0.5) * 2.0;
           
-          // Sun color gradient: white hot center -> yellow -> orange edges
-          vec3 coreColor = vec3(1.0, 1.0, 1.0);        // White
-          vec3 midColor = vec3(1.0, 0.9, 0.3);         // Yellow
-          vec3 edgeColor = vec3(1.0, 0.5, 0.1);        // Orange
+          // Realistic limb darkening (sun is brighter in center)
+          float limbDarken = pow(1.0 - dist, 0.8);
+          
+          // Sun color gradient: brighter white center -> warm yellow -> soft golden
+          vec3 coreColor = vec3(1.0, 1.0, 1.0);        // Pure white
+          vec3 midColor = vec3(1.0, 0.95, 0.7);        // Warmer white/pale yellow
+          vec3 edgeColor = vec3(1.0, 0.8, 0.4);        // Soft golden
           
           // Mix colors based on distance and turbulence
           vec3 color = mix(coreColor, midColor, dist * 0.7 + turbulence * 0.3);
           color = mix(color, edgeColor, dist * dist);
           
-          // Add surface granulation (solar cells)
-          float granulation = snoise(vPosition * 10.0 + vec3(time * 0.05)) * 0.1;
+          // Add surface granulation (solar convection cells) - more prominent
+          float granulation = snoise(vPosition * 10.0 + vec3(time * 0.05)) * 0.15;
           color += granulation;
           
-          // Intense brightness
-          float brightness = (1.5 - dist * 0.5) * intensity;
+          // Enhanced brightness with limb darkening
+          float brightness = (2.0 - dist * 0.4) * intensity * limbDarken;
           color *= brightness;
           
           // Pulsing effect
@@ -230,47 +233,47 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       const pulse = 1 + Math.sin(time * 0.8) * 0.05;
       sunRef.current.scale.setScalar(pulse);
       
-      // Update shader uniforms
+      // Update shader uniforms with more dynamic intensity
       const material = sunRef.current.material as ShaderMaterial;
       material.uniforms.time.value = time;
-      material.uniforms.intensity.value = 1.0 + Math.sin(time * 1.5) * 0.2;
+      material.uniforms.intensity.value = 1.2 + Math.sin(time * 1.5) * 0.2;
     }
 
-    // Rotating corona layers (different speeds)
+    // Rotating corona layers (different speeds) - much subtler
     if (corona1Ref.current) {
       corona1Ref.current.rotation.z = time * 0.1;
       const mat1 = corona1Ref.current.material as THREE.MeshBasicMaterial;
-      mat1.opacity = 0.25 + Math.sin(time * 0.5) * 0.08;
+      mat1.opacity = 0.08 + Math.sin(time * 0.5) * 0.02;
     }
     if (corona2Ref.current) {
       corona2Ref.current.rotation.z = -time * 0.08;
       const mat2 = corona2Ref.current.material as THREE.MeshBasicMaterial;
-      mat2.opacity = 0.2 + Math.sin(time * 0.7) * 0.06;
+      mat2.opacity = 0.05 + Math.sin(time * 0.7) * 0.02;
     }
     if (corona3Ref.current) {
       corona3Ref.current.rotation.z = time * 0.06;
       const mat3 = corona3Ref.current.material as THREE.MeshBasicMaterial;
-      mat3.opacity = 0.15 + Math.sin(time * 0.9) * 0.05;
+      mat3.opacity = 0.03 + Math.sin(time * 0.9) * 0.01;
     }
 
-    // Solar flares/prominences (spinning and pulsing)
+    // Solar flares/prominences (spinning and pulsing) - much subtler
     if (flare1Ref.current) {
       flare1Ref.current.rotation.x = time * 0.4;
       flare1Ref.current.rotation.y = time * 0.3;
       const flareMat1 = flare1Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat1.emissiveIntensity = 5 + Math.sin(time * 2) * 1;
+      flareMat1.emissiveIntensity = 3 + Math.sin(time * 2) * 0.5;
     }
     if (flare2Ref.current) {
       flare2Ref.current.rotation.x = -time * 0.35;
       flare2Ref.current.rotation.z = time * 0.25;
       const flareMat2 = flare2Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat2.emissiveIntensity = 5 + Math.sin(time * 2.5) * 1;
+      flareMat2.emissiveIntensity = 3 + Math.sin(time * 2.5) * 0.5;
     }
     if (flare3Ref.current) {
       flare3Ref.current.rotation.y = time * 0.45;
       flare3Ref.current.rotation.z = -time * 0.2;
       const flareMat3 = flare3Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat3.emissiveIntensity = 5 + Math.sin(time * 3) * 1;
+      flareMat3.emissiveIntensity = 3 + Math.sin(time * 3) * 0.5;
     }
   });
 
@@ -285,27 +288,27 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         <primitive object={sunShaderMaterial} attach="material" />
       </mesh>
 
-      {/* Corona Layer 1 - Innermost glow (white-yellow) */}
+      {/* Corona Layer 1 - Innermost glow (subtle white-yellow) */}
       <mesh ref={corona1Ref}>
-        <sphereGeometry args={[1.2, 32, 32]} />
+        <sphereGeometry args={[1.25, 32, 32]} />
         <meshBasicMaterial
-          color="#FFFACD"
+          color="#FFFEF0"
           transparent
-          opacity={0.15}
+          opacity={0.08}
           blending={THREE.AdditiveBlending}
           side={THREE.BackSide}
           toneMapped={false}
         />
       </mesh>
 
-      {/* Corona Layer 2 - Mid glow (yellow-orange) */}
+      {/* Corona Layer 2 - Mid glow (very subtle) */}
       {!isMobile && (
         <mesh ref={corona2Ref}>
-          <sphereGeometry args={[1.5, 32, 32]} />
+          <sphereGeometry args={[1.6, 32, 32]} />
           <meshBasicMaterial
-            color="#FFD700"
+            color="#FFFEF0"
             transparent
-            opacity={0.12}
+            opacity={0.05}
             blending={THREE.AdditiveBlending}
             side={THREE.BackSide}
             toneMapped={false}
@@ -313,14 +316,14 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         </mesh>
       )}
 
-      {/* Corona Layer 3 - Outer glow (orange) */}
+      {/* Corona Layer 3 - Barely visible outer glow */}
       {!isMobile && (
         <mesh ref={corona3Ref}>
-          <sphereGeometry args={[2, 32, 32]} />
+          <sphereGeometry args={[2.1, 32, 32]} />
           <meshBasicMaterial
-            color="#FF8C00"
+            color="#FFFEF0"
             transparent
-            opacity={0.1}
+            opacity={0.03}
             blending={THREE.AdditiveBlending}
             side={THREE.BackSide}
             toneMapped={false}
@@ -328,41 +331,47 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
         </mesh>
       )}
 
-      {/* Solar Flare/Prominence 1 - Bright orange loop */}
+      {/* Solar Flare/Prominence 1 - Much thinner and subtler */}
       <mesh ref={flare1Ref} position={[0, 0, 0]}>
-        <torusGeometry args={[1.3, 0.04, 16, 100]} />
+        <torusGeometry args={[1.3, 0.02, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF6B1A"
-          emissive="#FF4500"
-          emissiveIntensity={5}
+          color="#FF8C69"
+          emissive="#FF8C69"
+          emissiveIntensity={3}
           metalness={0}
           roughness={0.5}
+          transparent
+          opacity={0.6}
           toneMapped={false}
         />
       </mesh>
 
       {/* Solar Flare/Prominence 2 */}
       <mesh ref={flare2Ref} position={[0, 0, 0]} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[1.4, 0.035, 16, 100]} />
+        <torusGeometry args={[1.4, 0.018, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF8C00"
-          emissive="#FF6347"
-          emissiveIntensity={5}
+          color="#FF8C69"
+          emissive="#FF8C69"
+          emissiveIntensity={3}
           metalness={0}
           roughness={0.5}
+          transparent
+          opacity={0.6}
           toneMapped={false}
         />
       </mesh>
 
       {/* Solar Flare/Prominence 3 */}
       <mesh ref={flare3Ref} position={[0, 0, 0]} rotation={[0, Math.PI / 3, Math.PI / 4]}>
-        <torusGeometry args={[1.35, 0.038, 16, 100]} />
+        <torusGeometry args={[1.35, 0.02, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FFA500"
-          emissive="#FF7F50"
-          emissiveIntensity={5}
+          color="#FF8C69"
+          emissive="#FF8C69"
+          emissiveIntensity={3}
           metalness={0}
           roughness={0.5}
+          transparent
+          opacity={0.6}
           toneMapped={false}
         />
       </mesh>
