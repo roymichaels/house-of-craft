@@ -8,6 +8,8 @@ import StoriesModal from "@/components/modals/StoriesModal";
 import ConciergeModal from "@/components/modals/ConciergeModal";
 import MissionModal from "@/components/modals/MissionModal";
 import PhilosophyModal from "@/components/modals/PhilosophyModal";
+import WishlistModal from "@/components/modals/WishlistModal";
+import CartModal from "@/components/modals/CartModal";
 import CursorGlow from "@/components/effects/CursorGlow";
 import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
@@ -56,6 +58,8 @@ const Index = () => {
       <ConciergeModal />
       <MissionModal />
       <PhilosophyModal />
+      <WishlistModal />
+      <CartModal />
     </div>
   );
 };
