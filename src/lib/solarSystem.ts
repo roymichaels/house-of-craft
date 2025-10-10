@@ -114,12 +114,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // Reduced bloom for more realistic appearance
+  // Minimal bloom - only for sun, prevents star square artifacts
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.2,  // strength - reduced for realism
-    0.8,  // radius - tighter bloom
-    0.4   // threshold - higher to only bloom bright objects
+    0.5,  // strength - minimal to prevent artifacts
+    0.4,  // radius - very tight, circular bloom
+    0.85  // threshold - high, only sun blooms
   );
   composer.addPass(bloomPass);
 
@@ -196,18 +196,18 @@ export function initSolarSystem(container: HTMLElement) {
       varying vec3 vNormal;
       varying vec3 vPosition;
 
-      // Improved noise function
+      // Smooth noise function
       float noise(vec3 p) {
         return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
       }
 
-      // Fractal Brownian Motion for more organic patterns
+      // Smooth Fractal Brownian Motion - fewer octaves for cinematic quality
       float fbm(vec3 p) {
         float value = 0.0;
         float amplitude = 0.5;
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 3; i++) {
           value += amplitude * noise(p);
-          p *= 2.0;
+          p *= 1.8;
           amplitude *= 0.5;
         }
         return value;
@@ -218,13 +218,12 @@ export function initSolarSystem(container: HTMLElement) {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
 
-        // EXTREME displacement for violent apocalyptic turbulence
+        // Smooth cinematic displacement - slow, dramatic movement
         vec3 pos = position;
-        float disp1 = fbm(position * 3.0 + time * 0.25);
-        float disp2 = fbm(position * 5.0 - time * 0.35);
-        float disp3 = fbm(position * 1.8 + time * 0.15);
-        float disp4 = fbm(position * 7.0 + time * 0.4);
-        float displacement = (disp1 * 0.35 + disp2 * 0.3 + disp3 * 0.2 + disp4 * 0.15) * 1.8;
+        float disp1 = fbm(position * 1.5 + time * 0.08);
+        float disp2 = fbm(position * 2.2 - time * 0.12);
+        float disp3 = fbm(position * 1.0 + time * 0.05);
+        float displacement = (disp1 * 0.4 + disp2 * 0.35 + disp3 * 0.25) * 1.2;
         pos += normal * displacement;
 
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -245,79 +244,79 @@ export function initSolarSystem(container: HTMLElement) {
         return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
       }
 
-      // Fractal Brownian Motion for complex patterns - MORE OCTAVES
+      // Smooth Fractal Brownian Motion - cinematic quality
       float fbm(vec3 p) {
         float value = 0.0;
         float amplitude = 0.5;
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < 3; i++) {
           value += amplitude * noise(p);
-          p *= 2.3;
+          p *= 1.8;
           amplitude *= 0.5;
         }
         return value;
       }
 
       void main() {
-        // INTENSE fresnel effect for apocalyptic edge glow
+        // Dramatic fresnel effect for cinematic edge glow
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - max(dot(vNormal, viewDir), 0.0), 2.0);
 
-        // CHAOTIC flowing lava patterns with EXTREME frequencies
-        vec3 flowDir1 = vPosition + vec3(time * 0.18, time * 0.12, 0.0);
-        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.22, time * 0.15);
-        vec3 flowDir3 = vPosition + vec3(time * 0.08, -time * 0.09, time * 0.11);
-        vec3 flowDir4 = vPosition + vec3(time * 0.25, time * 0.05, -time * 0.08);
+        // Slow, dramatic flowing lava patterns - cinematic speeds
+        vec3 flowDir1 = vPosition + vec3(time * 0.05, time * 0.03, 0.0);
+        vec3 flowDir2 = vPosition - vec3(0.0, time * 0.07, time * 0.04);
+        vec3 flowDir3 = vPosition + vec3(time * 0.02, -time * 0.025, time * 0.03);
+        vec3 flowDir4 = vPosition + vec3(time * 0.06, time * 0.015, -time * 0.02);
 
-        float lava1 = fbm(flowDir1 * 2.8);
-        float lava2 = fbm(flowDir2 * 4.2);
-        float lava3 = fbm(flowDir3 * 2.0);
-        float lava4 = noise(vPosition * 10.0 + time * 0.6);
-        float lava5 = fbm(flowDir4 * 3.5);
+        float lava1 = fbm(flowDir1 * 1.5);
+        float lava2 = fbm(flowDir2 * 2.0);
+        float lava3 = fbm(flowDir3 * 1.2);
+        float lava4 = noise(vPosition * 4.0 + time * 0.15);
+        float lava5 = fbm(flowDir4 * 1.8);
 
-        // Combine patterns for EXTREME turbulent apocalyptic effect
+        // Combine patterns for dramatic apocalyptic effect
         float noiseValue = lava1 * 0.35 + lava2 * 0.25 + lava3 * 0.2 + lava4 * 0.12 + lava5 * 0.08;
 
-        // Add EXTREME dramatic swirling veins and flame streaks
-        float veins = abs(sin(lava1 * 18.0 + time * 1.0));
-        float veins2 = abs(cos(lava2 * 15.0 - time * 0.8));
-        float veins3 = abs(sin(lava3 * 20.0 + time * 0.6));
-        noiseValue = mix(noiseValue, (veins + veins2 + veins3) * 0.4, 0.4);
+        // Slow, dramatic swirling veins and flame channels
+        float veins = abs(sin(lava1 * 8.0 + time * 0.3));
+        float veins2 = abs(cos(lava2 * 6.5 - time * 0.25));
+        float veins3 = abs(sin(lava3 * 9.0 + time * 0.2));
+        noiseValue = mix(noiseValue, (veins + veins2 + veins3) * 0.4, 0.35);
 
-        // MAXIMUM contrast for apocalyptic effect
-        noiseValue = pow(noiseValue, 0.5);
-        noiseValue = smoothstep(0.02, 0.98, noiseValue);
+        // Smooth contrast for cinematic quality
+        noiseValue = pow(noiseValue, 0.6);
+        noiseValue = smoothstep(0.08, 0.92, noiseValue);
 
-        // Create DEEP dramatic dark spots (cooler lava crust)
-        float spots = fbm(vPosition * 5.0 + time * 0.04);
-        float darkSpots = smoothstep(0.7, 0.8, spots);
-        noiseValue = mix(noiseValue * 0.15, noiseValue, darkSpots);
+        // Deep dramatic dark spots (cooler lava crust) - slow formation
+        float spots = fbm(vPosition * 2.5 + time * 0.01);
+        float darkSpots = smoothstep(0.65, 0.82, spots);
+        noiseValue = mix(noiseValue * 0.2, noiseValue, darkSpots);
 
-        // APOCALYPTIC color mapping with EXTREME heat variation
+        // Cinematic apocalyptic color mapping with dramatic heat variation
         vec3 color;
-        if (noiseValue < 0.12) {
+        if (noiseValue < 0.15) {
           color = colorDark;
-        } else if (noiseValue < 0.25) {
-          color = mix(colorDark, colorCool, (noiseValue - 0.12) / 0.13);
-        } else if (noiseValue < 0.45) {
-          color = mix(colorCool, colorMid, (noiseValue - 0.25) / 0.2);
-        } else if (noiseValue < 0.65) {
-          color = mix(colorMid, colorHot, (noiseValue - 0.45) / 0.2);
-        } else if (noiseValue < 0.82) {
-          color = mix(colorHot, colorWhiteHot, (noiseValue - 0.65) / 0.17);
+        } else if (noiseValue < 0.28) {
+          color = mix(colorDark, colorCool, (noiseValue - 0.15) / 0.13);
+        } else if (noiseValue < 0.48) {
+          color = mix(colorCool, colorMid, (noiseValue - 0.28) / 0.2);
+        } else if (noiseValue < 0.68) {
+          color = mix(colorMid, colorHot, (noiseValue - 0.48) / 0.2);
+        } else if (noiseValue < 0.85) {
+          color = mix(colorHot, colorWhiteHot, (noiseValue - 0.68) / 0.17);
         } else {
-          color = colorWhiteHot * 1.2;
+          color = colorWhiteHot * 1.15;
         }
 
-        // Add BLAZING white-hot veins of flowing lava
-        float brightVeins = smoothstep(0.75, 0.92, noiseValue);
-        color = mix(color, colorWhiteHot * 2.0, brightVeins * 0.8);
+        // Blazing white-hot veins of flowing lava - smooth transitions
+        float brightVeins = smoothstep(0.78, 0.90, noiseValue);
+        color = mix(color, colorWhiteHot * 1.8, brightVeins * 0.7);
 
-        // EXTREME dramatic fresnel glow for fiery atmosphere
-        color = mix(color, colorHot * 1.5, fresnel * 0.75);
+        // Dramatic fresnel glow for fiery atmosphere
+        color = mix(color, colorHot * 1.4, fresnel * 0.65);
 
-        // Add intense surface texture detail
-        float detail = noise(vPosition * 25.0 + time * 0.15) * 0.12;
-        color += detail * vec3(1.2, 0.8, 0.6);
+        // Subtle surface texture detail - cinematic grain
+        float detail = noise(vPosition * 12.0 + time * 0.05) * 0.08;
+        color += detail * vec3(1.0, 0.7, 0.5);
 
         gl_FragColor = vec4(color, 1.0);
       }
@@ -369,8 +368,8 @@ export function initSolarSystem(container: HTMLElement) {
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
 
-        float pulse = sin(time * 0.5) * 0.15 + 0.85;
-        float intensity = fresnel * 0.6 * pulse;
+        float pulse = sin(time * 0.3) * 0.12 + 0.88;
+        float intensity = fresnel * 0.5 * pulse;
 
         vec3 color = glowColor * intensity;
         gl_FragColor = vec4(color, intensity * 0.4);
@@ -511,34 +510,34 @@ export function initSolarSystem(container: HTMLElement) {
       sunLayers.material.uniforms.time.value = time;
       sunLayers.coronaMaterial.uniforms.time.value = time;
 
-      // Pulsating scale
-      const pulseScale = 1.0 + Math.sin(time * 0.7) * 0.05 + Math.sin(time * 1.5) * 0.025 + Math.sin(time * 2.3) * 0.015;
+      // Slow, dramatic pulsating scale - cinematic breathing effect
+      const pulseScale = 1.0 + Math.sin(time * 0.3) * 0.04 + Math.sin(time * 0.6) * 0.02 + Math.sin(time * 0.9) * 0.01;
       sunLayers.core.scale.setScalar(pulseScale * 1.03);
       sunLayers.surface.scale.setScalar(pulseScale);
       sunLayers.corona.scale.setScalar(pulseScale * 1.02);
 
-      // Rotation for lava flow
-      sunLayers.surface.rotation.y += 0.002;
-      sunLayers.surface.rotation.x += 0.0005;
+      // Very slow rotation for cinematic lava flow
+      sunLayers.surface.rotation.y += 0.0005;
+      sunLayers.surface.rotation.x += 0.0001;
 
-      // Slower counter-rotation for corona
-      sunLayers.corona.rotation.y -= 0.0008;
+      // Slow counter-rotation for corona atmosphere
+      sunLayers.corona.rotation.y -= 0.0002;
     }
     
-    // Update planets
+    // Update planets - slow, contemplative orbital motion
     celestialBodies.forEach(body => {
-      // Orbit
-      body.angle += body.orbitSpeed * 0.001;
+      // Orbit - reduced speed for dramatic, slow-motion effect
+      body.angle += body.orbitSpeed * 0.0001;
       body.mesh.position.x = Math.cos(body.angle) * body.orbitRadius;
       body.mesh.position.z = Math.sin(body.angle) * body.orbitRadius;
-      
+
       // Rotation
       body.mesh.rotation.y += body.rotationSpeed;
-      
+
       // Update moons
       if (body.moons) {
         body.moons.forEach(moon => {
-          moon.angle += moon.orbitSpeed * 0.01;
+          moon.angle += moon.orbitSpeed * 0.002;
           moon.mesh.position.x = body.mesh.position.x + Math.cos(moon.angle) * moon.orbitRadius;
           moon.mesh.position.z = body.mesh.position.z + Math.sin(moon.angle) * moon.orbitRadius;
         });
@@ -633,12 +632,13 @@ function createStarfield() {
     geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
     const material = new THREE.PointsMaterial({
-      size: 1.2,
+      size: 0.8,
       sizeAttenuation: true,
       vertexColors: true,
       transparent: true,
-      opacity: layer.opacity,
-      blending: THREE.AdditiveBlending
+      opacity: layer.opacity * 0.7,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
     const stars = new THREE.Points(geometry, material);
@@ -733,12 +733,13 @@ function createSpaceDust() {
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
   const material = new THREE.PointsMaterial({
-    size: 0.8,
+    size: 0.6,
     sizeAttenuation: true,
     vertexColors: true,
     transparent: true,
-    opacity: 0.15,
-    blending: THREE.AdditiveBlending
+    opacity: 0.12,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
   });
 
   const dust = new THREE.Points(geometry, material);
