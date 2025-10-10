@@ -15,7 +15,11 @@ interface ObjectData {
   image?: string; // Kept for backward compatibility
   media?: MediaItem[];
   story?: string;
-  price?: string;
+  price?: string | number;
+  productId?: string;
+  subcategory?: string;
+  inStock?: boolean;
+  specs?: Record<string, string>;
 }
 
 interface ModalState {

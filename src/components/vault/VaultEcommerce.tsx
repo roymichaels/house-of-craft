@@ -253,6 +253,7 @@ const VaultEcommerce = ({ category, searchQuery = '' }: VaultEcommerceProps) => 
                         description: product.description,
                         price: product.price,
                         image: product.images[0],
+                        specs: product.specs,
                       }}
                     />
                   </motion.div>

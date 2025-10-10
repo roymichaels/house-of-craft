@@ -15,6 +15,7 @@ interface Product {
   image: string;
   images?: string[];
   videos?: string[];
+  specs?: Record<string, string>;
 }
 
 interface ProductCardProps {
@@ -47,7 +48,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
       image: product.image,
       media: mediaItems,
       story: `${product.name} - ${product.description}`,
-      price: displayPrice
+      price: displayPrice,
+      productId: product.id,
+      subcategory: product.subcategory,
+      inStock: true,
+      specs: product.specs
     });
   };
 

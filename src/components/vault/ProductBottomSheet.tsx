@@ -51,8 +51,8 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
       subcategory: product.subcategory || 'general'
     }, quantity);
 
-    toast.success(`${product.name} added to cart`);
-    setQuantity(1);
+    toast.success(`${quantity}x ${product.name} added to cart`);
+    onClose();
   };
 
   const incrementQuantity = () => setQuantity(q => q + 1);
