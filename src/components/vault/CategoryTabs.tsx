@@ -37,7 +37,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
       className="px-4 md:px-12 pb-6"
     >
       {/* Grid Layout - 2-3 columns */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {categories.map((category, index) => {
           const productCount = category.subcategories.reduce(
             (acc, sub) => acc + sub.products.length,
@@ -86,7 +86,7 @@ const CategoryTabs = ({ categories, activeCategory, onSelectCategory }: Category
                                mb-2 tracking-wide
                                group-hover:drop-shadow-[0_0_12px_rgba(196,166,97,0.4)]
                                transition-all duration-300">
-                  {category.name}
+                  {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
                 </h3>
 
                 {/* Tagline */}

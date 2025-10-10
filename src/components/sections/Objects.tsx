@@ -71,7 +71,7 @@ const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
                          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
                          group-hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.8)]
                          transition-all duration-300">
-            {category.name}
+            {category.name.charAt(0).toUpperCase() + category.name.slice(1).toLowerCase()}
           </h3>
 
           {/* Tagline */}
