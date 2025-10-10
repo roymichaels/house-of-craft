@@ -31,25 +31,32 @@ interface Moon {
 
 const celestialBodies: CelestialBody[] = [];
 
-// Planet data - sizes increased 1.5x for visibility
+// Planet data - exact values from main-6.js
 const PLANETS_DATA = [
-  { name: "Mercury", radius: 1.2, distance: 12, speed: 4.15, rotation: 0.02, color: 0x8C7853, angle: 0 },
-  { name: "Venus", radius: 2.25, distance: 18, speed: 1.62, rotation: 0.004, color: 0xFFC649, angle: 0.3 },
+  { name: "Mercury", radius: 0.5, distance: 8, speed: 0.0041, rotation: 0.02, color: 0x8C7853, angle: 2.1 },
+  { name: "Venus", radius: 0.9, distance: 11, speed: 0.0016, rotation: 0.004, color: 0xFFC649, angle: 4.8 },
   { 
     name: "Earth", 
-    radius: 2.4, 
-    distance: 25, 
-    speed: 1.0, 
+    radius: 1.0, 
+    distance: 15, 
+    speed: 0.001, 
     rotation: 0.01, 
     color: 0x4169E1, 
-    angle: 0.6,
-    moon: { radius: 0.6, distance: 3, speed: 0.5, color: 0xAAAAAA }
+    angle: 3.45,
+    moon: { radius: 0.27, distance: 2.5, speed: 0.037, color: 0x878787 }
   },
-  { name: "Mars", radius: 1.8, distance: 32, speed: 0.53, rotation: 0.01, color: 0xCD5C5C, angle: 0.9 },
-  { name: "Jupiter", radius: 6.0, distance: 52, speed: 0.084, rotation: 0.04, color: 0xDAA520, angle: 1.2 },
-  { name: "Saturn", radius: 5.25, distance: 70, speed: 0.034, rotation: 0.038, color: 0xF4A460, angle: 1.5, hasRings: true },
-  { name: "Uranus", radius: 3.75, distance: 85, speed: 0.012, rotation: 0.03, color: 0x4FD0E0, angle: 1.8 },
-  { name: "Neptune", radius: 3.6, distance: 100, speed: 0.006, rotation: 0.032, color: 0x4169E1, angle: 2.1 },
+  { name: "Mars", radius: 0.8, distance: 19, speed: 0.00053, rotation: 0.01, color: 0xCD5C5C, angle: 0.9 },
+  { name: "Jupiter", radius: 2.0, distance: 25, speed: 0.000084, rotation: 0.04, color: 0xDAA520, angle: 2.7 },
+  { name: "Saturn", radius: 1.7, distance: 31, speed: 0.000034, rotation: 0.038, color: 0xF4A460, angle: 5.8, hasRings: true },
+  { name: "Uranus", radius: 1.2, distance: 37, speed: 0.000012, rotation: 0.03, color: 0x4FD0E0, angle: 1.2 },
+  { name: "Neptune", radius: 1.1, distance: 42, speed: 0.0000061, rotation: 0.032, color: 0x4169E1, angle: 6.1 },
+  // Dwarf planets
+  { name: "Ceres", radius: 0.3, distance: 22, speed: 0.00022, rotation: 0.01, color: 0x999999, angle: 0 },
+  { name: "Pluto", radius: 0.4, distance: 48, speed: 0.000004, rotation: 0.01, color: 0xD1B399, angle: 5.3 },
+  { name: "Eris", radius: 0.35, distance: 52, speed: 0.0000018, rotation: 0.01, color: 0xE6E6FA, angle: 2.7 },
+  { name: "Makemake", radius: 0.25, distance: 50, speed: 0.0000032, rotation: 0.01, color: 0x8B4513, angle: 1.9 },
+  { name: "Haumea", radius: 0.28, distance: 51, speed: 0.0000035, rotation: 0.01, color: 0xFFFFFF, angle: 4.2 },
+  { name: "Sedna", radius: 0.2, distance: 65, speed: 0.00000009, rotation: 0.01, color: 0x8B0000, angle: 0.1 },
 ];
 
 export function initSolarSystem(container: HTMLElement) {
@@ -79,7 +86,7 @@ export function initSolarSystem(container: HTMLElement) {
     0.1,
     1000
   );
-  camera.position.set(0, 40, 80);
+  camera.position.set(0, 30, 70);
   camera.lookAt(0, 0, 0);
   
   // ============================================================================
@@ -107,9 +114,9 @@ export function initSolarSystem(container: HTMLElement) {
   
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.5,  // strength
-    0.4,  // radius
-    0.85  // threshold
+    0.5,  // strength
+    0.6,  // radius
+    0.05  // threshold
   );
   composer.addPass(bloomPass);
   
@@ -125,7 +132,7 @@ export function initSolarSystem(container: HTMLElement) {
   controls.rotateSpeed = 0.3;
   controls.zoomSpeed = 0.8;
   controls.panSpeed = 0.5;
-  controls.minDistance = 15;
+  controls.minDistance = 8;
   controls.maxDistance = 200;
   
   // ============================================================================
@@ -158,6 +165,11 @@ export function initSolarSystem(container: HTMLElement) {
   });
   const sun = new THREE.Mesh(sunGeometry, sunMaterial);
   scene.add(sun);
+  
+  // ============================================================================
+  // ASTEROID BELT
+  // ============================================================================
+  createAsteroidBelt();
   
   // ============================================================================
   // PLANETS
@@ -345,7 +357,41 @@ function createStarfield() {
   scene.add(stars);
 }
 
+function createAsteroidBelt() {
+  for (let i = 0; i < 150; i++) {
+    const size = 0.02 + Math.random() * 0.06;
+    const distance = 20 + Math.random() * 4; // Between 20-24
+    const angle = Math.random() * Math.PI * 2;
+    
+    const geometry = new THREE.SphereGeometry(size, 6, 6);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x666666,
+      roughness: 1.0,
+      metalness: 0.1
+    });
+    const asteroid = new THREE.Mesh(geometry, material);
+    
+    asteroid.position.x = Math.cos(angle) * distance;
+    asteroid.position.z = Math.sin(angle) * distance;
+    asteroid.position.y = (Math.random() - 0.5) * 0.5;
+    
+    scene.add(asteroid);
+  }
+}
+
 function createOrbitPath(radius: number) {
+  // Color-coded orbit rings based on distance
+  let orbitColor: number;
+  if (radius < 20) {
+    orbitColor = 0x4A90E2; // Inner planets - Blue
+  } else if (radius >= 20 && radius < 24) {
+    orbitColor = 0x996633; // Asteroid region - Brown
+  } else if (radius >= 24 && radius < 45) {
+    orbitColor = 0x8B7EBF; // Outer planets - Purple
+  } else {
+    orbitColor = 0xCCA000; // Dwarf planets - Gold
+  }
+  
   const curve = new THREE.EllipseCurve(
     0, 0,           // center x, y
     radius, radius, // xRadius, yRadius
@@ -357,9 +403,9 @@ function createOrbitPath(radius: number) {
   const points = curve.getPoints(128);
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   const material = new THREE.LineBasicMaterial({
-    color: 0x666666,
+    color: orbitColor,
     transparent: true,
-    opacity: 0.15
+    opacity: 0.2
   });
   
   const orbit = new THREE.Line(geometry, material);
