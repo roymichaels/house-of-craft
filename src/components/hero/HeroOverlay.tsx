@@ -67,7 +67,7 @@ const HeroOverlay = ({
         transition={{ delay: 5, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
         style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
       >
-        <p className="text-sm md:text-base tracking-wider max-w-3xl mx-auto text-balance">
+        <p className="text-sm md:text-base font-ancient-tulip tracking-wider max-w-3xl mx-auto text-balance">
           {subtitle}
         </p>
       </motion.div>
@@ -122,7 +122,7 @@ const HeroOverlay = ({
         
         {/* Subtitle */}
         <motion.p 
-          className="text-xs md:text-sm text-muted-foreground/60 tracking-wider italic"
+          className="text-xs md:text-sm font-ancient-tulip text-muted-foreground/60 tracking-wider italic"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 8, duration: 1 }}

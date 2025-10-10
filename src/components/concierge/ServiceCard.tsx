@@ -32,7 +32,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
         </div>
         <div>
           <h3 className="text-xl font-serif mb-3">{service.title}</h3>
-          <p className="text-muted-foreground text-balance leading-relaxed">
+          <p className="font-ancient-tulip text-muted-foreground text-balance leading-relaxed">
             {service.description}
           </p>
         </div>

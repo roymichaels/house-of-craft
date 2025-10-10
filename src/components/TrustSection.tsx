@@ -50,7 +50,7 @@ const TrustSection = () => {
                 <GoldenIcon icon={feature.icon} size="lg" glow="medium" />
               </div>
               <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground text-balance">{feature.description}</p>
+              <p className="text-sm font-ancient-tulip text-muted-foreground text-balance">{feature.description}</p>
             </motion.div>
           ))}
         </div>
