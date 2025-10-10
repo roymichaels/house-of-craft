@@ -4,10 +4,9 @@ import { useModalStore } from "@/stores/modalStore";
 import { useState, useEffect } from "react";
 import { vaultOrders } from "@/data/vaultOrders";
 import VaultOrderTabs from "@/components/vault/VaultOrderTabs";
-import VaultInstruments from "@/components/vault/VaultInstruments";
-import VaultRelicGrid from "@/components/vault/VaultRelicGrid";
+import VaultEcommerce from "@/components/vault/VaultEcommerce";
 
-type ViewState = 'orders' | 'instruments' | 'relics';
+type ViewState = 'orders' | 'ecommerce';
 
 const CollectionsModal = () => {
   const { activeModal, closeModal } = useModalStore();
@@ -16,14 +15,12 @@ const CollectionsModal = () => {
   // State management
   const [viewState, setViewState] = useState<ViewState>('orders');
   const [activeOrder, setActiveOrder] = useState<string | null>(null);
-  const [activeInstrument, setActiveInstrument] = useState<string | null>(null);
 
   // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
       setViewState('orders');
       setActiveOrder(null);
-      setActiveInstrument(null);
     }
   }, [isOpen]);
 
@@ -33,10 +30,7 @@ const CollectionsModal = () => {
       if (!isOpen) return;
       
       if (e.key === 'Escape') {
-        if (viewState === 'relics') {
-          setViewState('instruments');
-          setActiveInstrument(null);
-        } else if (viewState === 'instruments') {
+        if (viewState === 'ecommerce') {
           setViewState('orders');
           setActiveOrder(null);
         } else {
@@ -51,28 +45,16 @@ const CollectionsModal = () => {
   // Navigation handlers
   const handleOrderSelect = (orderId: string) => {
     setActiveOrder(orderId);
-    setViewState('instruments');
-  };
-
-  const handleInstrumentSelect = (instrumentId: string) => {
-    setActiveInstrument(instrumentId);
-    setViewState('relics');
-  };
-
-  const handleBackToInstruments = () => {
-    setActiveInstrument(null);
-    setViewState('instruments');
+    setViewState('ecommerce');
   };
 
   const handleBackToOrders = () => {
     setActiveOrder(null);
-    setActiveInstrument(null);
     setViewState('orders');
   };
 
   // Get current data
   const currentOrder = vaultOrders.find(o => o.id === activeOrder);
-  const currentInstrument = currentOrder?.instruments.find(i => i.id === activeInstrument);
 
   return (
     <AnimatePresence>
@@ -110,9 +92,9 @@ const CollectionsModal = () => {
                 </button>
 
                 {/* Back Button (contextual) */}
-                {viewState !== 'orders' && (
+                {viewState === 'ecommerce' && (
                   <button
-                    onClick={viewState === 'relics' ? handleBackToInstruments : handleBackToOrders}
+                    onClick={handleBackToOrders}
                     className="absolute top-6 left-6 p-2 rounded-full bg-background/80 
                                hover:bg-primary/20 transition-colors z-10 flex items-center gap-2"
                     aria-label="Go back"
@@ -176,22 +158,8 @@ const CollectionsModal = () => {
                     />
                   )}
 
-                  {viewState === 'instruments' && currentOrder && (
-                    <VaultInstruments
-                      instruments={currentOrder.instruments}
-                      orderTitle={currentOrder.title}
-                      activeInstrument={activeInstrument}
-                      onSelectInstrument={handleInstrumentSelect}
-                    />
-                  )}
-
-                  {viewState === 'relics' && currentInstrument && currentOrder && (
-                    <VaultRelicGrid
-                      relics={currentInstrument.relics}
-                      instrumentName={currentInstrument.name}
-                      orderTitle={currentOrder.title}
-                      onBack={handleBackToInstruments}
-                    />
+                  {viewState === 'ecommerce' && currentOrder && (
+                    <VaultEcommerce order={currentOrder} />
                   )}
                 </AnimatePresence>
               </div>
