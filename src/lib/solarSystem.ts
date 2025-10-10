@@ -103,7 +103,7 @@ export function initSolarSystem(container: HTMLElement) {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.5;  // Increased for brighter, more volumetric sun
+  renderer.toneMappingExposure = 1.0;  // Balanced exposure for realistic appearance
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   
@@ -114,12 +114,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // ENHANCED BLOOM for realistic 3D volumetric sun glow
+  // REALISTIC BLOOM - subtle atmospheric glow like photograph
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    1.8,  // strength - strong glow for volumetric appearance
-    1.2,   // radius - wider spread for atmospheric effect
-    0.3   // threshold - lower to capture more luminous areas
+    0.8,  // strength - moderate realistic glow
+    0.6,   // radius - tight, realistic spread
+    0.6   // threshold - only brightest areas glow
   );
   composer.addPass(bloomPass);
 
@@ -145,8 +145,8 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(0x4a4a5a, 0.4);
   scene.add(ambientLight);
 
-  // Main sun light - bright realistic sun color
-  const sunLight = new THREE.PointLight(0xFFDD88, 25.0, 800, 2);
+  // Main sun light - realistic orange sun color
+  const sunLight = new THREE.PointLight(0xFF8833, 20.0, 800, 2);
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -189,17 +189,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   const sunGroup = new THREE.Group();
   
-  // REALISTIC 3D SUN SURFACE SHADER - Bright, volumetric appearance
+  // REALISTIC PHOTOGRAPHIC SUN SHADER - Like a volcanic fiery sphere
   const solarShader = {
     uniforms: {
       time: { value: 0 },
-      // BRIGHT REALISTIC SUN COLOR PALETTE for 3D depth
-      colorCore: { value: new THREE.Color(0xFFFFFF) },        // White-hot core
-      colorPhotosphere: { value: new THREE.Color(0xFFDD88) }, // Bright yellow-orange
-      colorGranule: { value: new THREE.Color(0xFFBB44) },     // Golden yellow
-      colorCool: { value: new THREE.Color(0xFF9922) },        // Deep orange
-      colorDark: { value: new THREE.Color(0xFF6600) },        // Darker orange edges
-      colorChromosphere: { value: new THREE.Color(0xFF8833) } // Bright orange atmosphere
+      // REALISTIC VOLCANIC SUN COLORS - deep oranges and reds with bright cores
+      colorCore: { value: new THREE.Color(0xFFFFEE) },        // Bright white-yellow hotspots
+      colorHot: { value: new THREE.Color(0xFFCC55) },         // Bright yellow-orange
+      colorMid: { value: new THREE.Color(0xFF8833) },         // Orange
+      colorCool: { value: new THREE.Color(0xFF5522) },        // Red-orange
+      colorDark: { value: new THREE.Color(0xDD3311) },        // Dark red
+      colorEdge: { value: new THREE.Color(0xCC2200) }         // Deep red edges
     },
     vertexShader: `
       uniform float time;
@@ -357,82 +357,59 @@ export function initSolarSystem(container: HTMLElement) {
       }
 
       void main() {
-        // View direction for 3D depth perception
+        // View direction for realistic 3D lighting
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float viewDot = dot(vNormal, viewDir);
+        float viewDot = max(dot(vNormal, viewDir), 0.0);
 
-        // ENHANCED LIMB DARKENING for strong 3D spherical appearance
-        float limbDarkening = smoothstep(0.0, 1.0, viewDot);
-        limbDarkening = pow(limbDarkening, 0.8);  // Stronger gradient for 3D depth
+        // STRONG LIMB DARKENING - creates realistic sphere with dark edges
+        float limbDarkening = pow(viewDot, 1.5);
 
-        // Solar granulation - realistic convection cells
-        float granulation = turbulence(vPosition * 3.0 + time * 0.02) * 0.5 + 0.5;
-        granulation = smoothstep(0.2, 0.8, granulation);
+        // Fine surface texture - volcanic/boiling appearance
+        float texture1 = turbulence(vPosition * 4.0 + time * 0.05);
+        float texture2 = turbulence(vPosition * 8.0 - time * 0.08);
+        float texture3 = snoise(vPosition * 12.0 + time * 0.1) * 0.5 + 0.5;
 
-        // Large-scale convection patterns
-        float superGranulation = snoise(vPosition * 0.8 + time * 0.01) * 0.5 + 0.5;
+        // Combine textures for complex surface
+        float surfaceNoise = (texture1 * 0.5 + texture2 * 0.3 + texture3 * 0.2);
 
-        // Sunspots - darker regions for contrast
-        float sunspots = turbulence(vPosition * 1.5 + time * 0.005);
-        float darkSpots = smoothstep(0.6, 0.85, sunspots);
+        // Create hot spots and cool regions
+        float hotSpots = smoothstep(0.6, 0.9, surfaceNoise);
+        float coolRegions = smoothstep(0.3, 0.6, surfaceNoise);
 
-        // Solar flares and active regions
-        float activity = snoise(vPosition * 2.0 + time * 0.03) * 0.5 + 0.5;
-        float brightRegions = smoothstep(0.7, 0.92, activity);
+        // Build color from dark to bright based on surface features
+        vec3 baseColor = colorDark;
+        baseColor = mix(baseColor, colorCool, coolRegions);
+        baseColor = mix(baseColor, colorMid, smoothstep(0.4, 0.7, surfaceNoise));
+        baseColor = mix(baseColor, colorHot, hotSpots);
+        baseColor = mix(baseColor, colorCore, pow(hotSpots, 2.0) * 0.6);
 
-        // Combine surface features for realistic texture
-        float surfaceDetail = granulation * 0.6 + superGranulation * 0.4;
+        // Apply STRONG limb darkening - edges become very dark
+        baseColor = mix(colorEdge * 0.3, baseColor, limbDarkening);
 
-        // Build bright realistic solar surface - start with photosphere color
-        vec3 baseColor = mix(colorCool, colorPhotosphere, surfaceDetail);
+        // Subtle edge glow
+        float edgeGlow = pow(1.0 - viewDot, 4.0);
+        baseColor += colorMid * edgeGlow * 0.15;
 
-        // Add darker sunspot regions for depth contrast
-        baseColor = mix(baseColor, colorDark, darkSpots * 0.4);
-
-        // Add bright active regions and flares
-        baseColor = mix(baseColor, colorGranule, brightRegions * 0.7);
-        baseColor = mix(baseColor, colorCore, brightRegions * brightRegions * 0.5);
-
-        // Apply enhanced limb darkening for strong 3D spherical shape
-        // Center is brighter, edges are darker - key to 3D appearance
-        baseColor = mix(baseColor * 0.4, baseColor, limbDarkening);
-
-        // Prominent edge glow for atmospheric depth
-        float edgeGlow = pow(1.0 - viewDot, 2.5);
-        baseColor = mix(baseColor, colorChromosphere, edgeGlow * 0.3);
-
-        // Increase overall brightness for realistic sun luminosity
-        float brightness = 1.8 + turbulence(vPosition * 4.0 + time * 0.02) * 0.3;
-        baseColor *= brightness;
+        // Overall intensity - keep it volcanic/realistic
+        baseColor *= 2.5;
 
         gl_FragColor = vec4(baseColor, 1.0);
       }
     `
   };
   
-  // MULTI-LAYER 3D VOLUMETRIC SUN CONSTRUCTION
+  // REALISTIC VOLCANIC SUN CONSTRUCTION
 
-  // Layer 1: Bright white-hot core - the brightest center
-  const innerCoreGeometry = new THREE.SphereGeometry(2.8, 128, 128);
+  // Inner core - bright orange-yellow core
+  const innerCoreGeometry = new THREE.SphereGeometry(3.0, 128, 128);
   const innerCoreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(15, 12, 8),  // Extremely bright white-yellow core
+    color: new THREE.Color(3.5, 2.0, 0.5),  // Bright orange core
     toneMapped: false
   });
   const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
   sunGroup.add(innerCore);
 
-  // Layer 2: Bright yellow-orange transition layer
-  const midCoreGeometry = new THREE.SphereGeometry(3.5, 128, 128);
-  const midCoreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(8, 4, 0.5),  // Bright yellow-orange
-    toneMapped: false,
-    transparent: true,
-    opacity: 0.9
-  });
-  const midCore = new THREE.Mesh(midCoreGeometry, midCoreMaterial);
-  sunGroup.add(midCore);
-
-  // Layer 3: Main photosphere - realistic solar surface with enhanced 3D depth
+  // Main photosphere - realistic textured surface
   const surfaceGeometry = new THREE.SphereGeometry(5.0, 256, 256);
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: solarShader.uniforms,
@@ -442,12 +419,12 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Layer 4: Inner atmosphere glow - bright orange atmosphere
-  const innerAtmosphereGeometry = new THREE.SphereGeometry(6.0, 128, 128);
-  const innerAtmosphereMaterial = new THREE.ShaderMaterial({
+  // Subtle atmospheric glow layer
+  const atmosphereGeometry = new THREE.SphereGeometry(6.5, 96, 96);
+  const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xFF6600) }
+      glowColor: { value: new THREE.Color(0xFF5522) }
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -466,11 +443,11 @@ export function initSolarSystem(container: HTMLElement) {
 
       void main() {
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.0);
+        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.5);
 
-        float intensity = fresnel * 0.6;
+        float intensity = fresnel * 0.25;
 
-        gl_FragColor = vec4(glowColor * 2.0, intensity * 0.8);
+        gl_FragColor = vec4(glowColor * 1.2, intensity * 0.4);
       }
     `,
     transparent: true,
@@ -478,109 +455,18 @@ export function initSolarSystem(container: HTMLElement) {
     side: THREE.BackSide,
     depthWrite: false
   });
-  const innerAtmosphere = new THREE.Mesh(innerAtmosphereGeometry, innerAtmosphereMaterial);
-  sunGroup.add(innerAtmosphere);
-
-  // Layer 5: Mid atmosphere - orange-yellow transition
-  const midAtmosphereGeometry = new THREE.SphereGeometry(7.5, 128, 128);
-  const midAtmosphereMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xFF9933) }
-    },
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-      void main() {
-        vNormal = normalize(normalMatrix * normal);
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float time;
-      uniform vec3 glowColor;
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-
-      void main() {
-        vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
-
-        float intensity = fresnel * 0.5;
-
-        gl_FragColor = vec4(glowColor * 1.5, intensity * 0.6);
-      }
-    `,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    side: THREE.BackSide,
-    depthWrite: false
-  });
-  const midAtmosphere = new THREE.Mesh(midAtmosphereGeometry, midAtmosphereMaterial);
-  sunGroup.add(midAtmosphere);
-
-  // Layer 6: Outer corona - softer yellow-white outer glow
-  const coronaGeometry = new THREE.SphereGeometry(9.5, 128, 128);
-  const coronaMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      time: { value: 0 },
-      coronaColor: { value: new THREE.Color(0xFFCC66) },
-      chromosphereColor: { value: new THREE.Color(0xFFAA44) }
-    },
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-      void main() {
-        vNormal = normalize(normalMatrix * normal);
-        vPosition = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float time;
-      uniform vec3 coronaColor;
-      uniform vec3 chromosphereColor;
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-
-      void main() {
-        vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
-
-        // Dynamic atmospheric activity
-        float activity = sin(time * 0.2 + vPosition.x * 2.0) * 0.2 + 0.8;
-
-        // Layered atmospheric colors with depth
-        vec3 atmosphereColor = mix(chromosphereColor, coronaColor, fresnel * 0.8);
-
-        float intensity = fresnel * 0.4 * activity;
-
-        gl_FragColor = vec4(atmosphereColor * 1.2, intensity * 0.5);
-      }
-    `,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    side: THREE.BackSide,
-    depthWrite: false
-  });
-  const corona = new THREE.Mesh(coronaGeometry, coronaMaterial);
-  sunGroup.add(corona);
+  const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+  sunGroup.add(atmosphere);
 
   scene.add(sunGroup);
 
   // Store references for animation
   sunLayers = {
     innerCore: innerCore,
-    midCore: midCore,
     surface: sunSurface,
     material: surfaceMaterial,
-    innerAtmosphere: innerAtmosphere,
-    innerAtmosphereMaterial: innerAtmosphereMaterial,
-    midAtmosphere: midAtmosphere,
-    midAtmosphereMaterial: midAtmosphereMaterial,
-    corona: corona,
-    coronaMaterial: coronaMaterial
+    atmosphere: atmosphere,
+    atmosphereMaterial: atmosphereMaterial
   };
   
   // ============================================================================
@@ -694,36 +580,27 @@ export function initSolarSystem(container: HTMLElement) {
     
     const time = performance.now() * 0.001; // Time in seconds
     
-    // Animate sun - enhanced 3D volumetric effects
+    // Animate sun - realistic volcanic sphere
     if (sunLayers) {
       // Update shader time uniforms
       sunLayers.material.uniforms.time.value = time;
-      sunLayers.innerAtmosphereMaterial.uniforms.time.value = time;
-      sunLayers.midAtmosphereMaterial.uniforms.time.value = time;
-      sunLayers.coronaMaterial.uniforms.time.value = time;
+      sunLayers.atmosphereMaterial.uniforms.time.value = time;
 
-      // Multi-layer pulsing for realistic solar breathing with depth
-      const pulseScale = 1.0 + Math.sin(time * 0.15) * 0.02 + Math.sin(time * 0.3) * 0.01;
-      const secondaryPulse = 1.0 + Math.sin(time * 0.25) * 0.015;
+      // Subtle pulsing for realistic breathing
+      const pulseScale = 1.0 + Math.sin(time * 0.2) * 0.015;
 
-      sunLayers.innerCore.scale.setScalar(pulseScale * 1.03);
-      sunLayers.midCore.scale.setScalar(pulseScale * 1.02);
+      sunLayers.innerCore.scale.setScalar(pulseScale * 1.01);
       sunLayers.surface.scale.setScalar(pulseScale);
-      sunLayers.innerAtmosphere.scale.setScalar(pulseScale * secondaryPulse * 1.01);
-      sunLayers.midAtmosphere.scale.setScalar(pulseScale * secondaryPulse * 1.02);
-      sunLayers.corona.scale.setScalar(pulseScale * secondaryPulse * 1.03);
+      sunLayers.atmosphere.scale.setScalar(pulseScale * 1.01);
 
-      // Realistic solar rotation with layered differential rotation
-      sunLayers.innerCore.rotation.y += 0.0004;
-      sunLayers.midCore.rotation.y += 0.00035;
-      sunLayers.surface.rotation.y += 0.0003;
-      sunLayers.surface.rotation.x += 0.00005;
+      // Realistic solar rotation
+      sunLayers.innerCore.rotation.y += 0.0005;
+      sunLayers.surface.rotation.y += 0.0004;
+      sunLayers.surface.rotation.x += 0.00008;
 
-      // Atmospheric differential rotation for depth
-      sunLayers.innerAtmosphere.rotation.y -= 0.0002;
-      sunLayers.midAtmosphere.rotation.y -= 0.00018;
-      sunLayers.corona.rotation.y -= 0.00015;
-      sunLayers.corona.rotation.z += 0.00008;
+      // Atmospheric rotation
+      sunLayers.atmosphere.rotation.y -= 0.0003;
+      sunLayers.atmosphere.rotation.z += 0.0001;
     }
     
     // Update planets - slow, contemplative orbital motion
