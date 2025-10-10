@@ -67,14 +67,22 @@ const Planet = ({
         <sphereGeometry args={[radius, 64, 64]} />
         <meshStandardMaterial
           color={color}
-          emissive={emissive || color}
-          emissiveIntensity={2.5}
-          roughness={0.3}
-          metalness={0.6}
-          envMapIntensity={3}
+          emissive={color}
+          emissiveIntensity={5.5}
+          roughness={0.2}
+          metalness={0.8}
+          envMapIntensity={5}
           toneMapped={false}
         />
       </mesh>
+
+      {/* Individual planet light source */}
+      <pointLight
+        position={[0, 0, 0]}
+        color={color}
+        intensity={radius * 12}
+        distance={radius * 15}
+      />
 
       {/* Saturn's rings */}
       {rings && (
@@ -82,32 +90,45 @@ const Planet = ({
           <ringGeometry args={[radius * 1.5, radius * 2.2, 64]} />
           <meshStandardMaterial
             color="#D4B896"
+            emissive="#D4B896"
+            emissiveIntensity={3}
             transparent
-            opacity={0.7}
+            opacity={0.9}
             side={THREE.DoubleSide}
-            roughness={0.8}
-            metalness={0.1}
+            roughness={0.5}
+            metalness={0.3}
+            toneMapped={false}
           />
         </mesh>
       )}
 
       {/* Moons */}
       {moons.map((moon, index) => (
-        <mesh
-          key={moon.name}
-          ref={(el) => {
-            if (el) moonRefs.current[index] = el;
-          }}
-          castShadow
-          receiveShadow
-        >
-          <sphereGeometry args={[moon.radius, 32, 32]} />
-          <meshStandardMaterial
+        <group key={moon.name}>
+          <mesh
+            ref={(el) => {
+              if (el) moonRefs.current[index] = el;
+            }}
+            castShadow
+            receiveShadow
+          >
+            <sphereGeometry args={[moon.radius, 32, 32]} />
+            <meshStandardMaterial
+              color={moon.color}
+              emissive={moon.color}
+              emissiveIntensity={3.5}
+              roughness={0.4}
+              metalness={0.5}
+              toneMapped={false}
+            />
+          </mesh>
+          <pointLight
+            position={[0, 0, 0]}
             color={moon.color}
-            roughness={0.9}
-            metalness={0.1}
+            intensity={moon.radius * 10}
+            distance={moon.radius * 12}
           />
-        </mesh>
+        </group>
       ))}
     </group>
   );
