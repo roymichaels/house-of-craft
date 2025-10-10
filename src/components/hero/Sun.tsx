@@ -7,42 +7,63 @@ interface SunProps {
   glowIntensity?: number;
 }
 
-const Sun = ({ radius, glowIntensity = 3.5 }: SunProps) => {
+const Sun = ({ radius, glowIntensity = 5.0 }: SunProps) => {
   const sunRef = useRef<THREE.Mesh>(null);
+  const innerCoreRef = useRef<THREE.Mesh>(null);
   const coronaRef = useRef<THREE.Mesh>(null);
-  const atmosphereRef = useRef<THREE.Mesh>(null);
+  const outerGlowRef = useRef<THREE.Mesh>(null);
   const flareGroupRef = useRef<THREE.Group>(null);
 
-  // Photorealistic sun surface shader
+  // APOCALYPTIC FIREBALL surface shader
   const sunMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        radius: { value: radius },
-        glowIntensity: { value: glowIntensity },
       },
       vertexShader: `
         varying vec3 vNormal;
         varying vec3 vPosition;
         varying vec2 vUv;
 
+        // Add surface displacement for turbulent effect
+        uniform float time;
+
+        float hash(vec3 p) {
+          return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+        }
+
+        float noise(vec3 p) {
+          vec3 i = floor(p);
+          vec3 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+
+          return mix(
+            mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
+                mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+            mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+                mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+        }
+
         void main() {
           vNormal = normalize(normalMatrix * normal);
-          vPosition = position;
           vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+          // Violent surface displacement
+          vec3 pos = position;
+          float displacement = noise(pos * 3.0 + time * 0.5) * 0.15;
+          displacement += noise(pos * 6.0 + time * 0.8) * 0.08;
+          pos += normal * displacement;
+
+          vPosition = pos;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
         }
       `,
       fragmentShader: `
         uniform float time;
-        uniform float radius;
-        uniform float glowIntensity;
-
         varying vec3 vNormal;
         varying vec3 vPosition;
         varying vec2 vUv;
 
-        // Improved noise functions for realistic surface detail
         float hash(vec2 p) {
           return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
         }
@@ -51,120 +72,130 @@ const Sun = ({ radius, glowIntensity = 3.5 }: SunProps) => {
           vec2 i = floor(p);
           vec2 f = fract(p);
           f = f * f * (3.0 - 2.0 * f);
-
-          float a = hash(i);
-          float b = hash(i + vec2(1.0, 0.0));
-          float c = hash(i + vec2(0.0, 1.0));
-          float d = hash(i + vec2(1.0, 1.0));
-
-          return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+          return mix(mix(hash(i), hash(i + vec2(1,0)), f.x),
+                     mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y);
         }
 
         float fbm(vec2 p) {
           float value = 0.0;
           float amplitude = 0.5;
-          float frequency = 1.0;
-
-          for(int i = 0; i < 6; i++) {
-            value += amplitude * noise(p * frequency);
-            frequency *= 2.0;
+          for(int i = 0; i < 8; i++) {
+            value += amplitude * noise(p);
+            p *= 2.0;
             amplitude *= 0.5;
           }
-
           return value;
         }
 
-        // Granulation pattern (convection cells)
-        float granulation(vec2 uv, float scale) {
-          vec2 p = uv * scale + time * 0.02;
-          return fbm(p) * 0.5 + 0.5;
-        }
-
-        // Sunspot regions (darker, cooler areas)
-        float sunspots(vec2 uv) {
-          vec2 p1 = uv * 3.0 + vec2(time * 0.01, 0.0);
-          vec2 p2 = uv * 2.5 + vec2(0.0, time * 0.008);
-
-          float spot1 = smoothstep(0.6, 0.8, noise(p1));
-          float spot2 = smoothstep(0.55, 0.75, noise(p2));
-
-          return spot1 * spot2;
-        }
-
-        // Active regions (bright, hot areas)
-        float activeRegions(vec2 uv) {
-          vec2 p = uv * 4.0 + time * 0.03;
-          float pattern = fbm(p);
-          return smoothstep(0.6, 0.9, pattern);
-        }
-
-        // Limb darkening effect
-        float limbDarkening(vec3 normal) {
-          float rim = 1.0 - abs(dot(normal, vec3(0.0, 0.0, 1.0)));
-          return pow(rim, 0.5);
-        }
-
         void main() {
-          // Calculate surface coordinates
-          vec2 uv = vUv * 2.0 - 1.0;
+          // VIOLENT TURBULENT SURFACE
+          vec2 uv = vUv * 8.0 + time * 0.3;
 
-          // Base granulation
-          float gran = granulation(vUv, 20.0);
+          // Multiple layers of chaotic motion
+          float turbulence = fbm(uv + time * 0.4);
+          turbulence += fbm(uv * 2.0 - time * 0.6) * 0.5;
+          turbulence += fbm(uv * 4.0 + time * 0.8) * 0.25;
 
-          // Add sunspots
-          float spots = sunspots(vUv);
+          // Extreme fire patterns
+          float fire1 = fbm(vUv * 10.0 + vec2(0.0, time * 1.5));
+          float fire2 = fbm(vUv * 15.0 + vec2(time * 2.0, 0.0));
+          float fire = (fire1 + fire2) * 0.5;
 
-          // Add active regions
-          float active = activeRegions(vUv);
+          // Violent bright spots
+          float hotspots = pow(fire, 3.0) * 2.0;
 
-          // Limb darkening
-          float limb = limbDarkening(vNormal);
+          // APOCALYPTIC COLOR PALETTE
+          vec3 darkRed = vec3(0.5, 0.05, 0.0);       // Deep burning red
+          vec3 red = vec3(1.0, 0.1, 0.0);            // Intense red
+          vec3 orange = vec3(1.0, 0.4, 0.0);         // Burning orange
+          vec3 brightOrange = vec3(1.0, 0.65, 0.1);  // Hot orange
+          vec3 yellow = vec3(1.0, 0.9, 0.2);         // Scorching yellow
+          vec3 white = vec3(1.0, 1.0, 0.95);         // White-hot
 
-          // Color palette - photorealistic sun colors
-          vec3 coreColor = vec3(1.0, 0.95, 0.85);      // White-hot core
-          vec3 hotColor = vec3(1.0, 0.85, 0.3);        // Bright yellow
-          vec3 warmColor = vec3(1.0, 0.6, 0.2);        // Orange
-          vec3 coolColor = vec3(0.9, 0.4, 0.15);       // Deep orange-red
-          vec3 spotColor = vec3(0.4, 0.15, 0.05);      // Dark sunspot
+          // Build extreme fire color
+          vec3 color = darkRed;
+          color = mix(color, red, smoothstep(0.2, 0.4, turbulence));
+          color = mix(color, orange, smoothstep(0.4, 0.6, turbulence));
+          color = mix(color, brightOrange, smoothstep(0.5, 0.7, fire));
+          color = mix(color, yellow, smoothstep(0.7, 0.85, fire));
+          color = mix(color, white, smoothstep(0.85, 1.0, hotspots));
 
-          // Build color based on surface features
-          vec3 baseColor = mix(warmColor, hotColor, gran * 0.7);
+          // Extreme brightness variations
+          float brightness = 1.0 + turbulence * 2.0 + hotspots * 3.0;
+          color *= brightness;
 
-          // Apply active regions (bright spots)
-          baseColor = mix(baseColor, coreColor, active * 0.8);
+          // MASSIVE emissive power for apocalyptic glow
+          color *= 8.0;
 
-          // Apply sunspots (dark regions)
-          baseColor = mix(baseColor, spotColor, spots * 0.6);
-
-          // Apply limb darkening for realism
-          baseColor = mix(coolColor, baseColor, limb * 0.7 + 0.3);
-
-          // Add brightness variation
-          float brightness = 1.0 + gran * 0.3 + active * 0.5;
-          baseColor *= brightness;
-
-          // High emissive intensity for dramatic look
-          vec3 finalColor = baseColor * glowIntensity * 1.5;
-
-          gl_FragColor = vec4(finalColor, 1.0);
+          gl_FragColor = vec4(color, 1.0);
         }
       `,
       side: THREE.FrontSide,
       toneMapped: false,
     });
-  }, [radius, glowIntensity]);
+  }, []);
 
-  // Dramatic corona shader
+  // EXPLOSIVE inner core
+  const innerCoreMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float time;
+        varying vec2 vUv;
+
+        float hash(vec2 p) {
+          return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+        }
+
+        float noise(vec2 p) {
+          vec2 i = floor(p);
+          vec2 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash(i), hash(i + vec2(1,0)), f.x),
+                     mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y);
+        }
+
+        void main() {
+          vec2 center = vUv - 0.5;
+          float dist = length(center);
+
+          // Pulsing white-hot core
+          float pulse = 1.0 + sin(time * 2.0) * 0.3 + sin(time * 3.5) * 0.2;
+          float core = smoothstep(0.5, 0.0, dist) * pulse;
+
+          vec3 whiteHot = vec3(1.0, 1.0, 0.95);
+          vec3 yellowHot = vec3(1.0, 0.95, 0.4);
+
+          vec3 color = mix(yellowHot, whiteHot, core);
+          color *= 15.0 * pulse;
+
+          gl_FragColor = vec4(color, core);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+  }, []);
+
+  // MASSIVE corona with violent tendrils
   const coronaMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
         time: { value: 0 },
-        glowIntensity: { value: glowIntensity },
       },
       vertexShader: `
         varying vec3 vNormal;
         varying vec3 vPosition;
-
         void main() {
           vNormal = normalize(normalMatrix * normal);
           vPosition = position;
@@ -173,70 +204,44 @@ const Sun = ({ radius, glowIntensity = 3.5 }: SunProps) => {
       `,
       fragmentShader: `
         uniform float time;
-        uniform float glowIntensity;
-
         varying vec3 vNormal;
         varying vec3 vPosition;
 
-        float noise(vec3 p) {
+        float hash(vec3 p) {
           return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
         }
 
+        float noise(vec3 p) {
+          vec3 i = floor(p);
+          vec3 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+          return mix(
+            mix(mix(hash(i), hash(i + vec3(1,0,0)), f.x),
+                mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+            mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+                mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+        }
+
         void main() {
-          // View direction for fresnel effect
           vec3 viewDirection = normalize(vPosition - cameraPosition);
-          float fresnel = pow(1.0 + dot(viewDirection, vNormal), 3.0);
+          float fresnel = pow(1.0 + dot(viewDirection, vNormal), 2.0);
 
-          // Wispy corona tendrils
-          float tendrils = noise(vPosition * 5.0 + time * 0.1);
-          tendrils += noise(vPosition * 10.0 + time * 0.15) * 0.5;
+          // VIOLENT plasma tendrils
+          float tendrils = noise(vPosition * 3.0 + time * 0.8);
+          tendrils += noise(vPosition * 6.0 - time * 1.2) * 0.5;
+          tendrils += noise(vPosition * 12.0 + time * 1.5) * 0.25;
 
-          // Corona color - intense orange-red glow
-          vec3 coronaColor = vec3(1.0, 0.5, 0.2);
+          // Extreme corona colors
+          vec3 red = vec3(1.0, 0.2, 0.0);
+          vec3 orange = vec3(1.0, 0.5, 0.1);
+          vec3 yellow = vec3(1.0, 0.8, 0.2);
 
-          // Combine effects
-          float alpha = fresnel * (0.4 + tendrils * 0.3) * glowIntensity * 0.3;
+          vec3 color = mix(red, orange, tendrils);
+          color = mix(color, yellow, pow(tendrils, 2.0));
 
-          gl_FragColor = vec4(coronaColor, alpha);
-        }
-      `,
-      transparent: true,
-      side: THREE.BackSide,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
-  }, [glowIntensity]);
+          float alpha = fresnel * (0.6 + tendrils * 0.4) * 1.5;
 
-  // Atmospheric chromosphere layer
-  const atmosphereMaterial = useMemo(() => {
-    return new THREE.ShaderMaterial({
-      uniforms: {
-        time: { value: 0 },
-      },
-      vertexShader: `
-        varying vec3 vNormal;
-
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform float time;
-        varying vec3 vNormal;
-
-        void main() {
-          // View direction for rim effect
-          vec3 viewDirection = normalize(cameraPosition);
-          float rim = 1.0 - abs(dot(viewDirection, vNormal));
-          rim = pow(rim, 2.0);
-
-          // Red-orange chromosphere color
-          vec3 chromosphereColor = vec3(1.0, 0.3, 0.1);
-
-          float alpha = rim * 0.5;
-
-          gl_FragColor = vec4(chromosphereColor, alpha);
+          gl_FragColor = vec4(color * 3.0, alpha);
         }
       `,
       transparent: true,
@@ -246,81 +251,128 @@ const Sun = ({ radius, glowIntensity = 3.5 }: SunProps) => {
     });
   }, []);
 
-  // Animation loop
+  // MASSIVE outer glow
+  const outerGlowMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float time;
+        varying vec3 vNormal;
+
+        void main() {
+          vec3 viewDirection = normalize(cameraPosition);
+          float rim = pow(1.0 - abs(dot(viewDirection, vNormal)), 3.0);
+
+          float pulse = 1.0 + sin(time * 0.8) * 0.2;
+
+          vec3 glowColor = vec3(1.0, 0.6, 0.2);
+
+          gl_FragColor = vec4(glowColor * 2.0, rim * 0.8 * pulse);
+        }
+      `,
+      transparent: true,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+  }, []);
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
 
-    // Update shader time uniforms
-    if (sunMaterial.uniforms) {
-      sunMaterial.uniforms.time.value = time;
-    }
-    if (coronaMaterial.uniforms) {
-      coronaMaterial.uniforms.time.value = time;
-    }
-    if (atmosphereMaterial.uniforms) {
-      atmosphereMaterial.uniforms.time.value = time;
-    }
+    // Update all shader times
+    if (sunMaterial.uniforms) sunMaterial.uniforms.time.value = time;
+    if (innerCoreMaterial.uniforms) innerCoreMaterial.uniforms.time.value = time;
+    if (coronaMaterial.uniforms) coronaMaterial.uniforms.time.value = time;
+    if (outerGlowMaterial.uniforms) outerGlowMaterial.uniforms.time.value = time;
 
-    // Slow rotation for surface movement
+    // Chaotic rotation
     if (sunRef.current) {
-      sunRef.current.rotation.y += 0.0005;
+      sunRef.current.rotation.y += 0.002;
+      sunRef.current.rotation.x += 0.0003;
     }
 
-    // Dramatic pulsing corona
+    // Violent pulsing core
+    if (innerCoreRef.current) {
+      const pulse = 1 + Math.sin(time * 2) * 0.2 + Math.sin(time * 3.5) * 0.15;
+      innerCoreRef.current.scale.setScalar(pulse);
+    }
+
+    // EXTREME corona pulsing
     if (coronaRef.current) {
-      const pulseFactor = 1 + Math.sin(time * 0.3) * 0.15 + Math.sin(time * 0.7) * 0.08;
+      const pulseFactor = 1 + Math.sin(time * 0.5) * 0.3 + Math.sin(time * 1.2) * 0.2;
       coronaRef.current.scale.setScalar(pulseFactor);
     }
 
-    // Subtle atmosphere breathing
-    if (atmosphereRef.current) {
-      const breathe = 1 + Math.sin(time * 0.4) * 0.05;
-      atmosphereRef.current.scale.setScalar(breathe);
+    // Massive outer glow breathing
+    if (outerGlowRef.current) {
+      const breathe = 1 + Math.sin(time * 0.3) * 0.25;
+      outerGlowRef.current.scale.setScalar(breathe);
     }
 
-    // Rotate solar flares
+    // Rotate flares chaotically
     if (flareGroupRef.current) {
-      flareGroupRef.current.rotation.y = time * 0.1;
+      flareGroupRef.current.rotation.y = time * 0.3;
+      flareGroupRef.current.rotation.z = Math.sin(time * 0.2) * 0.5;
     }
   });
 
   return (
     <group>
-      {/* Main sun body with photorealistic shader */}
+      {/* APOCALYPTIC main sun body */}
       <mesh ref={sunRef}>
         <sphereGeometry args={[radius, 128, 128]} />
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
-      {/* Chromosphere atmosphere layer */}
-      <mesh ref={atmosphereRef}>
-        <sphereGeometry args={[radius * 1.08, 64, 64]} />
-        <primitive object={atmosphereMaterial} attach="material" />
+      {/* White-hot inner core */}
+      <mesh ref={innerCoreRef}>
+        <sphereGeometry args={[radius * 0.7, 64, 64]} />
+        <primitive object={innerCoreMaterial} attach="material" />
       </mesh>
 
-      {/* Dramatic corona */}
+      {/* MASSIVE violent corona */}
       <mesh ref={coronaRef}>
-        <sphereGeometry args={[radius * 1.5, 64, 64]} />
+        <sphereGeometry args={[radius * 2.0, 64, 64]} />
         <primitive object={coronaMaterial} attach="material" />
       </mesh>
 
-      {/* Solar flares group */}
+      {/* HUGE outer glow */}
+      <mesh ref={outerGlowRef}>
+        <sphereGeometry args={[radius * 2.8, 32, 32]} />
+        <primitive object={outerGlowMaterial} attach="material" />
+      </mesh>
+
+      {/* EXPLOSIVE solar flares */}
       <group ref={flareGroupRef}>
-        {/* Multiple flare particles for cinematic effect */}
-        {[...Array(12)].map((_, i) => {
-          const angle = (i / 12) * Math.PI * 2;
-          const distance = radius * (1.3 + Math.random() * 0.4);
+        {[...Array(24)].map((_, i) => {
+          const angle = (i / 24) * Math.PI * 2;
+          const distance = radius * (1.5 + Math.random() * 0.8);
           const x = Math.cos(angle) * distance;
-          const y = (Math.random() - 0.5) * radius * 0.5;
+          const y = (Math.random() - 0.5) * radius * 0.8;
           const z = Math.sin(angle) * distance;
+          const size = radius * (0.2 + Math.random() * 0.3);
 
           return (
             <mesh key={i} position={[x, y, z]}>
-              <sphereGeometry args={[radius * 0.15, 16, 16]} />
+              <sphereGeometry args={[size, 16, 16]} />
               <meshBasicMaterial
-                color={new THREE.Color(1.0, 0.6 + Math.random() * 0.3, 0.2)}
+                color={new THREE.Color(
+                  1.0,
+                  0.4 + Math.random() * 0.5,
+                  Math.random() * 0.2
+                )}
                 transparent
-                opacity={0.3 + Math.random() * 0.3}
+                opacity={0.5 + Math.random() * 0.4}
                 blending={THREE.AdditiveBlending}
               />
             </mesh>
@@ -328,22 +380,29 @@ const Sun = ({ radius, glowIntensity = 3.5 }: SunProps) => {
         })}
       </group>
 
-      {/* Enhanced point light for dramatic scene lighting */}
+      {/* EXTREME lighting for apocalyptic atmosphere */}
       <pointLight
         position={[0, 0, 0]}
-        intensity={glowIntensity * 2.5}
-        distance={300}
-        decay={1.5}
-        color="#FFA040"
+        intensity={glowIntensity * 8.0}
+        distance={500}
+        decay={1.2}
+        color="#FF6600"
       />
 
-      {/* Additional warm fill light */}
       <pointLight
         position={[0, 0, 0]}
-        intensity={glowIntensity * 1.5}
-        distance={200}
-        decay={2}
-        color="#FFD080"
+        intensity={glowIntensity * 5.0}
+        distance={400}
+        decay={1.5}
+        color="#FFAA33"
+      />
+
+      <pointLight
+        position={[0, 0, 0]}
+        intensity={glowIntensity * 3.0}
+        distance={300}
+        decay={1.8}
+        color="#FFCC55"
       />
     </group>
   );
