@@ -33,11 +33,11 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
       {/* Pulsing Solar Halo */}
       <SolarHalo radius={4.0} lightColor={lightColor} intensity={1.2} />
       
-      {/* Floor sigil */}
+      {/* Floor sigil - visible from below during doctrine */}
       <mesh
         ref={sigilRef}
-        rotation={[Math.PI / 2, 0, 0]}
-        position={[0, -3, -5]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -6, 0]}
         receiveShadow
       >
         <circleGeometry args={[3, 64]} />
@@ -52,8 +52,8 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
       
       {/* Outer ring */}
       <mesh 
-        rotation={[Math.PI / 2, 0, 0]}
-        position={[0, -2.95, -5]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, -5.95, 0]}
       >
         <ringGeometry args={[3.2, 3.5, 64]} />
         <meshBasicMaterial 
@@ -67,7 +67,7 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
       {/* Central pulsing light */}
       <pointLight 
         ref={glowRef}
-        position={[0, -2, -5]}
+        position={[0, -5, 0]}
         color={lightColor}
         intensity={2}
         distance={10}

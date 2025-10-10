@@ -100,8 +100,11 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         penumbra={0.8}
       />
       
-      {/* Fill light - soft ambient (increased for Apollinean fog) */}
-      <ambientLight intensity={0.5} />
+      {/* Ambient temple glow - unified space */}
+      <ambientLight intensity={0.15} color={lightColor} />
+      <hemisphereLight 
+        args={[lightColor, "#0a0a0a", 0.2]}
+      />
       
       {/* Rim light - accent separation */}
       <directionalLight
@@ -163,8 +166,6 @@ const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) =>
         distance={15}
       />
 
-      {/* Native Three.js fog for atmospheric depth */}
-      <fog attach="fog" args={["#0C0C0C", 5, 15]} />
     </>
   );
 };

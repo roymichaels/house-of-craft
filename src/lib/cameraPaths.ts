@@ -15,26 +15,26 @@ export const chamberPaths: Record<SceneMode, CameraPath> = {
     roll: 0
   },
   mindcraft: {
-    position: [12, 3, 10],
-    lookAt: [15, 2, -5],
-    fov: 45,
-    roll: -3
+    position: [6, 1, 8],
+    lookAt: [8, 0, -3],
+    fov: 48,
+    roll: -2
   },
   objects: {
-    position: [-8, 0, 12],
-    lookAt: [-12, -1, -10],
-    fov: 42,
+    position: [-6, 0, 8],
+    lookAt: [-8, 0, -3],
+    fov: 46,
     roll: 2
   },
   doctrine: {
-    position: [-12, 4, 14],
-    lookAt: [-15, 3, 5],
-    fov: 48,
+    position: [0, 6, 10],
+    lookAt: [0, 4, -6],
+    fov: 52,
     roll: 0
   },
   circle: {
-    position: [0, 8, 16],
-    lookAt: [0, 10, -8],
+    position: [0, 10, 12],
+    lookAt: [0, 8, -4],
     fov: 55,
     roll: 0
   }

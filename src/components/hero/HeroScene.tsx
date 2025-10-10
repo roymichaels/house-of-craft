@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { Environment, Stars } from "@react-three/drei";
+import * as THREE from "three";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
 import AmbientDust from "./AmbientDust";
@@ -41,27 +42,59 @@ const HeroScene = ({
         className="w-full h-full"
       >
         <Suspense fallback={null}>
-          {/* Apollinean atmosphere - fog for depth */}
-          <fog attach="fog" args={['#000000', 5, 25]} />
+          {/* Apollinean atmosphere - extended fog for unified temple */}
+          <fog attach="fog" args={['#000000', 10, 35]} />
           
           <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
           
-          {/* Unified Temple - All chambers always rendered in 3D space */}
+          {/* Unified Temple - All chambers in one connected space */}
           <group name="apollon-temple">
+            {/* Temple Floor - Shared ground plane */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, -5]} receiveShadow>
+              <planeGeometry args={[40, 30]} />
+              <meshStandardMaterial 
+                color="#0a0a0a"
+                roughness={0.8}
+                metalness={0.2}
+                emissive="#1a1a1a"
+                emissiveIntensity={0.1}
+              />
+            </mesh>
+
+            {/* Vaulted Ceiling */}
+            <mesh position={[0, 12, -5]} rotation={[0, 0, 0]}>
+              <planeGeometry args={[30, 20]} />
+              <meshStandardMaterial 
+                color="#050505"
+                transparent
+                opacity={0.3}
+                side={THREE.DoubleSide}
+              />
+            </mesh>
+
+            {/* Central Atrium */}
             <group position={[0, 0, 0]}>
               <ChamberAtrium lightColor={lightColor} />
             </group>
-            <group position={[15, 2, -5]}>
+
+            {/* East Wing - Mastery */}
+            <group position={[8, 0, -3]}>
               <ChamberMastery lightColor={lightColor} accentColor={accentColor} />
             </group>
-            <group position={[-12, -1, -10]}>
+
+            {/* West Gallery - Vault */}
+            <group position={[-8, 0, -3]}>
               <ChamberVault lightColor={lightColor} />
             </group>
-            <group position={[-15, 3, 5]}>
+
+            {/* Upper Terrace - Doctrine */}
+            <group position={[0, 4, -6]}>
               <ChamberDoctrine lightColor={lightColor} />
             </group>
-            <group position={[0, 10, -8]}>
+
+            {/* Inner Sanctum - Circle */}
+            <group position={[0, 8, -4]}>
               <ChamberInner lightColor={lightColor} />
             </group>
           </group>

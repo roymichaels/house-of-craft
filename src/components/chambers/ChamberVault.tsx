@@ -25,15 +25,15 @@ const ChamberVault = ({ lightColor }: ChamberVaultProps) => {
 
   const vaultRelics = Object.values(relics).filter(r => r.chamber === 'vault');
 
-  // 4 pedestals arranged in semi-circle
+  // 4 pedestals arranged facing camera from West Gallery
   const pedestalConfigs = Array.from({ length: 4 }, (_, i) => {
-    const angle = (i / 3 - 0.5) * Math.PI * 0.6;
-    const radius = 6;
+    const angle = (i / 3 - 0.5) * Math.PI * 0.4;
+    const radius = 4;
     return {
       position: [
         Math.sin(angle) * radius,
         0,
-        Math.cos(angle) * radius - 3
+        Math.cos(angle) * radius
       ] as [number, number, number],
       relicColor: ["#C4A661", "#7A6A4F", "#A08968", "#D4B86A"][i],
       relicData: vaultRelics[i],
@@ -47,7 +47,7 @@ const ChamberVault = ({ lightColor }: ChamberVaultProps) => {
       <LightColumns lightColor={lightColor} intensity={0.8} />
       
       {/* Latin Inscription */}
-      <LatinInscription mode="objects" position={[0, 3.5, -6]} />
+      <LatinInscription mode="objects" position={[0, 3.5, -3]} />
       
       {/* Pedestals and Relics */}
       {pedestalConfigs.map((config) => (

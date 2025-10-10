@@ -22,12 +22,12 @@ const ChamberDoctrine = ({ lightColor }: ChamberDoctrineProps) => {
     });
   });
 
-  // 3 floating marble tablets
+  // 3 floating tablets in ascending rows
   const tablets = Array.from({ length: 3 }, (_, i) => ({
     position: [
-      (i - 1) * 2.5,
-      i * 1.5,
-      -2
+      (i - 1) * 2,
+      i * 1.2,
+      0
     ] as [number, number, number],
     key: i
   }));
