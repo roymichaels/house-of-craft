@@ -34,7 +34,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 27 10% 5%;
+    --background: 0 0% 0%;
     --foreground: 40 15% 93%;
     --obsidian-smoke: 0 0% 4%;
 
@@ -123,7 +123,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 27 10% 5%;
+    --background: 0 0% 0%;
     --foreground: 40 15% 93%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -323,11 +323,11 @@ a, button {
   pointer-events: none;
   z-index: 5;
   background: radial-gradient(
-    ellipse 70% 60% at 50% 40%,
+    ellipse 80% 80% at 50% 50%,
     transparent 0%,
-    rgba(0, 0, 0, 0.4) 70%,
-    rgba(0, 0, 0, 0.8) 100%
+    transparent 60%,
+    rgba(0, 0, 0, 0.2) 90%,
+    rgba(0, 0, 0, 0.4) 100%
   );
-  mix-blend-mode: multiply;
 }
 }

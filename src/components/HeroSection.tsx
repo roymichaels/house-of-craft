@@ -26,7 +26,7 @@ const HeroSection = () => {
       <Navigation />
       
       {/* Vanilla Three.js container - behind everything */}
-      <div ref={containerRef} className="absolute inset-0" />
+      <div ref={containerRef} className="absolute inset-0 z-0" />
 
       {/* Vignette effect */}
       <div className="scene-vignette pointer-events-none" />
