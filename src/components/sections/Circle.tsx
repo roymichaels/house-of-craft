@@ -32,10 +32,7 @@ const Circle = () => {
   ];
 
   return (
-    <section ref={ref} className="w-full py-32 px-6 bg-card relative overflow-hidden">
-      {/* Radial gradient background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(196,166,97,0.1)_0%,transparent_70%)]" />
-      
+    <section ref={ref} className="w-full py-32 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -50,10 +47,10 @@ const Circle = () => {
             <div className="w-12 h-[2px] bg-ancient-gold" />
           </div>
           
-          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
+          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
             The Inner Sanctum
           </h2>
-          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
             Private access to APOLLON — for those who lead, create, and command through light.
           </p>
         </motion.div>
@@ -70,13 +67,13 @@ const Circle = () => {
                 delay: index * 0.1,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="group relative p-8 border border-border bg-background/50 backdrop-blur-sm hover:border-ancient-gold/50 transition-all duration-500"
+              className="group relative p-8 border border-white/10 bg-black/25 backdrop-blur-md hover:border-ancient-gold/50 transition-all duration-500"
             >
               <benefit.icon className="w-10 h-10 text-ancient-gold mb-4 group-hover:scale-110 transition-transform duration-300" />
-              <h3 className="font-ancient text-2xl text-foreground mb-3 tracking-wide">
+              <h3 className="font-ancient text-2xl text-foreground mb-3 tracking-wide [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
                 {benefit.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed font-serif">
+              <p className="text-muted-foreground leading-relaxed font-serif [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]">
                 {benefit.description}
               </p>
               
@@ -94,10 +91,10 @@ const Circle = () => {
           className="text-center"
         >
           <div className="mb-8">
-            <p className="text-foreground text-lg mb-2 font-serif">
+            <p className="text-foreground text-lg mb-2 font-serif [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
               Initiation is by invitation or request.
             </p>
-            <p className="text-muted-foreground text-sm font-serif">
+            <p className="text-muted-foreground text-sm font-serif [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]">
               For serious inquiries regarding collaborations, commissions, or private access.
             </p>
           </div>

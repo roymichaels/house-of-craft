@@ -30,10 +30,7 @@ const Mindcraft = () => {
   ];
 
   return (
-    <section ref={ref} className="w-full py-16 px-6 bg-background relative overflow-hidden grain">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card to-background opacity-50" />
-      
+    <section ref={ref} className="w-full py-16 px-6 relative overflow-hidden">
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -42,10 +39,10 @@ const Mindcraft = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-20"
         >
-          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
+          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
             The Instruments of Mastery
           </h2>
-          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
             Where discipline meets design. Tools for men who live with intent.
           </p>
         </motion.div>
@@ -64,12 +61,12 @@ const Mindcraft = () => {
               }}
               className="group relative"
             >
-              <div className="relative p-8 border border-border bg-card/50 backdrop-blur-sm hover:border-ancient-gold/50 transition-all duration-500 hover:bg-card/80">
+              <div className="relative p-8 border border-white/10 bg-black/25 backdrop-blur-md hover:border-ancient-gold/50 transition-all duration-500 hover:bg-black/35">
                 <instrument.icon className="w-12 h-12 text-ancient-gold mb-6 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="font-ancient text-2xl text-foreground mb-4 tracking-wide">
+                <h3 className="font-ancient text-2xl text-foreground mb-4 tracking-wide [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
                   {instrument.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed font-serif">
+                <p className="text-muted-foreground leading-relaxed font-serif [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]">
                   {instrument.description}
                 </p>
                 

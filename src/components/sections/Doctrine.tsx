@@ -27,12 +27,7 @@ const Doctrine = () => {
   ];
 
   return (
-    <section ref={ref} className="w-full py-32 px-6 bg-background relative overflow-hidden grain">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,hsl(var(--ancient-gold))_1px,transparent_1px)] bg-[length:24px_24px]" />
-      </div>
-
+    <section ref={ref} className="w-full py-32 px-6 relative overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Section Header */}
         <motion.div
@@ -41,10 +36,10 @@ const Doctrine = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-20"
         >
-          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider">
+          <h2 className="font-ancient text-5xl md:text-7xl text-ancient-gold mb-6 tracking-wider [text-shadow:0_2px_12px_rgba(0,0,0,0.9)]">
             The Doctrine
           </h2>
-          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic">
+          <p className="text-foreground/80 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-serif italic [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
             Writings, aphorisms, and manifestos on mastery, perception, and command.
           </p>
         </motion.div>
@@ -69,10 +64,10 @@ const Doctrine = () => {
                   <div className="text-ancient-gold/60 text-xs font-ancient tracking-widest mb-2">
                     {writing.category}
                   </div>
-                  <h3 className="font-ancient text-3xl text-foreground mb-4 tracking-wide group-hover:text-ancient-gold transition-colors duration-300">
+                  <h3 className="font-ancient text-3xl text-foreground mb-4 tracking-wide group-hover:text-ancient-gold transition-colors duration-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">
                     {writing.title}
                   </h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed mb-4 font-serif italic">
+                  <p className="text-muted-foreground text-lg leading-relaxed mb-4 font-serif italic [text-shadow:0_2px_6px_rgba(0,0,0,0.7)]">
                     "{writing.excerpt}"
                   </p>
                   <button
