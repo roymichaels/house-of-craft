@@ -24,15 +24,15 @@ const VaultRelicGrid = ({ relics, instrumentName, orderTitle, onBack }: VaultRel
         <div className="text-center mb-10">
           <button
             onClick={onBack}
-            className="text-xs text-muted-foreground/60 hover:text-primary 
+            className="text-xs font-sans text-muted-foreground/60 hover:text-primary 
                        tracking-widest mb-2 transition-colors"
           >
             ← {orderTitle.toUpperCase()}
           </button>
-          <h3 className="text-3xl font-ancient text-primary mb-2">
+          <h3 className="text-3xl font-ancient-tulip text-primary mb-2 tracking-wide">
             {instrumentName}
           </h3>
-          <p className="text-sm text-muted-foreground italic">
+          <p className="text-sm font-ancient-tulip text-muted-foreground italic">
             Select your relic
           </p>
         </div>

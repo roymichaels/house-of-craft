@@ -81,7 +81,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       {/* Product Details */}
       <div className="space-y-1">
         {/* Title */}
-        <h3 className="text-sm font-ancient-tulip text-foreground line-clamp-1">
+        <h3 className="text-sm font-ancient-tulip text-foreground line-clamp-1 tracking-wide">
           {product.name}
         </h3>
         
@@ -91,7 +91,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </p>
 
         {/* Price */}
-        <p className="text-sm font-ancient-tulip font-semibold text-foreground pt-1">
+        <p className="text-sm font-sans font-semibold text-foreground pt-1">
           {displayPrice}
         </p>
       </div>

@@ -130,24 +130,24 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                 <div className="space-y-4">
                   {/* Category */}
                   <div className="inline-block px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                    <span className="text-xs font-medium text-ancient-gold tracking-wider">
+                    <span className="text-xs font-sans font-medium text-ancient-gold tracking-wider">
                       {product.category.toUpperCase()}
                     </span>
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-3xl font-ancient text-ancient-gold">
+                  <h2 className="text-3xl font-ancient-tulip text-ancient-gold tracking-wide">
                     {product.name}
                   </h2>
 
                   {/* Description */}
-                  <p className="text-foreground/80 leading-relaxed">
+                  <p className="text-foreground/80 leading-relaxed font-ancient-tulip">
                     {product.description}
                   </p>
 
                   {/* Price */}
                   <div className="pt-4 border-t border-border/50">
-                    <p className="text-2xl font-semibold text-foreground">
+                    <p className="text-2xl font-sans font-semibold text-foreground">
                       {product.price}
                     </p>
                   </div>
@@ -167,7 +167,7 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                   {/* Quantity Selector */}
                   <div className="flex items-center justify-between p-4 bg-card/40 backdrop-blur-sm
                                  border border-border/30 rounded-2xl">
-                    <span className="text-sm font-medium text-foreground">Quantity</span>
+                    <span className="text-sm font-sans font-medium text-foreground">Quantity</span>
                     <div className="flex items-center gap-3">
                       <motion.button
                         onClick={decrementQuantity}
@@ -203,7 +203,7 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                   <motion.button
                     onClick={handleAddToCart}
                     className="w-full py-4 bg-gradient-to-r from-primary via-primary to-primary/80
-                               text-background font-bold text-sm tracking-widest rounded-full
+                               text-background font-sans font-bold text-sm tracking-widest rounded-full
                                hover:shadow-lg hover:shadow-primary/25 transition-all
                                flex items-center justify-center gap-2"
                     whileHover={{ scale: 1.02 }}
@@ -219,7 +219,7 @@ const ProductBottomSheet = ({ product, onClose }: ProductBottomSheetProps) => {
                       onClose();
                       setTimeout(() => openModal('cart'), 300);
                     }}
-                    className="text-sm text-muted-foreground hover:text-ancient-gold transition-colors
+                    className="text-sm font-sans text-muted-foreground hover:text-ancient-gold transition-colors
                                text-center underline underline-offset-2"
                     whileHover={{ scale: 1.02 }}
                   >
