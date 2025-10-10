@@ -29,11 +29,10 @@ const getCategoryProductCount = (categoryId: string): number => {
 // Category Card Component
 interface CategoryCardProps {
   category: CategoryShowcase;
-  featured?: boolean;
   delay?: number;
 }
 
-const CategoryCard = ({ category, featured = false, delay = 0 }: CategoryCardProps) => {
+const CategoryCard = ({ category, delay = 0 }: CategoryCardProps) => {
   const { openModalWithCategory } = useModalStore();
   const IconComponent = category.icon ? iconMap[category.icon] : Watch;
   const productCount = getCategoryProductCount(category.id);
@@ -56,15 +55,11 @@ const CategoryCard = ({ category, featured = false, delay = 0 }: CategoryCardPro
         "bg-card/20 backdrop-blur-sm border border-border/20",
         "hover:border-primary/40 hover:bg-card/40",
         "transition-all duration-500",
-        featured ? "aspect-[16/6] p-8 md:p-10" : "aspect-[3/4] md:aspect-[4/5] p-6 md:p-8"
+        "aspect-[16/6] p-8 md:p-10"
       )}
     >
       {/* Background Image */}
-      <div className={cn(
-        "absolute inset-0 transition-opacity duration-700",
-        featured ? "opacity-30" : "opacity-20",
-        "group-hover:opacity-40"
-      )}>
+      <div className="absolute inset-0 opacity-30 group-hover:opacity-40 transition-opacity duration-700">
         <img
           src={category.heroImage}
           alt={category.name}
@@ -79,27 +74,21 @@ const CategoryCard = ({ category, featured = false, delay = 0 }: CategoryCardPro
           {/* Icon */}
           <GoldenIcon
             icon={IconComponent}
-            size={featured ? "2xl" : "xl"}
+            size="2xl"
             glow="medium"
             className="group-hover:drop-shadow-[0_0_25px_rgba(196,166,97,0.7)]"
           />
 
           {/* Name */}
-          <h3 className={cn(
-            "font-ancient text-ancient-gold",
-            "drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]",
-            "group-hover:drop-shadow-[0_0_25px_rgba(196,166,97,0.6)]",
-            "transition-all duration-300",
-            featured ? "text-3xl md:text-4xl lg:text-5xl" : "text-2xl md:text-3xl"
-          )}>
+          <h3 className="font-ancient text-ancient-gold text-3xl md:text-4xl lg:text-5xl
+                         drop-shadow-[0_0_20px_rgba(0,0,0,0.8)]
+                         group-hover:drop-shadow-[0_0_25px_rgba(196,166,97,0.6)]
+                         transition-all duration-300">
             {category.name}
           </h3>
 
           {/* Tagline */}
-          <p className={cn(
-            "text-foreground/60 italic",
-            featured ? "text-base md:text-lg" : "text-sm md:text-base"
-          )}>
+          <p className="text-base md:text-lg text-foreground/60 italic">
             {category.tagline}
           </p>
         </div>
@@ -151,8 +140,8 @@ const Objects = () => {
 
         {/* Category Showcase Grid */}
         <div className="space-y-6 md:space-y-8">
-          {/* Row 1: Featured Timepieces (Full Width) */}
-          <CategoryCard category={timepieces} featured={true} delay={0} />
+          {/* Row 1: Timepieces */}
+          <CategoryCard category={timepieces} delay={0} />
 
           {/* Row 2: Three Categories */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
