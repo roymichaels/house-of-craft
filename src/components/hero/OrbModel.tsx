@@ -99,24 +99,24 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       
       // Turbulent emissive pulsing
       const material = sunRef.current.material as THREE.MeshPhysicalMaterial;
-      material.emissiveIntensity = 3.5 + Math.sin(time * 1.5) * 0.5;
+      material.emissiveIntensity = 6 + Math.sin(time * 1.5) * 1;
     }
 
     // Rotating corona layers (different speeds)
     if (corona1Ref.current) {
       corona1Ref.current.rotation.z = time * 0.1;
       const mat1 = corona1Ref.current.material as THREE.MeshBasicMaterial;
-      mat1.opacity = 0.15 + Math.sin(time * 0.5) * 0.05;
+      mat1.opacity = 0.25 + Math.sin(time * 0.5) * 0.08;
     }
     if (corona2Ref.current) {
       corona2Ref.current.rotation.z = -time * 0.08;
       const mat2 = corona2Ref.current.material as THREE.MeshBasicMaterial;
-      mat2.opacity = 0.12 + Math.sin(time * 0.7) * 0.04;
+      mat2.opacity = 0.2 + Math.sin(time * 0.7) * 0.06;
     }
     if (corona3Ref.current) {
       corona3Ref.current.rotation.z = time * 0.06;
       const mat3 = corona3Ref.current.material as THREE.MeshBasicMaterial;
-      mat3.opacity = 0.1 + Math.sin(time * 0.9) * 0.03;
+      mat3.opacity = 0.15 + Math.sin(time * 0.9) * 0.05;
     }
 
     // Solar flares/prominences (spinning and pulsing)
@@ -124,19 +124,19 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       flare1Ref.current.rotation.x = time * 0.4;
       flare1Ref.current.rotation.y = time * 0.3;
       const flareMat1 = flare1Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat1.emissiveIntensity = 2.5 + Math.sin(time * 2) * 0.5;
+      flareMat1.emissiveIntensity = 5 + Math.sin(time * 2) * 1;
     }
     if (flare2Ref.current) {
       flare2Ref.current.rotation.x = -time * 0.35;
       flare2Ref.current.rotation.z = time * 0.25;
       const flareMat2 = flare2Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat2.emissiveIntensity = 2.5 + Math.sin(time * 2.5) * 0.5;
+      flareMat2.emissiveIntensity = 5 + Math.sin(time * 2.5) * 1;
     }
     if (flare3Ref.current) {
       flare3Ref.current.rotation.y = time * 0.45;
       flare3Ref.current.rotation.z = -time * 0.2;
       const flareMat3 = flare3Ref.current.material as THREE.MeshPhysicalMaterial;
-      flareMat3.emissiveIntensity = 2.5 + Math.sin(time * 3) * 0.5;
+      flareMat3.emissiveIntensity = 5 + Math.sin(time * 3) * 1;
     }
   });
 
@@ -149,14 +149,12 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       <mesh ref={sunRef}>
         <sphereGeometry args={[1, 64, 64]} />
         <meshPhysicalMaterial
-          color="#FDB813"
-          emissive="#FFFFFF"
-          emissiveIntensity={3.5}
-          metalness={0.1}
-          roughness={0.8}
+          color="#FFEB3B"
+          emissive="#FDB813"
+          emissiveIntensity={6}
+          metalness={0}
+          roughness={0.9}
           toneMapped={false}
-          transparent
-          opacity={0.95}
         />
       </mesh>
 
@@ -207,13 +205,11 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       <mesh ref={flare1Ref} position={[0, 0, 0]}>
         <torusGeometry args={[1.3, 0.04, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF4500"
-          emissive="#FF6B1A"
-          emissiveIntensity={2.5}
-          metalness={0.2}
-          roughness={0.3}
-          transparent
-          opacity={0.9}
+          color="#FF6B1A"
+          emissive="#FF4500"
+          emissiveIntensity={5}
+          metalness={0}
+          roughness={0.5}
           toneMapped={false}
         />
       </mesh>
@@ -222,13 +218,11 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       <mesh ref={flare2Ref} position={[0, 0, 0]} rotation={[Math.PI / 3, 0, 0]}>
         <torusGeometry args={[1.4, 0.035, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF6347"
-          emissive="#FF8C00"
-          emissiveIntensity={2.5}
-          metalness={0.2}
-          roughness={0.3}
-          transparent
-          opacity={0.85}
+          color="#FF8C00"
+          emissive="#FF6347"
+          emissiveIntensity={5}
+          metalness={0}
+          roughness={0.5}
           toneMapped={false}
         />
       </mesh>
@@ -237,13 +231,11 @@ const OrbModel = ({ rotationSpeed, lightColor }: OrbModelProps) => {
       <mesh ref={flare3Ref} position={[0, 0, 0]} rotation={[0, Math.PI / 3, Math.PI / 4]}>
         <torusGeometry args={[1.35, 0.038, 16, 100]} />
         <meshPhysicalMaterial
-          color="#FF7F50"
-          emissive="#FFA500"
-          emissiveIntensity={2.5}
-          metalness={0.2}
-          roughness={0.3}
-          transparent
-          opacity={0.8}
+          color="#FFA500"
+          emissive="#FF7F50"
+          emissiveIntensity={5}
+          metalness={0}
+          roughness={0.5}
           toneMapped={false}
         />
       </mesh>
