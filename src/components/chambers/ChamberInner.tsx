@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { SolarHalo } from "../3d/effects/SolarHalo";
 
 interface ChamberInnerProps {
   lightColor: string;
@@ -26,9 +25,6 @@ const ChamberInner = ({ lightColor }: ChamberInnerProps) => {
 
   return (
     <group>
-      {/* Pulsing Solar Halo */}
-      <SolarHalo radius={4.0} lightColor={lightColor} intensity={1.2} />
-      
       {/* Floor sigil */}
       <mesh
         ref={sigilRef}
