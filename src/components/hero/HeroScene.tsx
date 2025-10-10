@@ -43,7 +43,7 @@ const HeroScene = ({
       >
         <Suspense fallback={null}>
           {/* Apollinean atmosphere - extended fog for unified temple (dimmer) */}
-          <fog attach="fog" args={['#000000', 8, 30]} />
+          <fog attach="fog" args={['#0a0820', 8, 30]} />
           
           <CameraController mode={mode} fov={cameraFov} position={cameraPosition} />
           <SceneLighting mode={mode} lightColor={lightColor} accentColor={accentColor} />
@@ -78,13 +78,13 @@ const HeroScene = ({
           
           <Environment preset="city" />
           
-          {/* Environmental particles - subtle golden tint for Apollinean atmosphere */}
+          {/* Environmental particles - vibrant space colors */}
           <Stars 
             radius={50} 
             depth={50} 
             count={500} 
             factor={2} 
-            saturation={0.1} 
+            saturation={0.6} 
             fade 
             speed={0.3}
           />

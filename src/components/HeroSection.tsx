@@ -6,8 +6,8 @@ import HeroOverlay from "./hero/HeroOverlay";
 import OrbModel from "./hero/OrbModel";
 import GoldenParticles from "./hero/GoldenParticles";
 import FloatingGeometry from "./hero/FloatingGeometry";
-import LightRays from "./hero/LightRays";
 import ConstellationField from "./hero/ConstellationField";
+import SpaceNebula from "./hero/SpaceNebula";
 import MouseLight from "./hero/MouseLight";
 import { useHeroScene } from "@/hooks/useHeroScene";
 import Navigation from "./Navigation";
@@ -67,8 +67,9 @@ const HeroSection = () => {
             {!isMobile && <MouseLight />}
             
             {/* Background Elements */}
+            <SpaceNebula />
             <ConstellationField />
-            <LightRays />
+            <GoldenParticles count={isMobile ? 150 : 300} radius={3} />
             {!isMobile && <FloatingGeometry />}
             
             {/* Main Orb */}
@@ -77,10 +78,7 @@ const HeroSection = () => {
               lightColor={config.light_color}
             />
             
-            {/* Golden Particles */}
-            <GoldenParticles count={isMobile ? 150 : 300} />
-            
-            <Environment preset="sunset" />
+            <Environment preset="night" />
             <OrbitControls
               enableZoom={false}
               enablePan={false}

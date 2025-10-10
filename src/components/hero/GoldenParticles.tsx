@@ -10,9 +10,19 @@ interface GoldenParticlesProps {
 const GoldenParticles = ({ count = 300, radius = 3 }: GoldenParticlesProps) => {
   const pointsRef = useRef<THREE.Points>(null);
   
-  const { positions, velocities } = useMemo(() => {
+  const { positions, velocities, colors } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const vel = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    
+    // Space color palette
+    const spaceColors = [
+      new THREE.Color("#D4AF37"), // Golden
+      new THREE.Color("#60A5FA"), // Cosmic Blue
+      new THREE.Color("#9333EA"), // Nebula Purple
+      new THREE.Color("#EC4899"), // Nebula Pink
+      new THREE.Color("#14B8A6"), // Teal
+    ];
     
     for (let i = 0; i < count * 3; i += 3) {
       // Spherical distribution around orb
@@ -28,9 +38,15 @@ const GoldenParticles = ({ count = 300, radius = 3 }: GoldenParticlesProps) => {
       vel[i] = (Math.random() - 0.5) * 0.01;
       vel[i + 1] = (Math.random() - 0.5) * 0.01;
       vel[i + 2] = (Math.random() - 0.5) * 0.01;
+      
+      // Random color from palette
+      const color = spaceColors[Math.floor(Math.random() * spaceColors.length)];
+      col[i] = color.r;
+      col[i + 1] = color.g;
+      col[i + 2] = color.b;
     }
     
-    return { positions: pos, velocities: vel };
+    return { positions: pos, velocities: vel, colors: col };
   }, [count, radius]);
 
   useFrame((state) => {
@@ -75,12 +91,18 @@ const GoldenParticles = ({ count = 300, radius = 3 }: GoldenParticlesProps) => {
           array={positions}
           itemSize={3}
         />
+        <bufferAttribute
+          attach="attributes-color"
+          count={count}
+          array={colors}
+          itemSize={3}
+        />
       </bufferGeometry>
       <pointsMaterial
-        size={0.04}
-        color="#D4AF37"
+        size={0.05}
+        vertexColors
         transparent
-        opacity={0.6}
+        opacity={0.7}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
         depthWrite={false}

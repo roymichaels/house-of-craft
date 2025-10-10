@@ -60,14 +60,14 @@ const ConstellationField = () => {
             itemSize={3}
           />
         </bufferGeometry>
-        <pointsMaterial
-          size={0.08}
-          color="#E8E8E8"
-          transparent
-          opacity={0.6}
-          sizeAttenuation
-          blending={THREE.AdditiveBlending}
-        />
+      <pointsMaterial
+        size={0.08}
+        color="#60A5FA"
+        transparent
+        opacity={0.8}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
       </points>
 
       {/* Constellation lines */}
@@ -80,12 +80,12 @@ const ConstellationField = () => {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial
-          color="#C4A661"
-          transparent
-          opacity={0.15}
-          blending={THREE.AdditiveBlending}
-        />
+      <lineBasicMaterial
+        color="#9333EA"
+        transparent
+        opacity={0.25}
+        blending={THREE.AdditiveBlending}
+      />
       </lineSegments>
     </group>
   );
