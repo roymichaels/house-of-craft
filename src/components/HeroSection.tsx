@@ -23,19 +23,24 @@ const HeroSection = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-[#000814]">
-      <Navigation />
+      {/* Navigation - Top layer */}
+      <div className="relative z-30">
+        <Navigation />
+      </div>
       
-      {/* Vanilla Three.js container - behind everything */}
+      {/* Three.js Solar System - Bottom layer */}
       <div ref={containerRef} className="absolute inset-0 z-0" />
 
-      {/* Vignette effect */}
-      <div className="scene-vignette pointer-events-none" />
+      {/* Vignette effect - Middle layer */}
+      <div className="scene-vignette pointer-events-none absolute inset-0 z-10" />
       
-      {/* Overlay content - on top with transparent background */}
-      <HeroOverlay 
-        title={data?.title || "APOLLO"}
-        subtitle={data?.subtitle || "Reliquary of Distinction"}
-      />
+      {/* Hero Overlay - Middle-top layer */}
+      <div className="relative z-20">
+        <HeroOverlay 
+          title={data?.title || "APOLLO"}
+          subtitle={data?.subtitle || "Reliquary of Distinction"}
+        />
+      </div>
     </div>
   );
 };
