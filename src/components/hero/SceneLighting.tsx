@@ -4,6 +4,7 @@ import { SpotLight, PointLight } from "three";
 import { useSceneStore, SceneMode } from "@/contexts/SceneContext";
 
 interface SceneLightingProps {
+  mode: SceneMode;
   lightColor: string;
   accentColor: string;
 }
@@ -25,8 +26,7 @@ const getLightingForMode = (mode: SceneMode) => {
   }
 };
 
-const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
-  const { mode } = useSceneStore();
+const SceneLighting = ({ mode, lightColor, accentColor }: SceneLightingProps) => {
   const keyLightRef = useRef<SpotLight>(null);
   const sweepLightRef = useRef<SpotLight>(null);
   const jewelLightRef = useRef<PointLight>(null);

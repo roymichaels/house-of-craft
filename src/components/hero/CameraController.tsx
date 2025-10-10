@@ -1,16 +1,23 @@
 import { useRef, useEffect } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera } from "three";
+import { PerspectiveCamera, Vector3 } from "three";
+import { SceneMode } from "@/contexts/SceneContext";
+import { chamberPaths } from "@/lib/cameraPaths";
 
 interface CameraControllerProps {
+  mode: SceneMode;
   fov: number;
   position: { x: number; y: number; z: number };
 }
 
-const CameraController = ({ fov, position }: CameraControllerProps) => {
+const CameraController = ({ mode, fov, position }: CameraControllerProps) => {
   const { camera, size } = useThree();
   const mousePosition = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
+  const targetPosition = useRef(new Vector3());
+  const targetLookAt = useRef(new Vector3());
+  const targetFov = useRef(50);
+  const introComplete = useRef(false);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -32,10 +39,18 @@ const CameraController = ({ fov, position }: CameraControllerProps) => {
     }
   }, [camera, fov, position]);
 
+  // Update target when mode changes
+  useEffect(() => {
+    const path = chamberPaths[mode];
+    targetPosition.current.set(...path.position);
+    targetLookAt.current.set(...path.lookAt);
+    targetFov.current = path.fov;
+  }, [mode]);
+
   useFrame((state) => {
     // Extended intro dolly animation (0-5 seconds) with focus pull
     const elapsed = state.clock.getElapsedTime();
-    if (elapsed < 5 && camera instanceof PerspectiveCamera) {
+    if (elapsed < 5 && !introComplete.current && camera instanceof PerspectiveCamera) {
       const progress = Math.min(elapsed / 5, 1);
       const easeOut = 1 - Math.pow(1 - progress, 3);
       camera.position.z = position.z + 1.5 - (1.5 * easeOut);
@@ -43,16 +58,36 @@ const CameraController = ({ fov, position }: CameraControllerProps) => {
       // Subtle camera sway (breathing effect)
       const sway = Math.sin(elapsed * 0.5) * 0.02;
       camera.position.y = position.y + sway;
+      
+      if (elapsed >= 4.9) {
+        introComplete.current = true;
+      }
+    } else if (introComplete.current) {
+      // Chamber navigation - smooth lerp
+      camera.position.lerp(targetPosition.current, 0.02);
+      
+      // Smooth lookAt transition
+      const currentLookAt = new Vector3();
+      camera.getWorldDirection(currentLookAt);
+      currentLookAt.add(camera.position);
+      currentLookAt.lerp(targetLookAt.current, 0.02);
+      camera.lookAt(currentLookAt);
+      
+      // FOV transition
+      if (camera instanceof PerspectiveCamera) {
+        camera.fov += (targetFov.current - camera.fov) * 0.02;
+        camera.updateProjectionMatrix();
+      }
+      
+      // Parallax effect - subtle camera rotation based on mouse (reduced during transitions)
+      const parallaxStrength = 0.03;
+      targetRotation.current.y = mousePosition.current.x * parallaxStrength;
+      targetRotation.current.x = mousePosition.current.y * parallaxStrength;
+
+      // Smooth lerp interpolation
+      camera.rotation.y += (targetRotation.current.y - camera.rotation.y) * 0.03;
+      camera.rotation.x += (targetRotation.current.x - camera.rotation.x) * 0.03;
     }
-
-    // Parallax effect - subtle camera rotation based on mouse
-    const parallaxStrength = 0.05;
-    targetRotation.current.y = mousePosition.current.x * parallaxStrength;
-    targetRotation.current.x = mousePosition.current.y * parallaxStrength;
-
-    // Smooth lerp interpolation
-    camera.rotation.y += (targetRotation.current.y - camera.rotation.y) * 0.05;
-    camera.rotation.x += (targetRotation.current.x - camera.rotation.x) * 0.05;
   });
 
   return null;
