@@ -16,6 +16,10 @@ interface HeroScene {
   cta_text: string;
   cta_link: string;
   is_active: boolean;
+  movement_style: string;
+  show_balance_wheel: boolean;
+  show_gears: boolean;
+  hand_style: string;
 }
 
 export const useHeroScene = () => {

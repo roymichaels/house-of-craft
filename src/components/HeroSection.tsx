@@ -18,6 +18,10 @@ const HeroSection = () => {
     camera_position: { x: 0, y: 0, z: 5 },
     cta_text: "Enter The House",
     cta_link: "/collections",
+    show_real_time: false,
+    show_balance_wheel: true,
+    show_gears: true,
+    hand_style: "classic",
   };
 
   return (
@@ -41,6 +45,10 @@ const HeroSection = () => {
             accentColor={config.accent_color}
             cameraFov={config.camera_fov}
             cameraPosition={config.camera_position}
+            showRealTime={config.show_real_time}
+            showBalanceWheel={config.show_balance_wheel}
+            showGears={config.show_gears}
+            handStyle={config.hand_style}
           />
         </Suspense>
       )}

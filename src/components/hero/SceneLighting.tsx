@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { SpotLight } from "three";
+import { SpotLight, PointLight } from "three";
 
 interface SceneLightingProps {
   lightColor: string;
@@ -9,12 +9,28 @@ interface SceneLightingProps {
 
 const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
   const keyLightRef = useRef<SpotLight>(null);
+  const sweepLightRef = useRef<SpotLight>(null);
+  const jewelLightRef = useRef<PointLight>(null);
 
   useFrame((state) => {
     if (keyLightRef.current) {
       // Gentle oscillation of key light
       const oscillation = Math.sin(state.clock.elapsedTime * 0.1) * 0.2;
       keyLightRef.current.position.x = 5 + oscillation;
+    }
+
+    // Sweeping sunlight effect (40s loop simulating day)
+    if (sweepLightRef.current) {
+      const sweepAngle = (state.clock.elapsedTime / 40) * Math.PI * 2;
+      const sweepRadius = 6;
+      sweepLightRef.current.position.x = Math.cos(sweepAngle) * sweepRadius;
+      sweepLightRef.current.position.z = Math.sin(sweepAngle) * sweepRadius;
+    }
+
+    // Pulsating jewel light
+    if (jewelLightRef.current) {
+      const pulse = 0.3 + Math.sin(state.clock.elapsedTime * 8 * Math.PI) * 0.2;
+      jewelLightRef.current.intensity = pulse;
     }
   });
 
@@ -29,6 +45,16 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
         angle={0.6}
         penumbra={0.5}
         castShadow
+      />
+
+      {/* Sweeping daylight - simulates sun movement */}
+      <spotLight
+        ref={sweepLightRef}
+        position={[6, 4, 0]}
+        color="#FFF4E0"
+        intensity={0.5}
+        angle={0.4}
+        penumbra={0.8}
       />
       
       {/* Fill light - soft ambient */}
@@ -47,6 +73,18 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
         color="#ffffff"
         intensity={0.2}
       />
+
+      {/* Jewel accent light - pulsating ruby glow */}
+      <pointLight
+        ref={jewelLightRef}
+        position={[0, 1.2, 0.5]}
+        color="#C73E3A"
+        intensity={0.3}
+        distance={1}
+      />
+
+      {/* Subtle fog for depth */}
+      <fog attach="fog" args={["#1A1816", 8, 15]} />
     </>
   );
 };
