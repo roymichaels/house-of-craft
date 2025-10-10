@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
-import { Environment } from "@react-three/drei";
+import { Environment, Stars } from "@react-three/drei";
+import { EffectComposer, Bloom, Vignette, DepthOfField } from "@react-three/postprocessing";
 import WatchModel from "./WatchModel";
 import SceneLighting from "./SceneLighting";
 import CameraController from "./CameraController";
@@ -37,6 +38,7 @@ const HeroScene = ({
           alpha: true,
           powerPreference: "high-performance"
         }}
+        shadows
         className="w-full h-full"
       >
         <Suspense fallback={null}>
@@ -51,6 +53,33 @@ const HeroScene = ({
             handStyle={handStyle}
           />
           <Environment preset="city" />
+          
+          {/* Environmental particles - subtle gold sparkle */}
+          <Stars 
+            radius={50} 
+            depth={50} 
+            count={300} 
+            factor={2} 
+            saturation={0} 
+            fade 
+            speed={0.3}
+          />
+          
+          {/* Post-processing effects */}
+          <EffectComposer>
+            <Bloom 
+              intensity={0.3} 
+              luminanceThreshold={0.9} 
+              luminanceSmoothing={0.9}
+              mipmapBlur
+            />
+            <Vignette offset={0.5} darkness={0.6} />
+            <DepthOfField 
+              focusDistance={0.01} 
+              focalLength={0.05} 
+              bokehScale={2}
+            />
+          </EffectComposer>
         </Suspense>
       </Canvas>
     </div>

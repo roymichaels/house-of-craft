@@ -27,8 +27,8 @@ const WatchModel = ({
       // Slow continuous rotation
       meshRef.current.rotation.y += rotationSpeed * 0.01;
       
-      // Subtle breathing animation
-      const breathe = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
+      // Enhanced breathing animation (4s cycle, synced with heartbeat)
+      const breathe = Math.sin(state.clock.elapsedTime * (Math.PI / 2)) * 0.015;
       meshRef.current.scale.setScalar(1 + breathe);
     }
   });
@@ -36,15 +36,17 @@ const WatchModel = ({
   return (
     <group>
       {/* Watch case - torus bezel with enhanced material */}
-      <mesh ref={meshRef} position={[0, 0, 0]}>
+      <mesh ref={meshRef} position={[0, 0, 0]} castShadow receiveShadow>
         <torusGeometry args={[1.2, 0.4, 32, 100]} />
         <meshPhysicalMaterial
           color={lightColor}
           metalness={0.95}
           roughness={0.15}
-          envMapIntensity={1.5}
-          clearcoat={0.3}
-          clearcoatRoughness={0.1}
+          envMapIntensity={2.0}
+          clearcoat={0.4}
+          clearcoatRoughness={0.08}
+          emissive={lightColor}
+          emissiveIntensity={0.05}
         />
       </mesh>
 

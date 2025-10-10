@@ -27,10 +27,17 @@ const SceneLighting = ({ lightColor, accentColor }: SceneLightingProps) => {
       sweepLightRef.current.position.z = Math.sin(sweepAngle) * sweepRadius;
     }
 
-    // Pulsating jewel light
+    // Pulsating jewel light synced with heartbeat (every 3s)
     if (jewelLightRef.current) {
-      const pulse = 0.3 + Math.sin(state.clock.elapsedTime * 8 * Math.PI) * 0.2;
+      const heartbeat = Math.sin(state.clock.elapsedTime * (Math.PI / 1.5));
+      const pulse = 0.3 + heartbeat * 0.2;
       jewelLightRef.current.intensity = pulse;
+    }
+    
+    // Sync key light intensity with heartbeat
+    if (keyLightRef.current) {
+      const flicker = 0.8 + Math.sin(state.clock.elapsedTime * (Math.PI / 3)) * 0.1;
+      keyLightRef.current.intensity = flicker;
     }
   });
 

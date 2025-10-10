@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import HeroSeal from "./HeroSeal";
 import HeroLogo from "./HeroLogo";
 import ScrollIndicator from "./ScrollIndicator";
+import { useTitleReveal } from "@/hooks/useTitleReveal";
 
 interface HeroOverlayProps {
   title: string;
@@ -26,10 +27,12 @@ const HeroOverlay = ({
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
+  
+  // Title reveal hook for scroll-triggered entrance
+  const { titleOpacity, titleY, titleScale } = useTitleReveal();
 
-  // Scroll-driven animations
-  const textY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
-  const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  // Scroll-driven animations for fade out
+  const fadeOpacity = useTransform(scrollYProgress, [0.8, 1], [1, 0]);
 
   // Mouse parallax effect
   useEffect(() => {
@@ -56,34 +59,35 @@ const HeroOverlay = ({
       {/* Hero Logo */}
       <HeroLogo logoText={logoText} show={showLogo} />
 
-      {/* Main Content */}
+      {/* Tagline - appears at 5-7s in lower third */}
+      <motion.div
+        className="absolute bottom-32 left-0 right-0 z-10 text-center px-6"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 0.6, y: 0 }}
+        transition={{ delay: 5, duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
+      >
+        <p className="text-sm md:text-base tracking-wider max-w-3xl mx-auto text-balance">
+          {subtitle}
+        </p>
+      </motion.div>
+
+      {/* Main Title - Scroll-triggered reveal */}
       <motion.div
         ref={containerRef}
-        className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center justify-center min-h-screen"
-        style={prefersReducedMotion ? {} : { y: textY, opacity: textOpacity }}
+        className="relative z-10 container mx-auto px-6 text-center flex flex-col items-center justify-center min-h-screen pointer-events-none"
+        style={
+          prefersReducedMotion
+            ? {}
+            : { 
+                opacity: titleOpacity, 
+                y: titleY, 
+                scale: titleScale 
+              }
+        }
       >
-        {/* Tagline */}
-        <motion.p
-          className="text-base md:text-lg tracking-wider mb-6 max-w-2xl mx-auto text-balance"
-          style={
-            prefersReducedMotion
-              ? { opacity: 0.7 }
-              : {
-                  opacity: 0.7,
-                  x: mousePosition.x * 0.3,
-                  y: mousePosition.y * 0.3,
-                }
-          }
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.7, y: 0 }}
-          transition={{ delay: baseDelay + 1, duration: 1.5, ease: "easeOut" }}
-        >
-          {subtitle}
-        </motion.p>
-
-        {/* Main Title */}
         <motion.h1
-          className="text-5xl md:text-7xl lg:text-8xl font-serif mb-10 tracking-tight text-balance"
+          className="text-5xl md:text-7xl lg:text-8xl font-serif tracking-tight text-balance"
           style={
             prefersReducedMotion
               ? { opacity: 0.85 }
@@ -93,39 +97,34 @@ const HeroOverlay = ({
                   y: mousePosition.y * 0.5,
                 }
           }
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 0.85, scale: 1 }}
-          transition={{
-            delay: baseDelay + 2,
-            duration: 1.5,
-            ease: [0.16, 1, 0.3, 1],
-          }}
         >
           {title}
         </motion.h1>
+      </motion.div>
 
-        {/* CTA */}
+      {/* CTA - appears later */}
+      <motion.div
+        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 7, duration: 1.2, ease: "easeOut" }}
+        style={prefersReducedMotion ? {} : { opacity: fadeOpacity }}
+      >
         {ctaStyle === "seal" ? (
           <HeroSeal ctaLink={ctaLink} />
         ) : (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: baseDelay + 4, duration: 1.2, ease: "easeOut" }}
+          <a
+            href={ctaLink}
+            className="text-sm tracking-widest opacity-70 hover:opacity-100 
+                       transition-opacity duration-300 font-sans pointer-events-auto"
           >
-            <a
-              href={ctaLink}
-              className="text-sm tracking-widest opacity-70 hover:opacity-100 
-                         transition-opacity duration-300 font-sans"
-            >
-              ENTER
-            </a>
-          </motion.div>
+            ENTER
+          </a>
         )}
-
-        {/* Scroll Indicator */}
-        <ScrollIndicator />
       </motion.div>
+
+      {/* Scroll Indicator */}
+      <ScrollIndicator />
     </>
   );
 };

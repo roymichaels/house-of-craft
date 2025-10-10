@@ -1,0 +1,105 @@
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { X, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface MenuDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
+  const navItems = [
+    { name: "Collections", path: "/collections" },
+    { name: "Stories", path: "/stories" },
+    { name: "The House", path: "/about" },
+    { name: "Concierge", path: "/concierge" },
+  ];
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[100]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            onClick={onClose}
+          />
+
+          {/* Drawer Content */}
+          <motion.div
+            className="fixed inset-0 z-[101] flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute top-8 right-8 text-ancient-gold/60 hover:text-ancient-gold transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="h-8 w-8" />
+            </button>
+
+            {/* Menu Items */}
+            <nav className="flex flex-col items-center gap-8">
+              {navItems.map((item, index) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, x: -100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 0.1 + index * 0.1,
+                    duration: 0.8,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <Link
+                    to={item.path}
+                    onClick={onClose}
+                    className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-ancient-gold/70 
+                               transition-colors tracking-wider drop-shadow-[0_0_20px_rgba(196,166,97,0.3)]
+                               hover:drop-shadow-[0_0_30px_rgba(196,166,97,0.5)]"
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+
+              {/* Sign In */}
+              <motion.div
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{
+                  delay: 0.1 + navItems.length * 0.1,
+                  duration: 0.8,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="mt-8"
+              >
+                <Link to="/auth" onClick={onClose}>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="gap-2 border-ancient-gold/30 text-ancient-gold hover:bg-ancient-gold/10"
+                  >
+                    <User className="h-5 w-5" />
+                    Sign In
+                  </Button>
+                </Link>
+              </motion.div>
+            </nav>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default MenuDrawer;

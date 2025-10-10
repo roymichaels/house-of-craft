@@ -26,19 +26,23 @@ const CameraController = ({ fov, position }: CameraControllerProps) => {
   useEffect(() => {
     if (camera instanceof PerspectiveCamera) {
       camera.fov = fov;
-      // Start slightly further back for intro dolly
-      camera.position.set(position.x, position.y, position.z + 0.5);
+      // Start further back for longer intro dolly (focus pull)
+      camera.position.set(position.x, position.y, position.z + 1.5);
       camera.updateProjectionMatrix();
     }
   }, [camera, fov, position]);
 
   useFrame((state) => {
-    // Intro dolly animation (first 3 seconds)
+    // Extended intro dolly animation (0-5 seconds) with focus pull
     const elapsed = state.clock.getElapsedTime();
-    if (elapsed < 3 && camera instanceof PerspectiveCamera) {
-      const progress = Math.min(elapsed / 3, 1);
+    if (elapsed < 5 && camera instanceof PerspectiveCamera) {
+      const progress = Math.min(elapsed / 5, 1);
       const easeOut = 1 - Math.pow(1 - progress, 3);
-      camera.position.z = position.z + 0.5 - (0.5 * easeOut);
+      camera.position.z = position.z + 1.5 - (1.5 * easeOut);
+      
+      // Subtle camera sway (breathing effect)
+      const sway = Math.sin(elapsed * 0.5) * 0.02;
+      camera.position.y = position.y + sway;
     }
 
     // Parallax effect - subtle camera rotation based on mouse
