@@ -146,7 +146,7 @@ const Objects = () => {
         </motion.div>
 
         {/* Category Showcase Grid - 2 Rows x 3 Columns - Centered */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {/* Row 1: Timepieces, Accessories, Leather Goods */}
           <CategoryCard category={timepieces} delay={0} />
           <CategoryCard category={accessories} delay={0.1} />
