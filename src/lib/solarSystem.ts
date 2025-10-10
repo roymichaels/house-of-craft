@@ -66,11 +66,17 @@ export function initSolarSystem(container: HTMLElement) {
     console.warn('⚠️ Solar System already initialized');
     return () => {};
   }
-  
-  console.log('🌌 Initializing Solar System (main.js recreation)...');
-  isInitialized = true;
-  
-  cleanupSolarSystem();
+
+  if (!container || container.clientWidth === 0 || container.clientHeight === 0) {
+    console.error('❌ Invalid container for Solar System initialization');
+    return () => {};
+  }
+
+  try {
+    console.log('🌌 Initializing Solar System...');
+    isInitialized = true;
+
+    cleanupSolarSystem();
   
   // ============================================================================
   // SCENE
@@ -504,13 +510,21 @@ export function initSolarSystem(container: HTMLElement) {
   };
   
   window.addEventListener('resize', handleResize);
-  
+
+  console.log('✅ Solar System initialized successfully');
+
   return () => {
     console.log('🔄 Cleanup');
     window.removeEventListener('resize', handleResize);
     cancelAnimationFrame(animationId);
     isInitialized = false;
   };
+  } catch (error) {
+    console.error('❌ Error initializing Solar System:', error);
+    isInitialized = false;
+    cleanupSolarSystem();
+    return () => {};
+  }
 }
 
 // ============================================================================

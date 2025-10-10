@@ -13,45 +13,50 @@ let initialized = false;
 
 export const initChamberAudio = async () => {
   if (initialized) return;
-  
-  await Tone.start();
-  
-  // Chamber: Command (deep hum + heartbeat)
-  synths.hero = new Tone.Synth({
-    oscillator: { type: 'sine' },
-    envelope: { attack: 2, decay: 0.5, sustain: 0.8, release: 2 }
-  }).toDestination();
-  synths.hero.volume.value = -30;
-  
-  // Chamber: Mastery (metallic ticking)
-  synths.mindcraft = new Tone.Synth({
-    oscillator: { type: 'triangle' },
-    envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
-  }).toDestination();
-  synths.mindcraft.volume.value = -35;
-  
-  // Chamber: Presence (echoing chime)
-  synths.objects = new Tone.Synth({
-    oscillator: { type: 'sine' },
-    envelope: { attack: 0.05, decay: 1, sustain: 0.3, release: 2 }
-  }).toDestination();
-  synths.objects.volume.value = -32;
-  
-  // Chamber: Wisdom (whispered ambience)
-  synths.doctrine = new Tone.Synth({
-    oscillator: { type: 'sawtooth' },
-    envelope: { attack: 3, decay: 1, sustain: 0.6, release: 3 }
-  }).toDestination();
-  synths.doctrine.volume.value = -40;
-  
-  // Chamber: Brotherhood (choir bass)
-  synths.circle = new Tone.Synth({
-    oscillator: { type: 'sine' },
-    envelope: { attack: 2.5, decay: 0.8, sustain: 0.9, release: 2.5 }
-  }).toDestination();
-  synths.circle.volume.value = -28;
-  
-  initialized = true;
+
+  try {
+    await Tone.start();
+
+    // Chamber: Command (deep hum + heartbeat)
+    synths.hero = new Tone.Synth({
+      oscillator: { type: 'sine' },
+      envelope: { attack: 2, decay: 0.5, sustain: 0.8, release: 2 }
+    }).toDestination();
+    synths.hero.volume.value = -30;
+
+    // Chamber: Mastery (metallic ticking)
+    synths.mindcraft = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+    }).toDestination();
+    synths.mindcraft.volume.value = -35;
+
+    // Chamber: Presence (echoing chime)
+    synths.objects = new Tone.Synth({
+      oscillator: { type: 'sine' },
+      envelope: { attack: 0.05, decay: 1, sustain: 0.3, release: 2 }
+    }).toDestination();
+    synths.objects.volume.value = -32;
+
+    // Chamber: Wisdom (whispered ambience)
+    synths.doctrine = new Tone.Synth({
+      oscillator: { type: 'sawtooth' },
+      envelope: { attack: 3, decay: 1, sustain: 0.6, release: 3 }
+    }).toDestination();
+    synths.doctrine.volume.value = -40;
+
+    // Chamber: Brotherhood (choir bass)
+    synths.circle = new Tone.Synth({
+      oscillator: { type: 'sine' },
+      envelope: { attack: 2.5, decay: 0.8, sustain: 0.9, release: 2.5 }
+    }).toDestination();
+    synths.circle.volume.value = -28;
+
+    initialized = true;
+  } catch (error) {
+    console.warn('Chamber audio initialization failed (non-critical):', error);
+    initialized = true;
+  }
 };
 
 let currentMode: SceneMode | null = null;
