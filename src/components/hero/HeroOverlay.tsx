@@ -97,11 +97,11 @@ const HeroOverlay = ({
             onClick={() => openModal('collections')}
             className="
               relative px-12 py-4 rounded
-              bg-[hsl(var(--apollon-gold))] text-black
+              bg-primary text-primary-foreground
               font-ancient text-sm md:text-base tracking-[0.2em] font-bold
-              shadow-[0_0_20px_rgba(196,166,97,0.4)]
-              hover:shadow-[0_0_40px_rgba(196,166,97,0.7)]
-              hover:bg-[hsl(var(--primary))]
+              shadow-[0_0_20px_hsl(var(--primary)/0.4)]
+              hover:shadow-[0_0_40px_hsl(var(--primary)/0.7)]
+              hover:brightness-110
               transition-all duration-500 ease-out
               focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2
               focus:ring-offset-background
