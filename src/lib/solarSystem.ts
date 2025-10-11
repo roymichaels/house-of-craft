@@ -441,9 +441,7 @@ export function initSolarSystem(container: HTMLElement) {
   sunLayers = {
     innerCore: innerCore,
     surface: sunSurface,
-    material: surfaceMaterial,
-    atmosphere: atmosphere,
-    atmosphereMaterial: atmosphereMaterial
+    material: surfaceMaterial
   };
   
   // ============================================================================
@@ -1354,23 +1352,17 @@ export function initSolarSystem(container: HTMLElement) {
     if (sunLayers) {
       // Update shader time uniforms
       sunLayers.material.uniforms.time.value = time;
-      sunLayers.atmosphereMaterial.uniforms.time.value = time;
 
       // Subtle pulsing for realistic breathing
       const pulseScale = 1.0 + Math.sin(time * 0.2) * 0.015;
 
       sunLayers.innerCore.scale.setScalar(pulseScale * 1.01);
       sunLayers.surface.scale.setScalar(pulseScale);
-      sunLayers.atmosphere.scale.setScalar(pulseScale * 1.01);
 
       // Realistic solar rotation
       sunLayers.innerCore.rotation.y += 0.0005;
       sunLayers.surface.rotation.y += 0.0004;
       sunLayers.surface.rotation.x += 0.00008;
-
-      // Atmospheric rotation
-      sunLayers.atmosphere.rotation.y -= 0.0003;
-      sunLayers.atmosphere.rotation.z += 0.0001;
     }
     
     // Update planets - slow, contemplative orbital motion
