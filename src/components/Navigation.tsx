@@ -23,9 +23,14 @@ const Navigation = () => {
   const { getItemCount } = useCartStore();
   const { items: wishlistItems } = useWishlistStore();
   const { openModal } = useModalStore();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, role, signOut } = useAuth();
   const cartCount = getItemCount();
   const wishlistCount = wishlistItems.length;
+
+  // Debug logging
+  console.log('Navigation - User:', user?.email);
+  console.log('Navigation - Role:', role);
+  console.log('Navigation - isAdmin:', isAdmin);
 
   return (
     <>
@@ -96,6 +101,9 @@ const Navigation = () => {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuLabel className="text-sm truncate">
                     {user.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Role: {role}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
