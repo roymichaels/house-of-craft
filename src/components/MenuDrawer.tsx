@@ -18,6 +18,11 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
 
   const navItems = [
     { name: "Collections", modal: "collections" as ModalType, type: "modal" as const },
+    { name: "Philosophy", modal: "philosophy" as ModalType, type: "modal" as const },
+    { name: "Our Mission", modal: "mission" as ModalType, type: "modal" as const },
+    { name: "Our Stories", modal: "stories" as ModalType, type: "modal" as const },
+    { name: "Doctrine", modal: "doctrine" as ModalType, type: "modal" as const },
+    { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];
 
   const handleNavClick = (item: typeof navItems[0]) => {
@@ -62,25 +67,29 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
             </button>
 
             {/* Menu Items */}
-            <nav className="flex flex-col items-center gap-6 md:gap-8 px-8 max-w-4xl mx-auto">
+            <nav className="flex flex-col items-center gap-4 md:gap-6 px-8 max-w-4xl mx-auto">
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    delay: 0.1 + index * 0.1,
+                    delay: 0.1 + index * 0.08,
                     duration: 0.8,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
                   <button
                     onClick={() => handleNavClick(item)}
-                    className="font-ancient text-4xl md:text-6xl text-ancient-gold hover:text-aureate
+                    className={`font-ancient ${
+                      index === 0
+                        ? 'text-4xl md:text-5xl'
+                        : 'text-2xl md:text-4xl'
+                    } text-ancient-gold hover:text-aureate
                                transition-all duration-500 tracking-[0.15em]
                                drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]
                                hover:drop-shadow-[0_0_50px_rgba(212,175,55,0.6)]
-                               hover:scale-105"
+                               hover:scale-105`}
                   >
                     {item.name}
                   </button>
