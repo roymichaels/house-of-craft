@@ -83,18 +83,49 @@ const Sun = ({ radius }: SunProps) => {
           return value;
         }
 
+        // 3D noise for spherical mapping
+        float hash3d(vec3 p) {
+          return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+        }
+
+        float noise3d(vec3 p) {
+          vec3 i = floor(p);
+          vec3 f = fract(p);
+          f = f * f * (3.0 - 2.0 * f);
+
+          return mix(
+            mix(mix(hash3d(i), hash3d(i + vec3(1,0,0)), f.x),
+                mix(hash3d(i + vec3(0,1,0)), hash3d(i + vec3(1,1,0)), f.x), f.y),
+            mix(mix(hash3d(i + vec3(0,0,1)), hash3d(i + vec3(1,0,1)), f.x),
+                mix(hash3d(i + vec3(0,1,1)), hash3d(i + vec3(1,1,1)), f.x), f.y), f.z);
+        }
+
+        float fbm3d(vec3 p) {
+          float value = 0.0;
+          float amplitude = 0.5;
+          for(int i = 0; i < 8; i++) {
+            value += amplitude * noise3d(p);
+            p *= 2.0;
+            amplitude *= 0.5;
+          }
+          return value;
+        }
+
         void main() {
-          // VIOLENT TURBULENT SURFACE
-          vec2 uv = vUv * 8.0 + time * 0.3;
+          // Use 3D position for consistent texture from all angles
+          vec3 pos = normalize(vPosition) * 2.0;
+
+          // VIOLENT TURBULENT SURFACE using 3D coordinates
+          vec3 uv3d = pos * 8.0 + time * 0.3;
 
           // Multiple layers of chaotic motion
-          float turbulence = fbm(uv + time * 0.4);
-          turbulence += fbm(uv * 2.0 - time * 0.6) * 0.5;
-          turbulence += fbm(uv * 4.0 + time * 0.8) * 0.25;
+          float turbulence = fbm3d(uv3d + time * 0.4);
+          turbulence += fbm3d(uv3d * 2.0 - time * 0.6) * 0.5;
+          turbulence += fbm3d(uv3d * 4.0 + time * 0.8) * 0.25;
 
           // Extreme fire patterns
-          float fire1 = fbm(vUv * 10.0 + vec2(0.0, time * 1.5));
-          float fire2 = fbm(vUv * 15.0 + vec2(time * 2.0, 0.0));
+          float fire1 = fbm3d(pos * 10.0 + vec3(0.0, time * 1.5, 0.0));
+          float fire2 = fbm3d(pos * 15.0 + vec3(time * 2.0, 0.0, 0.0));
           float fire = (fire1 + fire2) * 0.5;
 
           // Violent bright spots
@@ -128,7 +159,7 @@ const Sun = ({ radius }: SunProps) => {
           gl_FragColor = vec4(color, 1.0);
         }
       `,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide,
       toneMapped: false,
     });
   }, []);
