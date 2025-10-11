@@ -1212,8 +1212,8 @@ export function initSolarSystem(container: HTMLElement) {
   // PLANETS
   // ============================================================================
   PLANETS_DATA.forEach(planetData => {
-    // Create planet with enhanced PBR materials
-    const geometry = new THREE.SphereGeometry(planetData.radius, 64, 64);
+    // Create planet with enhanced PBR materials - high segment count for perfect spheres
+    const geometry = new THREE.SphereGeometry(planetData.radius, 128, 128);
 
     // Create realistic procedural planet material with shader
     const planetMaterial = createPlanetMaterial(planetData);
@@ -1346,7 +1346,7 @@ export function initSolarSystem(container: HTMLElement) {
     
     // Add moon for Earth
     if (planetData.moon) {
-      const moonGeometry = new THREE.SphereGeometry(planetData.moon.radius, 32, 32);
+      const moonGeometry = new THREE.SphereGeometry(planetData.moon.radius, 64, 64);
       const moonMaterial = new THREE.MeshStandardMaterial({
         color: planetData.moon.color,
         roughness: 0.6,
