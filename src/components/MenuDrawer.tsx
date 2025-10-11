@@ -20,8 +20,6 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     { name: "Collections", modal: "collections" as ModalType, type: "modal" as const },
     { name: "Philosophy", modal: "philosophy" as ModalType, type: "modal" as const },
     { name: "Our Mission", modal: "mission" as ModalType, type: "modal" as const },
-    { name: "Our Stories", modal: "stories" as ModalType, type: "modal" as const },
-    { name: "Doctrine", modal: "doctrine" as ModalType, type: "modal" as const },
     { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];
 
