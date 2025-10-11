@@ -36,21 +36,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkUserRole = async () => {
     if (!user?.id) {
+      console.log('AuthContext: No user ID, setting role to user');
       setRole('user');
       return;
     }
 
     try {
+      console.log('AuthContext: Fetching role for user ID:', user.id);
       const { data, error } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
         .maybeSingle();
 
+      console.log('AuthContext: Profile query result:', { data, error });
+
       if (error) throw error;
-      setRole((data?.role as UserRole) || 'user');
+
+      const userRole = (data?.role as UserRole) || 'user';
+      console.log('AuthContext: Setting role to:', userRole);
+      setRole(userRole);
     } catch (error) {
-      console.error('Error checking user role:', error);
+      console.error('AuthContext: Error checking user role:', error);
       setRole('user');
     }
   };
