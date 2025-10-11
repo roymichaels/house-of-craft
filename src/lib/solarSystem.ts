@@ -116,12 +116,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // REDUCED BLOOM - minimal sun glow, emphasize planets
+  // Sun bloom glow effect
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.25,  // strength - further reduced to minimize edge artifacts
-    0.25,  // radius - tighter containment for cleaner edges
-    0.9    // threshold - higher threshold for sharper edges
+    0.6,   // strength - increased for visible glow
+    0.8,   // radius - wider glow radius
+    0.75   // threshold - lower for more glow coverage
   );
   composer.addPass(bloomPass);
 
@@ -433,12 +433,12 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Minimal atmospheric glow layer
-  const atmosphereGeometry = new THREE.SphereGeometry(4.5, 256, 256);
+  // Enhanced atmospheric glow layer
+  const atmosphereGeometry = new THREE.SphereGeometry(5.5, 256, 256);
   const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xCC3311) }  // Darker red glow
+      glowColor: { value: new THREE.Color(0xFF6633) }
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -457,11 +457,11 @@ export function initSolarSystem(container: HTMLElement) {
 
       void main() {
         vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.5);
+        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
 
-        float intensity = fresnel * 0.08;
+        float intensity = fresnel * 0.4;
 
-        gl_FragColor = vec4(glowColor * 0.3, intensity * 0.12);
+        gl_FragColor = vec4(glowColor, intensity * 0.5);
       }
     `,
     transparent: true,
