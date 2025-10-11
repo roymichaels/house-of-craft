@@ -116,12 +116,12 @@ export function initSolarSystem(container: HTMLElement) {
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // Sun bloom glow effect
+  // Bloom disabled
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.6,   // strength - increased for visible glow
-    0.8,   // radius - wider glow radius
-    0.75   // threshold - lower for more glow coverage
+    0.0,   // strength - disabled
+    0.1,   // radius
+    1.0    // threshold - maximum to disable glow
   );
   composer.addPass(bloomPass);
 
@@ -433,57 +433,7 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // White atmospheric glow layer radiating from center
-  const atmosphereGeometry = new THREE.SphereGeometry(7.0, 256, 256);
-  const atmosphereMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xFFFFFF) }
-    },
-    vertexShader: `
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-      varying vec3 vWorldPosition;
-      void main() {
-        vNormal = normalize(normalMatrix * normal);
-        vPosition = position;
-        vec4 worldPos = modelMatrix * vec4(position, 1.0);
-        vWorldPosition = worldPos.xyz;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float time;
-      uniform vec3 glowColor;
-      varying vec3 vNormal;
-      varying vec3 vPosition;
-      varying vec3 vWorldPosition;
-
-      void main() {
-        vec3 viewDir = normalize(cameraPosition - vWorldPosition);
-
-        // Distance from center for radial gradient
-        float distFromCenter = length(vPosition) / 7.0;
-
-        // Create smooth radial falloff from center
-        float radialGlow = 1.0 - smoothstep(0.5, 1.0, distFromCenter);
-
-        // Soft fresnel for edge
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 4.0);
-
-        // Combine for smooth white glow from center
-        float intensity = mix(radialGlow * 0.6, fresnel * 0.3, 0.5);
-
-        gl_FragColor = vec4(glowColor, intensity);
-      }
-    `,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    side: THREE.BackSide,
-    depthWrite: false
-  });
-  const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-  sunGroup.add(atmosphere);
+  // Atmospheric layer removed - no glow
 
   scene.add(sunGroup);
 
