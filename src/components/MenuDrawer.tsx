@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { X, User, Shield } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/stores/modalStore";
 import type { ModalType } from "@/stores/modalStore";
 import { GoldenIcon } from "@/components/ui/GoldenIcon";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -13,7 +14,9 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { openModal } = useModalStore();
+  const { isAdmin } = useAuth();
   const isHomepage = location.pathname === "/";
 
   const navItems = [
@@ -23,12 +26,22 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
     { name: "Concierge", modal: "concierge" as ModalType, type: "modal" as const },
   ];
 
-  const handleNavClick = (item: typeof navItems[0]) => {
+  const adminItems = isAdmin ? [
+    { name: "Admin Dashboard", path: "/admin/dashboard", type: "link" as const, icon: Shield },
+  ] : [];
+
+  const allItems = [...navItems, ...adminItems];
+
+  const handleNavClick = (item: typeof allItems[0]) => {
     onClose();
 
-    if (item.type === "modal" && item.modal) {
+    if (item.type === "modal" && 'modal' in item && item.modal) {
       setTimeout(() => {
         openModal(item.modal as ModalType);
+      }, 300);
+    } else if (item.type === "link" && 'path' in item && item.path) {
+      setTimeout(() => {
+        navigate(item.path);
       }, 300);
     }
   };
@@ -66,7 +79,7 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
 
             {/* Menu Items */}
             <nav className="flex flex-col items-center gap-4 md:gap-6 px-8 max-w-4xl mx-auto">
-              {navItems.map((item, index) => (
+              {allItems.map((item, index) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
@@ -87,9 +100,12 @@ const MenuDrawer = ({ isOpen, onClose }: MenuDrawerProps) => {
                                transition-all duration-500 tracking-[0.15em]
                                drop-shadow-[0_0_30px_rgba(212,175,55,0.4)]
                                hover:drop-shadow-[0_0_50px_rgba(212,175,55,0.6)]
-                               hover:scale-105`}
+                               hover:scale-105 flex items-center gap-3`}
                   >
                     {item.name}
+                    {'icon' in item && item.icon && (
+                      <GoldenIcon icon={item.icon} size={index === 0 ? 28 : 20} glow="medium" />
+                    )}
                   </button>
                 </motion.div>
               ))}
