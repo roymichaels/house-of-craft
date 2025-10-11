@@ -145,8 +145,8 @@ export function initSolarSystem(container: HTMLElement) {
   const ambientLight = new THREE.AmbientLight(0x6a6a8a, 1.2);
   scene.add(ambientLight);
 
-  // Reduced sun light - less dominance
-  const sunLight = new THREE.PointLight(0xFF8833, 5.0, 800, 2);
+  // Darker red sun light - reduced intensity
+  const sunLight = new THREE.PointLight(0xDD3311, 3.8, 800, 2);
   sunLight.position.set(0, 0, 0);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -202,13 +202,13 @@ export function initSolarSystem(container: HTMLElement) {
   const solarShader = {
     uniforms: {
       time: { value: 0 },
-      // REALISTIC VOLCANIC SUN COLORS - deep oranges and reds with bright cores
-      colorCore: { value: new THREE.Color(0xFFFFEE) },        // Bright white-yellow hotspots
-      colorHot: { value: new THREE.Color(0xFFCC55) },         // Bright yellow-orange
-      colorMid: { value: new THREE.Color(0xFF8833) },         // Orange
-      colorCool: { value: new THREE.Color(0xFF5522) },        // Red-orange
-      colorDark: { value: new THREE.Color(0xDD3311) },        // Dark red
-      colorEdge: { value: new THREE.Color(0xCC2200) }         // Deep red edges
+      // DARKER RED SUN COLORS - deep reds with muted cores
+      colorCore: { value: new THREE.Color(0xFF9955) },        // Muted orange-red core
+      colorHot: { value: new THREE.Color(0xFF6633) },         // Dark orange-red
+      colorMid: { value: new THREE.Color(0xEE4422) },         // Deep red-orange
+      colorCool: { value: new THREE.Color(0xCC3311) },        // Dark red
+      colorDark: { value: new THREE.Color(0xAA2200) },        // Very dark red
+      colorEdge: { value: new THREE.Color(0x881100) }         // Deep crimson edges
     },
     vertexShader: `
       uniform float time;
@@ -398,10 +398,10 @@ export function initSolarSystem(container: HTMLElement) {
 
         // Subtle edge glow
         float edgeGlow = pow(1.0 - viewDot, 4.0);
-        baseColor += colorMid * edgeGlow * 0.15;
+        baseColor += colorMid * edgeGlow * 0.12;
 
-        // Overall intensity - keep it volcanic/realistic
-        baseColor *= 2.5;
+        // Overall intensity - darker, more subdued
+        baseColor *= 1.6;
 
         gl_FragColor = vec4(baseColor, 1.0);
       }
@@ -410,10 +410,10 @@ export function initSolarSystem(container: HTMLElement) {
   
   // REALISTIC VOLCANIC SUN CONSTRUCTION
 
-  // Inner core - reduced brightness
+  // Inner core - darker red-orange glow
   const innerCoreGeometry = new THREE.SphereGeometry(2.1, 128, 128);
   const innerCoreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.5, 0.8, 0.2),  // Reduced orange core brightness
+    color: new THREE.Color(1.0, 0.3, 0.12),  // Darker red-orange core
     toneMapped: false
   });
   const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
@@ -424,7 +424,9 @@ export function initSolarSystem(container: HTMLElement) {
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: solarShader.uniforms,
     vertexShader: solarShader.vertexShader,
-    fragmentShader: solarShader.fragmentShader
+    fragmentShader: solarShader.fragmentShader,
+    side: THREE.DoubleSide,  // Render both sides for proper 3D appearance
+    toneMapped: false
   });
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
@@ -434,7 +436,7 @@ export function initSolarSystem(container: HTMLElement) {
   const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xFF5522) }
+      glowColor: { value: new THREE.Color(0xCC3311) }  // Darker red glow
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -455,9 +457,9 @@ export function initSolarSystem(container: HTMLElement) {
         vec3 viewDir = normalize(cameraPosition - vPosition);
         float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.5);
 
-        float intensity = fresnel * 0.1;
+        float intensity = fresnel * 0.08;
 
-        gl_FragColor = vec4(glowColor * 0.4, intensity * 0.15);
+        gl_FragColor = vec4(glowColor * 0.3, intensity * 0.12);
       }
     `,
     transparent: true,
