@@ -100,16 +100,16 @@ const Sun = ({ radius }: SunProps) => {
           // Violent bright spots
           float hotspots = pow(fire, 3.0) * 2.0;
 
-          // REALISTIC SUN COLOR PALETTE (more red)
-          vec3 deepRed = vec3(0.8, 0.1, 0.05);       // Deep red core
-          vec3 red = vec3(1.0, 0.2, 0.1);            // Red
-          vec3 redOrange = vec3(1.0, 0.35, 0.15);    // Red-orange
-          vec3 orange = vec3(1.0, 0.5, 0.2);         // Orange
-          vec3 brightOrange = vec3(1.0, 0.65, 0.3);  // Bright orange
-          vec3 yellow = vec3(1.0, 0.85, 0.4);        // Warm yellow
-          vec3 white = vec3(1.0, 0.95, 0.8);         // Warm white
+          // DARKER RED SUN COLOR PALETTE
+          vec3 deepRed = vec3(0.6, 0.08, 0.03);      // Darker deep red core
+          vec3 red = vec3(0.85, 0.15, 0.08);         // Dark red
+          vec3 redOrange = vec3(0.95, 0.25, 0.12);   // Red-orange
+          vec3 orange = vec3(1.0, 0.4, 0.15);        // Darker orange
+          vec3 brightOrange = vec3(1.0, 0.55, 0.22); // Muted bright orange
+          vec3 yellow = vec3(1.0, 0.75, 0.3);        // Less bright yellow
+          vec3 white = vec3(1.0, 0.85, 0.5);         // Warmer white
 
-          // Build realistic sun color with more red
+          // Build darker red sun color
           vec3 color = deepRed;
           color = mix(color, red, smoothstep(0.15, 0.35, turbulence));
           color = mix(color, redOrange, smoothstep(0.35, 0.5, turbulence));
@@ -118,17 +118,17 @@ const Sun = ({ radius }: SunProps) => {
           color = mix(color, yellow, smoothstep(0.8, 0.9, fire));
           color = mix(color, white, smoothstep(0.9, 1.0, hotspots));
 
-          // Enhanced brightness for more presence
-          float brightness = 1.2 + turbulence * 1.8 + hotspots * 2.5;
+          // Reduced brightness for darker appearance
+          float brightness = 0.9 + turbulence * 1.2 + hotspots * 1.8;
           color *= brightness;
 
-          // Increased base brightness for more glow
-          color *= 0.08;
+          // Lower base brightness for darker red sun
+          color *= 0.055;
 
           gl_FragColor = vec4(color, 1.0);
         }
       `,
-      side: THREE.FrontSide,
+      side: THREE.DoubleSide,
       toneMapped: false,
     });
   }, []);
@@ -154,11 +154,11 @@ const Sun = ({ radius }: SunProps) => {
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
-      {/* Enhanced warm glow light */}
+      {/* Darker red glow light */}
       <pointLight
         position={[0, 0, 0]}
-        color="#ff6b35"
-        intensity={2.0}
+        color="#d94020"
+        intensity={1.4}
         distance={30}
         decay={2}
       />
@@ -166,8 +166,8 @@ const Sun = ({ radius }: SunProps) => {
       {/* Outer atmospheric glow */}
       <pointLight
         position={[0, 0, 0]}
-        color="#ff4520"
-        intensity={1.0}
+        color="#c23515"
+        intensity={0.7}
         distance={40}
         decay={2.5}
       />
