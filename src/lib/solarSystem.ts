@@ -295,11 +295,12 @@ export function initSolarSystem(container: HTMLElement) {
     `,
     fragmentShader: `
       uniform float time;
-      uniform vec3 colorWhiteHot;
+      uniform vec3 colorCore;
       uniform vec3 colorHot;
       uniform vec3 colorMid;
       uniform vec3 colorCool;
       uniform vec3 colorDark;
+      uniform vec3 colorEdge;
       varying vec2 vUv;
       varying vec3 vNormal;
       varying vec3 vPosition;
