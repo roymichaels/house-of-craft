@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +29,7 @@ const ContactForm = () => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -109,18 +110,25 @@ const ContactForm = () => {
         {/* Service Interest */}
         <div className="space-y-2">
           <Label htmlFor="service">Service Interest *</Label>
-          <Select {...register("service", { required: "Please select a service" })}>
-            <SelectTrigger className={errors.service ? "border-destructive" : ""}>
-              <SelectValue placeholder="Select a service" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="sourcing">Watch Sourcing & Acquisition</SelectItem>
-              <SelectItem value="authentication">Authentication & Appraisal</SelectItem>
-              <SelectItem value="restoration">Service & Restoration</SelectItem>
-              <SelectItem value="portfolio">Portfolio Management</SelectItem>
-              <SelectItem value="general">General Inquiry</SelectItem>
-            </SelectContent>
-          </Select>
+          <Controller
+            name="service"
+            control={control}
+            rules={{ required: "Please select a service" }}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className={errors.service ? "border-destructive" : ""}>
+                  <SelectValue placeholder="Select a service" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sourcing">Watch Sourcing & Acquisition</SelectItem>
+                  <SelectItem value="authentication">Authentication & Appraisal</SelectItem>
+                  <SelectItem value="restoration">Service & Restoration</SelectItem>
+                  <SelectItem value="portfolio">Portfolio Management</SelectItem>
+                  <SelectItem value="general">General Inquiry</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
           {errors.service && (
             <p className="text-sm text-destructive">{errors.service.message}</p>
           )}

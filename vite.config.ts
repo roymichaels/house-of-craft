@@ -16,4 +16,17 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom", "three", "@react-three/fiber"],
   },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          three: ["three"],
+          ui: ["@radix-ui/react-dialog", "@radix-ui/react-select", "@radix-ui/react-tabs"],
+        },
+      },
+    },
+  },
 }));
