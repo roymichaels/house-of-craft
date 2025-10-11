@@ -9,7 +9,10 @@ import {
   FileText,
   Settings,
   Crown,
-  LogOut
+  LogOut,
+  FolderTree,
+  Tag,
+  PackageCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -27,6 +30,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   const navItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: ['admin', 'superadmin', 'editor', 'support'] },
     { path: '/admin/products', label: 'Products', icon: Package, roles: ['admin', 'superadmin', 'editor'] },
+    { path: '/admin/categories', label: 'Categories', icon: FolderTree, roles: ['admin', 'superadmin', 'editor'] },
+    { path: '/admin/tags', label: 'Tags', icon: Tag, roles: ['admin', 'superadmin', 'editor'] },
+    { path: '/admin/inventory', label: 'Inventory', icon: PackageCheck, roles: ['admin', 'superadmin'] },
     { path: '/admin/orders', label: 'Orders', icon: ShoppingCart, roles: ['admin', 'superadmin', 'support'] },
     { path: '/admin/users', label: 'Users', icon: Users, roles: ['admin', 'superadmin'] },
     { path: '/admin/content', label: 'Content', icon: FileText, roles: ['admin', 'superadmin', 'editor'] },
