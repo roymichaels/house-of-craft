@@ -34,18 +34,48 @@ export const useHeroScene = () => {
         .from("hero_scenes")
         .select("*")
         .eq("is_active", true)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
-      
-      // Parse camera_position from JSONB
-      const parsed = {
+      if (error) {
+        console.error("Failed to fetch hero scene:", error);
+        throw error;
+      }
+
+      if (!data) {
+        console.warn("No active hero scene found, using defaults");
+        return {
+          id: "default",
+          title: "APOLLON",
+          subtitle: "Reliquary of Distinction",
+          model_url: null,
+          hdri_url: null,
+          rotation_speed: 0.3,
+          light_color: "#C7A869",
+          accent_color: "#7A6A4F",
+          camera_fov: 45,
+          camera_position: { x: 0, y: 0, z: 5 },
+          show_real_time: false,
+          cta_text: "Enter The Order",
+          cta_link: "/collections",
+          is_active: true,
+          movement_style: "precision",
+          show_balance_wheel: true,
+          show_gears: true,
+          hand_style: "classic",
+          text_delay_ms: 3000,
+          show_logo: true,
+          logo_text: "APOLLON",
+          cta_style: "seal",
+        } as HeroScene;
+      }
+
+      return {
         ...data,
         camera_position: data.camera_position as { x: number; y: number; z: number },
-      };
-      
-      return parsed as HeroScene;
+      } as HeroScene;
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
