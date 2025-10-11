@@ -114,7 +114,7 @@ const Navigation = () => {
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
-                        <Link to="/admin/products" className="flex items-center gap-2 cursor-pointer">
+                        <Link to="/admin/dashboard" className="flex items-center gap-2 cursor-pointer">
                           <Shield size={16} />
                           Admin Dashboard
                         </Link>
