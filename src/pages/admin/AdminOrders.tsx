@@ -90,28 +90,31 @@ const AdminOrders = () => {
 
   return (
     <div>
-      <h1 className="font-heading text-3xl text-foreground mb-6">Orders</h1>
+      <div className="mb-8">
+        <h1 className="font-ancient text-4xl text-ancient-gold tracking-wider mb-2">Orders</h1>
+        <p className="text-ancient-gold/60 font-order tracking-wide">Manage customer transactions</p>
+      </div>
 
-      <div className="bg-card rounded-lg border border-border overflow-hidden">
+      <div className="bg-[#0A0404] rounded-lg border border-ancient-gold/20 overflow-hidden">
         <table className="w-full">
-          <thead className="bg-muted">
+          <thead className="bg-ancient-gold/5 border-b border-ancient-gold/20">
             <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Order ID</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Customer</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Total</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Date</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold">Actions</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Order ID</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Customer</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Total</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Status</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Date</th>
+              <th className="px-4 py-3 text-left text-sm font-order uppercase tracking-wider text-ancient-gold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order.id} className="border-t border-border">
-                <td className="px-4 py-3 text-sm">#{order.id.slice(0, 8)}</td>
-                <td className="px-4 py-3 text-sm">
+              <tr key={order.id} className="border-t border-ancient-gold/10 hover:bg-ancient-gold/5 transition-colors">
+                <td className="px-4 py-3 text-sm text-ancient-gold/80 font-order">#{order.id.slice(0, 8)}</td>
+                <td className="px-4 py-3 text-sm text-ancient-gold/80">
                   {order.profiles?.full_name || order.profiles?.email || 'Unknown'}
                 </td>
-                <td className="px-4 py-3 text-sm font-semibold">
+                <td className="px-4 py-3 text-sm font-ancient text-ancient-gold">
                   ${order.total_amount.toFixed(2)}
                 </td>
                 <td className="px-4 py-3 text-sm">
@@ -119,10 +122,10 @@ const AdminOrders = () => {
                     value={order.status}
                     onValueChange={(value) => updateOrderStatus(order.id, value)}
                   >
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-32 bg-ancient-gold/5 border-ancient-gold/20 text-ancient-gold">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#0A0404] border-ancient-gold/30">
                       <SelectItem value="pending">Pending</SelectItem>
                       <SelectItem value="processing">Processing</SelectItem>
                       <SelectItem value="shipped">Shipped</SelectItem>
@@ -131,13 +134,13 @@ const AdminOrders = () => {
                     </SelectContent>
                   </Select>
                 </td>
-                <td className="px-4 py-3 text-sm">
+                <td className="px-4 py-3 text-sm text-ancient-gold/60">
                   {format(new Date(order.created_at), 'PP')}
                 </td>
                 <td className="px-4 py-3 text-sm">
                   <button
                     onClick={() => setSelectedOrder(order)}
-                    className="text-primary hover:underline"
+                    className="text-ancient-gold/80 hover:text-ancient-gold font-order uppercase tracking-wide text-xs hover:underline transition-colors"
                   >
                     View Details
                   </button>
@@ -149,38 +152,40 @@ const AdminOrders = () => {
       </div>
 
       {orders.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No orders yet.</p>
+        <div className="text-center py-12 bg-[#0A0404] rounded-lg border border-ancient-gold/20 mt-6">
+          <p className="text-ancient-gold/60 font-order tracking-wide">No orders yet.</p>
         </div>
       )}
 
       {selectedOrder && (
         <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-[#0A0404] border-ancient-gold/30">
             <DialogHeader>
-              <DialogTitle>Order Details #{selectedOrder.id.slice(0, 8)}</DialogTitle>
+              <DialogTitle className="font-ancient text-2xl text-ancient-gold tracking-wider">
+                Order Details #{selectedOrder.id.slice(0, 8)}
+              </DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">Customer Information</h3>
-                <p className="text-sm">
-                  <span className="text-muted-foreground">Name: </span>
+            <div className="space-y-6">
+              <div className="p-4 bg-ancient-gold/5 rounded-lg border border-ancient-gold/20">
+                <h3 className="font-order uppercase tracking-wider text-sm text-ancient-gold mb-3">Customer Information</h3>
+                <p className="text-sm text-ancient-gold/80 mb-1">
+                  <span className="text-ancient-gold/60 font-order">Name: </span>
                   {selectedOrder.profiles?.full_name || 'N/A'}
                 </p>
-                <p className="text-sm">
-                  <span className="text-muted-foreground">Email: </span>
+                <p className="text-sm text-ancient-gold/80">
+                  <span className="text-ancient-gold/60 font-order">Email: </span>
                   {selectedOrder.profiles?.email || 'N/A'}
                 </p>
               </div>
 
               {selectedOrder.items && (
-                <div>
-                  <h3 className="font-semibold mb-2">Items</h3>
+                <div className="p-4 bg-ancient-gold/5 rounded-lg border border-ancient-gold/20">
+                  <h3 className="font-order uppercase tracking-wider text-sm text-ancient-gold mb-3">Items</h3>
                   <div className="space-y-2">
                     {Array.isArray(selectedOrder.items) && selectedOrder.items.map((item: any, idx: number) => (
-                      <div key={idx} className="flex justify-between text-sm">
-                        <span>{item.name} × {item.quantity}</span>
-                        <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <div key={idx} className="flex justify-between text-sm text-ancient-gold/80 py-2 border-b border-ancient-gold/10 last:border-0">
+                        <span className="font-order">{item.name} × {item.quantity}</span>
+                        <span className="font-ancient text-ancient-gold">${(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
@@ -188,9 +193,9 @@ const AdminOrders = () => {
               )}
 
               {selectedOrder.shipping_address && (
-                <div>
-                  <h3 className="font-semibold mb-2">Shipping Address</h3>
-                  <p className="text-sm">
+                <div className="p-4 bg-ancient-gold/5 rounded-lg border border-ancient-gold/20">
+                  <h3 className="font-order uppercase tracking-wider text-sm text-ancient-gold mb-3">Shipping Address</h3>
+                  <p className="text-sm text-ancient-gold/80 leading-relaxed">
                     {selectedOrder.shipping_address.line1}<br />
                     {selectedOrder.shipping_address.city}, {selectedOrder.shipping_address.state}{' '}
                     {selectedOrder.shipping_address.postal_code}
@@ -198,10 +203,10 @@ const AdminOrders = () => {
                 </div>
               )}
 
-              <div className="pt-4 border-t border-border">
+              <div className="pt-4 border-t border-ancient-gold/20">
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">Total:</span>
-                  <span className="text-lg font-bold">
+                  <span className="font-order uppercase tracking-wider text-ancient-gold">Total:</span>
+                  <span className="text-2xl font-ancient text-ancient-gold">
                     ${selectedOrder.total_amount.toFixed(2)}
                   </span>
                 </div>

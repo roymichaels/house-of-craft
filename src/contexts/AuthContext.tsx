@@ -3,15 +3,21 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+export type UserRole = 'user' | 'support' | 'editor' | 'admin' | 'superadmin';
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
+  role: UserRole;
   isAdmin: boolean;
+  isSuperadmin: boolean;
+  isEditor: boolean;
+  isSupport: boolean;
   loading: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  checkAdminStatus: () => Promise<void>;
+  checkUserRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,63 +25,64 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState<UserRole>('user');
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const checkAdminStatus = async () => {
+  const isAdmin = role === 'admin' || role === 'superadmin';
+  const isSuperadmin = role === 'superadmin';
+  const isEditor = role === 'editor' || role === 'admin' || role === 'superadmin';
+  const isSupport = role === 'support' || role === 'admin' || role === 'superadmin';
+
+  const checkUserRole = async () => {
     if (!user?.id) {
-      setIsAdmin(false);
+      setRole('user');
       return;
     }
 
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('profiles')
         .select('role')
-        .eq('user_id', user.id)
-        .eq('role', 'admin')
+        .eq('id', user.id)
         .maybeSingle();
 
       if (error) throw error;
-      setIsAdmin(!!data);
+      setRole((data?.role as UserRole) || 'user');
     } catch (error) {
-      console.error('Error checking admin status:', error);
-      setIsAdmin(false);
+      console.error('Error checking user role:', error);
+      setRole('user');
     }
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Defer admin check with setTimeout to prevent deadlock
+
         if (session?.user) {
           setTimeout(() => {
-            checkAdminStatus();
+            checkUserRole();
           }, 0);
         } else {
-          setIsAdmin(false);
+          setRole('user');
         }
-        
+
         setLoading(false);
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         setTimeout(() => {
-          checkAdminStatus();
+          checkUserRole();
         }, 0);
       }
-      
+
       setLoading(false);
     });
 
@@ -158,11 +165,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       setUser(null);
       setSession(null);
-      setIsAdmin(false);
-      
+      setRole('user');
+
       toast({
         title: "Signed out",
         description: "You have been signed out successfully.",
@@ -181,12 +188,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         session,
+        role,
         isAdmin,
+        isSuperadmin,
+        isEditor,
+        isSupport,
         loading,
         signUp,
         signIn,
         signOut,
-        checkAdminStatus,
+        checkUserRole,
       }}
     >
       {children}

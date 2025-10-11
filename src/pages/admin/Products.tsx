@@ -158,18 +158,24 @@ const Products = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="font-heading text-3xl text-foreground">Products</h1>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="font-ancient text-4xl text-ancient-gold tracking-wider mb-2">Products</h1>
+          <p className="text-ancient-gold/60 font-order tracking-wide">Manage your catalog of artifacts</p>
+        </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={resetForm}>
+            <Button
+              onClick={resetForm}
+              className="bg-ancient-gold/10 border border-ancient-gold/30 hover:bg-ancient-gold/20 text-ancient-gold"
+            >
               <Plus size={20} className="mr-2" />
-              Add Product
+              <span className="font-order uppercase tracking-wide">Add Product</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0A0404] border-ancient-gold/30">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="font-ancient text-2xl text-ancient-gold tracking-wider">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </DialogTitle>
             </DialogHeader>
@@ -239,8 +245,11 @@ const Products = () => {
                 />
                 <Label htmlFor="in_stock">In Stock</Label>
               </div>
-              <Button type="submit" className="w-full">
-                {editingProduct ? 'Update Product' : 'Create Product'}
+              <Button
+                type="submit"
+                className="w-full bg-ancient-gold/10 border border-ancient-gold/30 hover:bg-ancient-gold/20 text-ancient-gold font-order uppercase tracking-wider"
+              >
+                {editingProduct ? 'Confirm Changes' : 'Confirm Command'}
               </Button>
             </form>
           </DialogContent>
@@ -249,7 +258,7 @@ const Products = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
-          <div key={product.id} className="bg-card rounded-lg border border-border overflow-hidden">
+          <div key={product.id} className="bg-[#0A0404] rounded-lg border border-ancient-gold/20 hover:border-ancient-gold/40 overflow-hidden transition-all">
             {product.image_url && (
               <img
                 src={product.image_url}
@@ -258,14 +267,14 @@ const Products = () => {
               />
             )}
             <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-              <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+              <h3 className="font-ancient text-xl text-ancient-gold mb-2 tracking-wide">{product.name}</h3>
+              <p className="text-ancient-gold/60 text-sm mb-3 line-clamp-2 font-order">
                 {product.description}
               </p>
               <div className="flex justify-between items-center mb-3">
-                <span className="font-semibold text-lg">${product.price}</span>
-                <span className={`px-2 py-1 rounded text-xs ${
-                  product.in_stock ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
+                <span className="font-ancient text-lg text-ancient-gold">${product.price}</span>
+                <span className={`px-2 py-1 rounded text-xs font-order uppercase tracking-wider ${
+                  product.in_stock ? 'bg-laurel-green/20 text-laurel-green' : 'bg-vita-flame/20 text-vita-flame'
                 }`}>
                   {product.in_stock ? 'In Stock' : 'Out of Stock'}
                 </span>
@@ -274,20 +283,20 @@ const Products = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 border-ancient-gold/30 hover:bg-ancient-gold/10 text-ancient-gold/80 hover:text-ancient-gold"
                   onClick={() => openEditDialog(product)}
                 >
                   <Edit size={16} className="mr-1" />
-                  Edit
+                  <span className="font-order uppercase text-xs tracking-wider">Edit</span>
                 </Button>
                 <Button
                   variant="destructive"
                   size="sm"
-                  className="flex-1"
+                  className="flex-1 bg-vita-flame/10 border-vita-flame/30 hover:bg-vita-flame/20 text-vita-flame"
                   onClick={() => handleDelete(product.id)}
                 >
                   <Trash2 size={16} className="mr-1" />
-                  Delete
+                  <span className="font-order uppercase text-xs tracking-wider">Delete</span>
                 </Button>
               </div>
             </div>
@@ -296,8 +305,8 @@ const Products = () => {
       </div>
 
       {products.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">No products yet. Create your first product!</p>
+        <div className="text-center py-12 bg-[#0A0404] rounded-lg border border-ancient-gold/20">
+          <p className="text-ancient-gold/60 font-order tracking-wide">No products yet. Create your first artifact!</p>
         </div>
       )}
     </div>
