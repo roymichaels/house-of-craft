@@ -94,16 +94,17 @@ export function initSolarSystem(container: HTMLElement) {
   // ============================================================================
   // RENDERER
   // ============================================================================
-  renderer = new THREE.WebGLRenderer({ 
+  renderer = new THREE.WebGLRenderer({
     antialias: true,
-    alpha: false
+    alpha: false,
+    powerPreference: 'high-performance'
   });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.3;  // Increased exposure for brighter planets
+  renderer.toneMappingExposure = 1.3;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
   
@@ -111,15 +112,16 @@ export function initSolarSystem(container: HTMLElement) {
   // POST-PROCESSING
   // ============================================================================
   composer = new EffectComposer(renderer);
+
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
   // REDUCED BLOOM - minimal sun glow, emphasize planets
   const bloomPass = new UnrealBloomPass(
     new THREE.Vector2(container.clientWidth, container.clientHeight),
-    0.3,  // strength - reduced for less sun glow
-    0.3,   // radius - very tight containment
-    0.85   // threshold - only the very brightest sun areas glow
+    0.25,  // strength - further reduced to minimize edge artifacts
+    0.25,  // radius - tighter containment for cleaner edges
+    0.9    // threshold - higher threshold for sharper edges
   );
   composer.addPass(bloomPass);
 
@@ -411,7 +413,7 @@ export function initSolarSystem(container: HTMLElement) {
   // REALISTIC VOLCANIC SUN CONSTRUCTION
 
   // Inner core - darker red-orange glow
-  const innerCoreGeometry = new THREE.SphereGeometry(2.1, 128, 128);
+  const innerCoreGeometry = new THREE.SphereGeometry(2.1, 256, 256);
   const innerCoreMaterial = new THREE.MeshBasicMaterial({
     color: new THREE.Color(1.0, 0.3, 0.12),  // Darker red-orange core
     toneMapped: false
@@ -419,20 +421,20 @@ export function initSolarSystem(container: HTMLElement) {
   const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
   sunGroup.add(innerCore);
 
-  // Main photosphere - realistic textured surface with reduced size
-  const surfaceGeometry = new THREE.SphereGeometry(3.5, 256, 256);
+  // Main photosphere - realistic textured surface with high detail for smooth edges
+  const surfaceGeometry = new THREE.SphereGeometry(3.5, 512, 512);
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: solarShader.uniforms,
     vertexShader: solarShader.vertexShader,
     fragmentShader: solarShader.fragmentShader,
-    side: THREE.DoubleSide,  // Render both sides for proper 3D appearance
+    side: THREE.FrontSide,
     toneMapped: false
   });
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
   // Minimal atmospheric glow layer
-  const atmosphereGeometry = new THREE.SphereGeometry(4.5, 96, 96);
+  const atmosphereGeometry = new THREE.SphereGeometry(4.5, 256, 256);
   const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
