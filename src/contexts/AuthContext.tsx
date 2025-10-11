@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -34,24 +34,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isEditor = role === 'editor' || role === 'admin' || role === 'superadmin';
   const isSupport = role === 'support' || role === 'admin' || role === 'superadmin';
 
-  const checkUserRole = async () => {
-    if (!user?.id) {
+  const checkUserRole = useCallback(async () => {
+    const currentUser = await supabase.auth.getUser();
+    const userId = currentUser.data.user?.id;
+
+    if (!userId) {
       console.log('AuthContext: No user ID, setting role to user');
       setRole('user');
       return;
     }
 
     try {
-      console.log('AuthContext: Fetching role for user ID:', user.id);
+      console.log('AuthContext: Fetching role for user ID:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', user.id)
+        .eq('id', userId)
         .maybeSingle();
 
       console.log('AuthContext: Profile query result:', { data, error });
 
-      if (error) throw error;
+      if (error) {
+        console.error('AuthContext: Query error:', error);
+        throw error;
+      }
+
+      if (!data) {
+        console.warn('AuthContext: No profile found for user');
+        setRole('user');
+        return;
+      }
 
       const userRole = (data?.role as UserRole) || 'user';
       console.log('AuthContext: Setting role to:', userRole);
@@ -60,18 +72,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('AuthContext: Error checking user role:', error);
       setRole('user');
     }
-  };
+  }, []);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('AuthContext: Auth state changed:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          setTimeout(() => {
-            checkUserRole();
-          }, 0);
+          checkUserRole();
         } else {
           setRole('user');
         }
@@ -81,13 +92,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('AuthContext: Initial session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        setTimeout(() => {
-          checkUserRole();
-        }, 0);
+        checkUserRole();
       }
 
       setLoading(false);
@@ -95,6 +105,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      checkUserRole();
+    }
+  }, [user?.id]);
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
