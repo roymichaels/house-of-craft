@@ -6,10 +6,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import BrandedLoader from '@/components/ui/BrandedLoader';
+import { useNavigate } from 'react-router-dom';
+import { X, ArrowLeft } from 'lucide-react';
+import { GoldenIcon } from '@/components/ui/GoldenIcon';
 
 const Profile = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [fullName, setFullName] = useState('');
@@ -82,11 +86,33 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4">
+    <div className="min-h-screen bg-background py-12 px-4 relative">
+      {/* Exit Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="fixed top-8 right-8 z-50 group"
+        aria-label="Go back"
+      >
+        <GoldenIcon icon={X} size="lg" glow="medium" className="hover:rotate-90 duration-500" />
+      </button>
+
       <div className="max-w-2xl mx-auto">
-        <h1 className="font-heading text-4xl text-foreground mb-8">Profile</h1>
-        
-        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border border-border">
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-2 text-ancient-gold/60 hover:text-ancient-gold transition-colors duration-300"
+            aria-label="Go back"
+          >
+            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-300" />
+            <span className="text-sm tracking-wider">Back</span>
+          </button>
+        </div>
+
+        <h1 className="font-ancient text-4xl text-ancient-gold mb-8 tracking-[0.15em] drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+          Profile
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border border-ancient-gold/20">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
