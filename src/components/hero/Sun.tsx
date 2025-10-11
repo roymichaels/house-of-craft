@@ -100,28 +100,30 @@ const Sun = ({ radius }: SunProps) => {
           // Violent bright spots
           float hotspots = pow(fire, 3.0) * 2.0;
 
-          // APOCALYPTIC COLOR PALETTE
-          vec3 darkRed = vec3(0.5, 0.05, 0.0);       // Deep burning red
-          vec3 red = vec3(1.0, 0.1, 0.0);            // Intense red
-          vec3 orange = vec3(1.0, 0.4, 0.0);         // Burning orange
-          vec3 brightOrange = vec3(1.0, 0.65, 0.1);  // Hot orange
-          vec3 yellow = vec3(1.0, 0.9, 0.2);         // Scorching yellow
-          vec3 white = vec3(1.0, 1.0, 0.95);         // White-hot
+          // REALISTIC SUN COLOR PALETTE (more red)
+          vec3 deepRed = vec3(0.8, 0.1, 0.05);       // Deep red core
+          vec3 red = vec3(1.0, 0.2, 0.1);            // Red
+          vec3 redOrange = vec3(1.0, 0.35, 0.15);    // Red-orange
+          vec3 orange = vec3(1.0, 0.5, 0.2);         // Orange
+          vec3 brightOrange = vec3(1.0, 0.65, 0.3);  // Bright orange
+          vec3 yellow = vec3(1.0, 0.85, 0.4);        // Warm yellow
+          vec3 white = vec3(1.0, 0.95, 0.8);         // Warm white
 
-          // Build extreme fire color
-          vec3 color = darkRed;
-          color = mix(color, red, smoothstep(0.2, 0.4, turbulence));
-          color = mix(color, orange, smoothstep(0.4, 0.6, turbulence));
-          color = mix(color, brightOrange, smoothstep(0.5, 0.7, fire));
-          color = mix(color, yellow, smoothstep(0.7, 0.85, fire));
-          color = mix(color, white, smoothstep(0.85, 1.0, hotspots));
+          // Build realistic sun color with more red
+          vec3 color = deepRed;
+          color = mix(color, red, smoothstep(0.15, 0.35, turbulence));
+          color = mix(color, redOrange, smoothstep(0.35, 0.5, turbulence));
+          color = mix(color, orange, smoothstep(0.5, 0.65, fire));
+          color = mix(color, brightOrange, smoothstep(0.65, 0.8, fire));
+          color = mix(color, yellow, smoothstep(0.8, 0.9, fire));
+          color = mix(color, white, smoothstep(0.9, 1.0, hotspots));
 
-          // Extreme brightness variations
-          float brightness = 1.0 + turbulence * 2.0 + hotspots * 3.0;
+          // Enhanced brightness for more presence
+          float brightness = 1.2 + turbulence * 1.8 + hotspots * 2.5;
           color *= brightness;
 
-          // Minimal sun brightness
-          color *= 0.02;
+          // Increased base brightness for more glow
+          color *= 0.08;
 
           gl_FragColor = vec4(color, 1.0);
         }
@@ -152,13 +154,22 @@ const Sun = ({ radius }: SunProps) => {
         <primitive object={sunMaterial} attach="material" />
       </mesh>
 
-      {/* Nearly invisible sun light */}
+      {/* Enhanced warm glow light */}
       <pointLight
         position={[0, 0, 0]}
-        color="#ffd966"
-        intensity={0.5}
-        distance={20}
-        decay={3}
+        color="#ff6b35"
+        intensity={2.0}
+        distance={30}
+        decay={2}
+      />
+
+      {/* Outer atmospheric glow */}
+      <pointLight
+        position={[0, 0, 0]}
+        color="#ff4520"
+        intensity={1.0}
+        distance={40}
+        decay={2.5}
       />
     </group>
   );
