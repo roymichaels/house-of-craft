@@ -412,10 +412,10 @@ export function initSolarSystem(container: HTMLElement) {
   
   // REALISTIC VOLCANIC SUN CONSTRUCTION
 
-  // Inner core - darker red-orange glow
+  // Inner core - bright white hot center
   const innerCoreGeometry = new THREE.SphereGeometry(2.1, 256, 256);
   const innerCoreMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(1.0, 0.3, 0.12),  // Darker red-orange core
+    color: new THREE.Color(1.0, 1.0, 1.0),
     toneMapped: false
   });
   const innerCore = new THREE.Mesh(innerCoreGeometry, innerCoreMaterial);
@@ -433,19 +433,22 @@ export function initSolarSystem(container: HTMLElement) {
   const sunSurface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
   sunGroup.add(sunSurface);
 
-  // Enhanced atmospheric glow layer
-  const atmosphereGeometry = new THREE.SphereGeometry(5.5, 256, 256);
+  // White atmospheric glow layer radiating from center
+  const atmosphereGeometry = new THREE.SphereGeometry(7.0, 256, 256);
   const atmosphereMaterial = new THREE.ShaderMaterial({
     uniforms: {
       time: { value: 0 },
-      glowColor: { value: new THREE.Color(0xFF6633) }
+      glowColor: { value: new THREE.Color(0xFFFFFF) }
     },
     vertexShader: `
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying vec3 vWorldPosition;
       void main() {
         vNormal = normalize(normalMatrix * normal);
         vPosition = position;
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPosition = worldPos.xyz;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
     `,
@@ -454,14 +457,24 @@ export function initSolarSystem(container: HTMLElement) {
       uniform vec3 glowColor;
       varying vec3 vNormal;
       varying vec3 vPosition;
+      varying vec3 vWorldPosition;
 
       void main() {
-        vec3 viewDir = normalize(cameraPosition - vPosition);
-        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
+        vec3 viewDir = normalize(cameraPosition - vWorldPosition);
 
-        float intensity = fresnel * 0.4;
+        // Distance from center for radial gradient
+        float distFromCenter = length(vPosition) / 7.0;
 
-        gl_FragColor = vec4(glowColor, intensity * 0.5);
+        // Create smooth radial falloff from center
+        float radialGlow = 1.0 - smoothstep(0.5, 1.0, distFromCenter);
+
+        // Soft fresnel for edge
+        float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 4.0);
+
+        // Combine for smooth white glow from center
+        float intensity = mix(radialGlow * 0.6, fresnel * 0.3, 0.5);
+
+        gl_FragColor = vec4(glowColor, intensity);
       }
     `,
     transparent: true,
