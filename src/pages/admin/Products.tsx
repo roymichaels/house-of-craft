@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2 } from 'lucide-react';
+import { Plus, Edit, Trash2, Filter } from 'lucide-react';
 import BrandedLoader from '@/components/ui/BrandedLoader';
 
 interface Product {
@@ -20,8 +20,21 @@ interface Product {
   in_stock: boolean;
 }
 
+const CATEGORIES = [
+  { value: 'all', label: 'All Products' },
+  { value: 'timepieces', label: 'Timepieces' },
+  { value: 'accessories', label: 'Accessories' },
+  { value: 'leather-goods', label: 'Leather Goods' },
+  { value: 'apparel', label: 'Apparel' },
+  { value: 'home-ritual', label: 'Home & Ritual' },
+  { value: 'print-media', label: 'Print & Media' },
+];
+
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -41,12 +54,16 @@ const Products = () => {
     loadProducts();
   }, []);
 
+  useEffect(() => {
+    filterProducts();
+  }, [products, selectedCategory, searchQuery]);
+
   const loadProducts = async () => {
     try {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('category', { ascending: true });
 
       if (error) throw error;
       setProducts(data || []);
@@ -55,6 +72,23 @@ const Products = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const filterProducts = () => {
+    let filtered = products;
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(p => p.category === selectedCategory);
+    }
+
+    if (searchQuery) {
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,8 +194,8 @@ const Products = () => {
     <div>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="font-ancient text-4xl text-ancient-gold tracking-wider mb-2">Products</h1>
-          <p className="text-ancient-gold/60 font-order tracking-wide">Manage your catalog of artifacts</p>
+          <h1 className="font-ancient text-4xl text-ancient-gold tracking-wider mb-2">Apollo Catalog</h1>
+          <p className="text-ancient-gold/60 font-order tracking-wide">{filteredProducts.length} artifacts in collection</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
@@ -256,23 +290,71 @@ const Products = () => {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <div key={product.id} className="bg-[#0A0404] rounded-lg border border-ancient-gold/20 hover:border-ancient-gold/40 overflow-hidden transition-all">
-            {product.image_url && (
-              <img
-                src={product.image_url}
-                alt={product.name}
-                className="w-full h-48 object-cover"
-              />
-            )}
+      {/* Filter Controls */}
+      <div className="mb-6 space-y-4">
+        {/* Search */}
+        <div className="flex items-center gap-2">
+          <Filter className="text-ancient-gold" size={20} />
+          <Input
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="max-w-md bg-[#0A0404] border-ancient-gold/30 text-ancient-gold"
+          />
+        </div>
+
+        {/* Category Tabs */}
+        <div className="flex flex-wrap gap-2">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setSelectedCategory(cat.value)}
+              className={`px-4 py-2 rounded-lg font-order uppercase tracking-wider text-sm transition-all ${
+                selectedCategory === cat.value
+                  ? 'bg-ancient-gold text-[#0A0404]'
+                  : 'bg-ancient-gold/10 text-ancient-gold border border-ancient-gold/30 hover:bg-ancient-gold/20'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="bg-[#0A0404] rounded-lg border border-ancient-gold/20 hover:border-ancient-gold/40 overflow-hidden transition-all group">
+            <div className="relative">
+              {product.image_url ? (
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              ) : (
+                <div className="w-full h-56 bg-ancient-gold/5 flex items-center justify-center">
+                  <span className="text-ancient-gold/40 font-order text-sm">No Image</span>
+                </div>
+              )}
+              {product.subcategory && (
+                <div className="absolute top-2 right-2 bg-ancient-gold/90 px-2 py-1 rounded text-xs font-order uppercase tracking-wider text-[#0A0404]">
+                  {product.subcategory}
+                </div>
+              )}
+            </div>
             <div className="p-4">
-              <h3 className="font-ancient text-xl text-ancient-gold mb-2 tracking-wide">{product.name}</h3>
-              <p className="text-ancient-gold/60 text-sm mb-3 line-clamp-2 font-order">
+              {product.category && (
+                <div className="text-ancient-gold/40 text-xs font-order uppercase tracking-wider mb-1">
+                  {product.category}
+                </div>
+              )}
+              <h3 className="font-ancient text-lg text-ancient-gold mb-2 tracking-wide">{product.name}</h3>
+              <p className="text-ancient-gold/60 text-sm mb-3 line-clamp-2 font-order leading-relaxed">
                 {product.description}
               </p>
               <div className="flex justify-between items-center mb-3">
-                <span className="font-ancient text-lg text-ancient-gold">${product.price}</span>
+                <span className="font-ancient text-xl text-ancient-gold">${product.price.toLocaleString()}</span>
                 <span className={`px-2 py-1 rounded text-xs font-order uppercase tracking-wider ${
                   product.in_stock ? 'bg-laurel-green/20 text-laurel-green' : 'bg-vita-flame/20 text-vita-flame'
                 }`}>
@@ -304,9 +386,13 @@ const Products = () => {
         ))}
       </div>
 
-      {products.length === 0 && (
+      {filteredProducts.length === 0 && !loading && (
         <div className="text-center py-12 bg-[#0A0404] rounded-lg border border-ancient-gold/20">
-          <p className="text-ancient-gold/60 font-order tracking-wide">No products yet. Create your first artifact!</p>
+          <p className="text-ancient-gold/60 font-order tracking-wide">
+            {searchQuery || selectedCategory !== 'all'
+              ? 'No products match your filters.'
+              : 'No products yet. Create your first artifact!'}
+          </p>
         </div>
       )}
     </div>
