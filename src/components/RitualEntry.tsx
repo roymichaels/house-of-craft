@@ -11,13 +11,7 @@ const RitualEntry = () => {
   const { openModal } = useModalStore();
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem("apollo-visited");
-    
-    if (!hasVisited) {
-      setShowEntry(true);
-    } else {
-      setHasEntered(true);
-    }
+    setHasEntered(true);
   }, []);
 
   const handleEnter = () => {
