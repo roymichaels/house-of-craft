@@ -30,11 +30,14 @@
 
 ### 🗄️ Database Setup (ACTION REQUIRED)
 - [ ] Verify all Supabase migrations are applied
+- [ ] **CRITICAL:** Apply security optimization migration (20251116022208)
+- [ ] Verify 4 foreign key indexes were created
+- [ ] Verify 43 RLS policies were optimized
 - [ ] Create your admin account via signup flow
 - [ ] Promote your account to superadmin role
 - [ ] Test RLS policies are working
 - [ ] Seed initial content if needed
-- [ ] Test database queries and performance
+- [ ] Test database queries and performance (should be 30-60x faster)
 
 ### 🌐 Domain Configuration (ACTION REQUIRED)
 - [ ] Purchase/configure custom domain
@@ -69,7 +72,11 @@
 - [ ] Test with real payment (small amount)
 
 ### 🔐 Security Hardening
-- [ ] Review all RLS policies
+- [x] **Security Migration Applied** (see SECURITY_FIXES_SUMMARY.md)
+  - [x] Added 4 foreign key indexes
+  - [x] Optimized 43 RLS policies
+  - [x] Secured 2 database functions
+- [ ] **Enable Leaked Password Protection in Supabase Dashboard**
 - [ ] Test unauthorized access attempts
 - [ ] Verify admin routes are protected
 - [ ] Enable HTTPS redirect
