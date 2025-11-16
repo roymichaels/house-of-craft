@@ -1,0 +1,42 @@
+{
+  "name": "Apollo — The Order of Light",
+  "short_name": "Apollo",
+  "description": "Where Light Becomes Order. Luxury e-commerce platform for timeless instruments of presence.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0404",
+  "theme_color": "#D4AF37",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "lifestyle", "luxury"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

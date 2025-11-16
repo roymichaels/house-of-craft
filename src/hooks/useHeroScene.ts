@@ -45,7 +45,7 @@ export const useHeroScene = () => {
         console.warn("No active hero scene found, using defaults");
         return {
           id: "default",
-          title: "APOLLON",
+          title: "APOLLO",
           subtitle: "Reliquary of Distinction",
           model_url: null,
           hdri_url: null,
@@ -64,7 +64,7 @@ export const useHeroScene = () => {
           hand_style: "classic",
           text_delay_ms: 3000,
           show_logo: true,
-          logo_text: "APOLLON",
+          logo_text: "APOLLO",
           cta_style: "seal",
         } as HeroScene;
       }

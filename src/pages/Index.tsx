@@ -11,6 +11,7 @@ import CartModal from "@/components/modals/CartModal";
 import CursorGlow from "@/components/effects/CursorGlow";
 import VoiceOfHouse from "@/components/effects/VoiceOfHouse";
 import RitualEntry from "@/components/RitualEntry";
+import StructuredData from "@/components/StructuredData";
 import { initChamberAudio } from "@/lib/chamberAudio";
 
 const Index = () => {
@@ -21,6 +22,8 @@ const Index = () => {
 
   return (
     <div className="h-screen overflow-hidden flex flex-col">
+      <StructuredData type="Organization" />
+      <StructuredData type="WebSite" />
       <RitualEntry />
       <CursorGlow />
       <VoiceOfHouse />

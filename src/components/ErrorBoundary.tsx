@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center bg-[#000814] text-ancient-silver">
           <div className="text-center p-8 max-w-md">
             <h1 className="font-ancient text-4xl text-ancient-gold mb-4">
-              APOLLON
+              APOLLO
             </h1>
             <p className="text-lg mb-4">
               Something went wrong loading the application.

@@ -1,8 +1,11 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "apollo-luxury-platform",
+  "description": "Apollo — Where Light Becomes Order. Luxury e-commerce platform for timeless instruments of presence.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "author": "Apollo",
+  "keywords": ["luxury", "e-commerce", "apollo", "premium", "lifestyle"],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
